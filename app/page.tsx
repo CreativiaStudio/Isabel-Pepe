@@ -7,12 +7,18 @@ import { Sparkles, Crown, PackageCheck } from 'lucide-react';
 
 export default async function Home() {
   // Fetch di 4 prodotti in evidenza dal DB per la sezione "I Più Amati"
-  const { data: featuredProducts } = await supabase
-    .from('products')
-    .select('*')
-    .eq('is_active', true)
-    .not('image_primary', 'is', null)
-    .limit(4);
+  let featuredProducts: any[] = [];
+  try {
+    const { data } = await supabase
+      .from('products')
+      .select('*')
+      .eq('is_active', true)
+      .not('image_primary', 'is', null)
+      .limit(4);
+    if (data) featuredProducts = data;
+  } catch (err) {
+    console.error('Home product fetch error:', err);
+  }
 
   return (
     <main className="min-h-screen bg-white selection:bg-[#C0A09A] selection:text-white text-[#1A1A1A]">

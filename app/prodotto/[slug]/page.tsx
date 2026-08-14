@@ -45,9 +45,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   // Check auth per mostrare il tasto "Modifica Prodotto"
   const ADMIN_EMAILS = ['sviluppo@creativiastudio.com'];
-  const supabaseAuth = await createClient();
-  const { data: { user } } = await supabaseAuth.auth.getUser();
-  const isAdmin = !!user && ADMIN_EMAILS.includes(user.email || '');
+  let isAdmin = false;
+  try {
+    const supabaseAuth = await createClient();
+    const { data: { user } } = await supabaseAuth.auth.getUser();
+    isAdmin = !!user && ADMIN_EMAILS.includes(user.email || '');
+  } catch (e) {
+    // Non autenticato o eroe SSR
+  }
 
   // 2. Prepariamo la galleria immagini (ordine esatto della scheda prodotto: 1_modella, 2_sfondo, 3_panoramica)
   // L'array product.gallery salvato dal sync script contiene già i file nell'ordine numerico corretto.
