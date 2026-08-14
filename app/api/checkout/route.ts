@@ -1,11 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabase';
-
-// Inizializza Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: '2023-10-16' as any, // Bypass TypeScript version issues
-});
+import { stripe } from '@/lib/stripe';
 
 export async function POST(request: Request) {
   try {
