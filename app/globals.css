@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Effetto Testo Rose Gold Foil Premium */
+.text-rosegold-foil {
+  background-image: linear-gradient(110deg,
+      #8A5A5E 0%,
+      #C8969A 20%,
+      #FFF4F5 45%,
+      /* Riflesso specchiato bianco/rosa */
+      #C8969A 55%,
+      #8A5A5E 80%,
+      #4A282D 100%
+      /* Ombra profonda del metallo */
+    );
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  /* Effetto debossing: ombra chiara in basso, scura in alto */
+  text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5), -0.5px -0.5px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Effetto Sfondo Rose Gold Foil Premium */
+.bg-rosegold-foil {
+  background-image: linear-gradient(110deg,
+      #8A5A5E 0%,
+      #C8969A 25%,
+      #FFF4F5 45%,
+      #C8969A 65%,
+      #4A282D 100%);
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.8),
+    /* Luce sul bordo alto */
+    inset -1px -1px 3px rgba(0, 0, 0, 0.4),
+    /* Ombra sul bordo basso */
+    0 4px 10px -2px rgba(138, 90, 94, 0.3);
+  /* Leggero bagliore esterno */
+}

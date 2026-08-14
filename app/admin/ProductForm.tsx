@@ -1,0 +1,357 @@
+'use client'
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { addProduct, updateFullProduct } from './actions';
+import { Plus, Loader2, Save, X, Image as ImageIcon, Upload, Trash2 } from 'lucide-react';
+import { MediaLibraryModal } from './MediaLibraryModal';
+
+export default function ProductForm({ initialData, onCancel }: { initialData?: any, onCancel?: () => void }) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [mediaModalSlot, setMediaModalSlot] = useState<string | null>(null);
+  const [selectedMedia, setSelectedMedia] = useState<Record<string, string>>({});
+  const [clearedSlots, setClearedSlots] = useState<Record<string, boolean>>({});
+  const [message, setMessage] = useState('');
+  const [category, setCategory] = useState('Collane');
+  const [previews, setPreviews] = useState<{ [key: string]: string }>({});
+  const isEditing = !!initialData;
+
+  useEffect(() => {
+    if (initialData) {
+      setCategory(initialData.category || 'Collane');
+      setMessage('');
+      setPreviews({});
+      setSelectedMedia({});
+      setClearedSlots({});
+    } else {
+      setCategory('Collane');
+      setPreviews({});
+      setSelectedMedia({});
+      setClearedSlots({});
+    }
+  }, [initialData]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, slotKey: string) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setPreviews(prev => ({ ...prev, [slotKey]: url }));
+      setClearedSlots(prev => ({ ...prev, [slotKey]: false }));
+    }
+  };
+
+  const handleRemovePhoto = (slotKey: string) => {
+    setClearedSlots(prev => ({ ...prev, [slotKey]: true }));
+    setPreviews(prev => ({ ...prev, [slotKey]: '' }));
+    setSelectedMedia(prev => ({ ...prev, [slotKey]: '' }));
+  };
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+    
+    const formData = new FormData(e.currentTarget);
+    
+    let result;
+    try {
+      if (isEditing) {
+        result = await updateFullProduct(initialData.id, formData);
+      } else {
+        result = await addProduct(formData);
+      }
+      
+      if (result?.error) {
+        setMessage(`❌ Errore: ${result.error}`);
+      } else {
+        setMessage(isEditing ? '✅ Prodotto aggiornato con successo!' : '✅ Prodotto aggiunto con successo!');
+        router.refresh();
+        if (!isEditing) {
+          (e.target as HTMLFormElement).reset();
+        }
+      }
+    } catch (err: any) {
+      console.error(err);
+      setMessage(`❌ Errore di rete: il caricamento è fallito o il file era troppo grande.`);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-2xl shadow-md border border-gray-100 flex flex-col h-[calc(100vh-9.5rem)] overflow-hidden border-t-4 border-t-[#1A1A1A] transition-all animate-in fade-in slide-in-from-right-4 duration-300">
+      <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0" key={initialData?.id || 'new'}>
+        
+        {/* 1. Header Fisso in Alto */}
+        <div className="flex justify-between items-start border-b p-6 pb-4 shrink-0 bg-white z-10">
+          <div>
+            <h2 className="text-xl font-medium text-gray-800">{isEditing ? 'Modifica Prodotto' : 'Aggiungi Nuovo'}</h2>
+            {isEditing && initialData && (
+              <p className="text-sm text-gray-500 mt-1">Stai modificando: <span className="font-medium text-gray-700">{initialData.name}</span> ({initialData.sku})</p>
+            )}
+          </div>
+          {onCancel && (
+            <button type="button" onClick={onCancel} className="text-gray-400 hover:text-red-500 transition mt-1 p-1 rounded-full hover:bg-gray-100" title="Chiudi pannello">
+              <X size={20} />
+            </button>
+          )}
+        </div>
+        
+        {/* 2. Corpo Centrale Scrollabile */}
+        <div className="p-6 pt-4 overflow-y-auto flex-1 min-h-0 space-y-6">
+          {message && (
+            <div className={`p-4 rounded-md text-sm ${message.includes('Errore') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+              {message}
+            </div>
+          )}
+
+          <div className="space-y-4">
+            
+            {/* Riga 1: Nome */}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Nome Gioiello</label>
+              <input type="text" name="name" defaultValue={initialData?.name} required className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+            </div>
+
+            {/* Riga 2: SKU */}
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Codice (SKU)</label>
+              <input type="text" name="sku" defaultValue={initialData?.sku} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 placeholder:text-gray-500" placeholder="Es. IP-001" />
+            </div>
+
+            {/* Riga 3: Prezzo, Sconto e Stock */}
+            <div className="flex gap-4">
+              <div className="w-[40%]">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Prezzo (€)</label>
+                <input type="number" step="0.01" name="price" defaultValue={initialData?.price} required className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+              </div>
+              <div className="w-[40%]">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Sconto (€)</label>
+                <input type="number" step="0.01" name="discount_price" defaultValue={initialData?.discount_price} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" placeholder="Opzionale" />
+              </div>
+              <div className="w-[20%]">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Stock</label>
+                <input type="number" name="stock" defaultValue={initialData?.stock ?? 10} required className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+              </div>
+            </div>
+
+            {/* Riga 4: Categoria e Materiali */}
+            <div className="flex gap-4">
+              <div className="w-1/2">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Categoria</label>
+                <select name="category" value={category} onChange={(e) => setCategory(e.target.value)} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 bg-white">
+                  <option value="Collane">Collane</option>
+                  <option value="Bracciali">Bracciali</option>
+                  <option value="Orecchini">Orecchini</option>
+                  <option value="Anelli">Anelli</option>
+                  <option value="Set">Set Lusso</option>
+                </select>
+              </div>
+              <div className="w-1/2">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Materiali</label>
+                <input type="text" name="materials" defaultValue={initialData?.materials} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+              </div>
+            </div>
+
+            {/* Misure Anelli */}
+            {category === 'Anelli' && (
+              <div className="bg-[#FAF8F7] p-3 rounded-md border border-[#E8E0DE]">
+                <label className="block text-xs font-medium text-gray-700 mb-2">Misure</label>
+                <div className="flex flex-wrap gap-2">
+                  {[10, 12, 14, 16, 18, 20].map((size) => (
+                    <label key={size} className="flex items-center gap-1 bg-white px-2 py-1 rounded border cursor-pointer hover:border-[#C0A09A]">
+                      <input type="checkbox" name="sizes" value={size.toString()} defaultChecked={initialData?.sizes?.includes(size.toString()) || initialData?.sizes?.includes(size)} className="accent-[#C0A09A] w-3 h-3" />
+                      <span className="text-xs">{size}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Riga 5: Placcatura, Pietre, Carati */}
+            <div className="flex gap-4">
+              <div className="w-1/3">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Placcatura</label>
+                <select name="plating" defaultValue={initialData?.plating || 'Nessuna'} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 bg-white">
+                  <option value="Nessuna">Nessuna</option>
+                  <option value="Oro 18K 1 micron + e-coating">Oro 18K 1 micron + e-coating</option>
+                  <option value="Rodio + 1 micron">Rodio + 1 micron</option>
+                </select>
+              </div>
+              <div className="w-1/3">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Pietre</label>
+                <select name="gemstone" defaultValue={initialData?.gemstone || 'Nessuna'} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 bg-[#FAF8F7]">
+                  <option value="Nessuna">Nessuna</option>
+                  <option value="Moissanite con certificato GRA">Moissanite con certificato GRA</option>
+                  <option value="Perle di acqua dolce">Perle di acqua dolce</option>
+                  <option value="Zirconi">Zirconi</option>
+                </select>
+              </div>
+              <div className="w-1/3">
+                <label className="block text-xs font-medium text-gray-700 mb-1">Carati (Es. 1ct)</label>
+                <input type="text" name="carats" defaultValue={initialData?.carats} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 placeholder:text-gray-500" placeholder="Opzionale" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Descrizione Lunga</label>
+              <textarea name="description" rows={3} defaultValue={initialData?.description} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900"></textarea>
+            </div>
+
+            {/* --- GESTIONE 5 SLOT GALLERIA --- */}
+            <div className="bg-[#FAF8F7] p-3 rounded-md border border-[#E8E0DE] space-y-2">
+              <h3 className="text-sm font-medium text-gray-800 border-b pb-2 flex items-center justify-between">
+                Gestione Galleria (5 Slot)
+              </h3>
+              
+                <div className="flex flex-col gap-3">
+                {[1, 2, 3, 4, 5].map((slotNum) => {
+                  const slotName = `slot${slotNum}`;
+                  const isCleared = !!clearedSlots[slotName];
+                  
+                  let initialUrl = '';
+                  if (isEditing) {
+                    if (slotNum === 1) initialUrl = initialData?.gallery?.[0] || initialData?.image_secondary || '';
+                    else if (slotNum === 2) initialUrl = initialData?.gallery?.[1] || initialData?.image_primary || '';
+                    else initialUrl = initialData?.gallery?.[slotNum - 1] || '';
+                  }
+                  
+                  const currentPreview = isCleared ? '' : (previews[slotName as keyof typeof previews] || selectedMedia[slotName] || initialUrl);
+                  
+                  let labelTitle = "";
+                  if (slotNum === 1) labelTitle = "1: Modella (2:3)";
+                  if (slotNum === 2) labelTitle = "2: Sfondo Rosa (1:1)";
+                  if (slotNum === 3) labelTitle = "3: Panoramica (1:1)";
+                  if (slotNum === 4) labelTitle = "4: Foto Extra 1 (facoltativo)";
+                  if (slotNum === 5) labelTitle = "5: Foto Extra 2 (facoltativo)";
+
+                  return (
+                    <div key={slotNum} className="p-3 border border-gray-100 bg-white rounded-lg flex items-center gap-3 shadow-sm hover:border-gray-300 transition-colors">
+                      {/* Preview Area */}
+                      <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer">
+                        {currentPreview ? (
+                          <>
+                            <img src={currentPreview} className="w-full h-full object-cover rounded-md" />
+                            
+                            {/* Popup Ingrandito */}
+                            <div className="absolute z-50 hidden group-hover:block top-1/2 -translate-y-1/2 left-16 w-48 h-48 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden pointer-events-none animate-in fade-in zoom-in-95 duration-200">
+                              <img src={currentPreview} className="w-full h-full object-cover" />
+                            </div>
+                          </>
+                        ) : (
+                          <ImageIcon className="text-gray-300 w-5 h-5" />
+                        )}
+                      </div>
+                      
+                      {/* Input Area */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 mb-1">
+                          <label className="text-xs font-semibold text-gray-800 truncate">
+                            {labelTitle}
+                          </label>
+                          {currentPreview && (
+                            <button
+                              type="button"
+                              onClick={() => handleRemovePhoto(slotName)}
+                              className="text-gray-400 hover:text-red-600 p-1 hover:bg-red-50 rounded transition shrink-0"
+                              title="Togli foto da questa gallery"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          )}
+                        </div>
+                        
+                        {/* Hidden File Input */}
+                        <input 
+                          type="file" 
+                          id={`file_input_${slotName}`}
+                          name={slotName} 
+                          accept="image/*"
+                          onChange={(e) => handleFileChange(e, slotName)} 
+                          className="hidden" 
+                        />
+                        
+                        {/* Buttons Row */}
+                        <div className="flex items-center gap-2 mt-1">
+                          <label 
+                            htmlFor={`file_input_${slotName}`}
+                            className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-[11px] px-2.5 py-1 rounded border border-gray-200 font-medium transition flex items-center gap-1 select-none"
+                          >
+                            + Foto
+                          </label>
+                          <button 
+                            type="button"
+                            onClick={() => {
+                              setMediaModalSlot(slotName);
+                              setClearedSlots(prev => ({ ...prev, [slotName]: false }));
+                            }}
+                            className="bg-[#F5EBE9] hover:bg-[#C0A09A] hover:text-white text-[#8A6A64] text-[11px] px-2.5 py-1 rounded border border-[#E8D8D5] font-medium transition flex items-center gap-1 shrink-0"
+                          >
+                            <ImageIcon size={12} /> Sfoglia
+                          </button>
+                        </div>
+
+                        {/* Status Label Stacked Below */}
+                        <div className="text-[11px] text-gray-500 mt-1 truncate">
+                          {previews[slotName] ? (
+                            <span className="text-green-700 font-medium">✓ File locale selezionato</span>
+                          ) : selectedMedia[slotName] ? (
+                            <span className="text-blue-700 font-medium truncate block" title={selectedMedia[slotName]}>
+                              ✓ Selezionato da R2
+                            </span>
+                          ) : isCleared ? (
+                            <span className="text-red-500 font-normal italic">Foto rimossa (salva per confermare)</span>
+                          ) : currentPreview ? (
+                            <span className="text-gray-600 font-normal truncate block" title={currentPreview}>
+                              Foto inserita
+                            </span>
+                          ) : (
+                            <span className="text-gray-400 font-normal">Nessun file selezionato</span>
+                          )}
+                        </div>
+                        
+                        <input type="hidden" name={`${slotName}_cleared`} value={isCleared ? 'true' : 'false'} />
+                        <input type="hidden" name={`${slotName}_url`} value={isCleared ? '' : (selectedMedia[slotName] || '')} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Footer Fisso in Basso col Pulsante Salva Modifiche */}
+        <div className="p-4 border-t border-gray-200 bg-white flex gap-3 shrink-0 z-10 shadow-md">
+          {isEditing && (
+            <button type="button" onClick={onCancel} className="w-1/3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2.5 rounded-md transition-colors text-sm">
+              Annulla
+            </button>
+          )}
+          <button 
+            type="submit" 
+            disabled={loading}
+            className={`${isEditing ? 'w-2/3' : 'w-full'} bg-[#1A1A1A] hover:bg-[#C0A09A] text-white font-medium py-2.5 rounded-md transition-colors flex items-center justify-center gap-2 text-sm shadow-sm`}
+          >
+            {loading ? <Loader2 className="animate-spin" size={16} /> : (isEditing ? <Save size={16} /> : <Plus size={16} />)}
+            {loading ? 'Salvataggio...' : (isEditing ? 'Salva Modifiche' : 'Salva Nuovo Prodotto')}
+          </button>
+        </div>
+      </form>
+      
+      <MediaLibraryModal 
+        isOpen={mediaModalSlot !== null} 
+        onClose={() => setMediaModalSlot(null)} 
+        initialSearch=""
+        onSelect={(url) => {
+          if (mediaModalSlot) {
+            setSelectedMedia(prev => ({ ...prev, [mediaModalSlot]: url }));
+            // Clear local file preview if selecting from media library
+            setPreviews(prev => ({ ...prev, [mediaModalSlot]: '' }));
+          }
+        }} 
+      />
+    </div>
+  );
+}
