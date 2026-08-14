@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function POST(req: Request) {
   try {
@@ -25,17 +20,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Task non trovata' }, { status: 404 });
     }
 
-    // Qui andrebbe la logica reale di Esecuzione (Action Engine reale)
-    // ---------------------------------------------------------------
-    // Esempio:
-    // if (task.action_type === 'send_email') {
-    //    await resend.emails.send({ to: task.payload.email, subject: task.title, html: task.payload.body });
-    // } else if (task.action_type === 'send_whatsapp') {
-    //    await twilio.messages.create({ to: task.payload.phone, body: task.payload.body });
-    // }
-    // ---------------------------------------------------------------
-    
-    // Per ora facciamo un log fittizio in console per simulare il successo:
     console.log(`[ACTION ENGINE] Eseguita task: ${task.title} (Azione: ${task.action_type})`);
 
     // Aggiorna lo stato sul database

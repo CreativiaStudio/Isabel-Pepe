@@ -1,16 +1,9 @@
 import { NextResponse } from 'next/server';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(req: Request) {
-  // Simulazione di sicurezza: in produzione questo endpoint sarebbe protetto da una secret key (es. headers.get('Authorization') === `Bearer ${process.env.CRON_SECRET}`)
-  
   try {
     // 1. Raccogli dati del giorno precedente
     const yesterday = new Date();
@@ -33,7 +26,6 @@ REGOLE:
 - Fornisci una breve analisi.
 - Suggerisci 1 micro-azione per oggi.`;
 
-    // Utilizziamo un fallback simulato qualora Sonnet 5 non fosse mappato
     const result = await generateText({
       model: anthropic('claude-3-5-sonnet-20241022'), 
       system: systemPrompt,
@@ -62,7 +54,6 @@ REGOLE:
     await supabaseAdmin.from('jarvis_tasks').insert(newTask);
 
     if (autoPilot) {
-      // Esegui task (simulazione)
       console.log(`[ACTION ENGINE] Eseguita task in Auto-Pilot: ${newTask.title}`);
     }
 
