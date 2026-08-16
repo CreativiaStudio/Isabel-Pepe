@@ -107,34 +107,34 @@ export default function HeroVideoSlider() {
         );
       })}
 
-      {/* 2. TESTO E CALL TO ACTION (In basso su mobile per lasciare visibile il viso, a sinistra su desktop) */}
+      {/* 2. TESTO E CALL TO ACTION FISSI (In basso su mobile per lasciare visibile il viso, a sinistra su desktop) */}
       <div className="relative z-20 max-w-[1400px] w-full mx-auto px-5 sm:px-10 lg:px-16 pointer-events-none">
         <div className="w-full md:w-7/12 lg:w-1/2 flex flex-col items-start text-left pointer-events-auto">
           
-          {/* Subtitle / Tagline */}
+          {/* Subtitle / Tagline Fissa */}
           <div className="flex items-center gap-2 mb-2 sm:mb-3">
             <span className="w-5 sm:w-8 h-[1px] bg-[#C0A09A]"></span>
             <span className="font-sans text-[10px] sm:text-xs md:text-sm uppercase tracking-[0.3em] text-[#C0A09A] font-semibold drop-shadow-md">
-              {slides[currentSlide].subtitle}
+              Alta Gioielleria Demi-Fine
             </span>
           </div>
 
-          {/* Titolo Principale */}
+          {/* Titolo Principale Fisso */}
           <h1 className="font-serif text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl tracking-tight text-white leading-[1.08] uppercase mb-3 sm:mb-6 drop-shadow-xl whitespace-pre-line">
-            {slides[currentSlide].title}
+            Eterna{'\n'}Bellezza
           </h1>
 
-          {/* Descrizione Breve */}
+          {/* Descrizione Breve Fissa */}
           <p className="font-sans text-gray-200 text-xs sm:text-sm md:text-base max-w-md leading-relaxed tracking-wider font-light mb-5 sm:mb-8 drop-shadow-md">
-            {slides[currentSlide].description}
+            Creazioni in puro Argento 925 con placcatura Oro 18K (1 Micron) o Rodio Puro e Moissanite certificata GRA. Cofanetto Luxury incluso.
           </p>
 
-          {/* Bottone Call To Action */}
+          {/* Bottone Call To Action Fisso */}
           <Link
-            href={slides[currentSlide].ctaLink}
+            href="/shop"
             className="inline-flex items-center gap-3 bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 px-6 sm:px-9 py-3 sm:py-4 text-[11px] sm:text-xs uppercase tracking-[0.25em] font-medium transition-all duration-500 rounded-md sm:rounded-none shadow-lg hover:shadow-2xl group"
           >
-            <span>{slides[currentSlide].ctaText}</span>
+            <span>Scopri la Collezione</span>
             <span className="transform transition-transform duration-300 group-hover:translate-x-1.5">→</span>
           </Link>
         </div>
