@@ -1,18 +1,24 @@
 import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
-export function getR2Client(): S3Client {
-  const accountId = (process.env.R2_ACCOUNT_ID || '').trim();
-  const accessKeyId = (process.env.R2_ACCESS_KEY_ID || '').trim();
-  const secretAccessKey = (process.env.R2_SECRET_ACCESS_KEY || '').trim();
+const DEFAULT_R2_ACCOUNT_ID = '1e5fb92e860959f6d4d1421fec22aee7';
+const DEFAULT_R2_ACCESS_KEY_ID = 'e26a7eef46c26b5289f666f437021707';
+const DEFAULT_R2_SECRET_ACCESS_KEY = 'b8b548b8137350cb4a5e2f7c006fcbb5dbb1a806ea5561a007f59d57a2c67ce7';
+const DEFAULT_R2_BUCKET_NAME = 'isabel-pepe';
+const DEFAULT_R2_PUBLIC_URL = 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev';
 
-  if (!accountId || !accessKeyId || !secretAccessKey) {
-    console.warn("Attenzione: Credenziali Cloudflare R2 non ancora caricate:", {
-      hasAccountId: !!accountId,
-      hasAccessKey: !!accessKeyId,
-      hasSecretKey: !!secretAccessKey,
-    });
-  }
+export function getR2Config() {
+  const accountId = (process.env.R2_ACCOUNT_ID || DEFAULT_R2_ACCOUNT_ID).trim();
+  const accessKeyId = (process.env.R2_ACCESS_KEY_ID || DEFAULT_R2_ACCESS_KEY_ID).trim();
+  const secretAccessKey = (process.env.R2_SECRET_ACCESS_KEY || DEFAULT_R2_SECRET_ACCESS_KEY).trim();
+  const bucketName = (process.env.R2_BUCKET_NAME || DEFAULT_R2_BUCKET_NAME).trim();
+  const publicUrl = (process.env.R2_PUBLIC_URL || DEFAULT_R2_PUBLIC_URL).trim();
+
+  return { accountId, accessKeyId, secretAccessKey, bucketName, publicUrl };
+}
+
+export function getR2Client(): S3Client {
+  const { accountId, accessKeyId, secretAccessKey } = getR2Config();
 
   return new S3Client({
     region: 'auto',
@@ -37,6 +43,7 @@ export const r2Client = new Proxy({} as S3Client, {
 });
 
 export async function uploadToR2(file: File, folder: string = 'products', customName?: string): Promise<string> {
+  const { bucketName, publicUrl } = getR2Config();
   const isImage = file.type.startsWith('image/');
   const ext = isImage ? 'webp' : file.name.split('.').pop();
   
@@ -57,20 +64,19 @@ export async function uploadToR2(file: File, folder: string = 'products', custom
   if (isImage) {
     try {
       buffer = await sharp(buffer)
-        .resize({ width: 1500, withoutEnlargement: true }) // Scala intelligente
-        .webp({ quality: 80, effort: 4 }) // Compressione ottimizzata
+        .resize({ width: 1500, withoutEnlargement: true })
+        .webp({ quality: 80, effort: 4 })
         .toBuffer();
       contentType = 'image/webp';
     } catch (err) {
       console.error("Errore elaborazione Sharp:", err);
-      // Se fallisce (es. formato non supportato), proseguiamo col buffer originale
     }
   }
 
   const uint8Array = new Uint8Array(buffer);
   const client = getR2Client();
   const command = new PutObjectCommand({
-    Bucket: process.env.R2_BUCKET_NAME,
+    Bucket: bucketName,
     Key: key,
     Body: uint8Array,
     ContentLength: uint8Array.length,
@@ -79,27 +85,24 @@ export async function uploadToR2(file: File, folder: string = 'products', custom
 
   await client.send(command);
 
-  // Ritorna l'URL pubblico
-  const publicUrlBase = process.env.R2_PUBLIC_URL || 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev';
-  return `${publicUrlBase}/${key}`;
+  return `${publicUrl}/${key}`;
 }
 
 export async function renameR2Object(oldKey: string, newKey: string): Promise<boolean> {
   try {
-    const bucket = process.env.R2_BUCKET_NAME;
-    if (!bucket) return false;
+    const { bucketName } = getR2Config();
     const client = getR2Client();
 
     // 1. Copia l'oggetto
     await client.send(new CopyObjectCommand({
-      Bucket: bucket,
-      CopySource: `${bucket}/${oldKey}`,
+      Bucket: bucketName,
+      CopySource: `${bucketName}/${oldKey}`,
       Key: newKey
     }));
 
     // 2. Cancella il vecchio oggetto
     await client.send(new DeleteObjectCommand({
-      Bucket: bucket,
+      Bucket: bucketName,
       Key: oldKey
     }));
 

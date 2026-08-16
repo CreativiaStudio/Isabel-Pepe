@@ -325,19 +325,22 @@ export async function seedSampleProducts() {
 export async function getMediaLibrary() {
   try {
     const { ListObjectsV2Command } = await import('@aws-sdk/client-s3');
-    const { r2Client } = await import('@/lib/r2');
+    const { getR2Client, getR2Config } = await import('@/lib/r2');
     
+    const config = getR2Config();
+    const client = getR2Client();
+
     // Lista tutti gli oggetti nella cartella 'products'
     const command = new ListObjectsV2Command({
-      Bucket: process.env.R2_BUCKET_NAME,
+      Bucket: config.bucketName,
       Prefix: 'products/',
     });
 
-    const response = await r2Client.send(command);
+    const response = await client.send(command);
     
     if (!response.Contents) return [];
 
-    const publicUrlBase = process.env.R2_PUBLIC_URL || '';
+    const publicUrlBase = config.publicUrl;
 
     // Mappiamo i risultati estraendo URL e dettagli
     const mediaFiles = response.Contents.map(item => {
