@@ -108,10 +108,51 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           {/* COLONNA DESTRA: DETTAGLI STICKY */}
           <div className="w-full lg:w-2/5 lg:sticky lg:top-32 flex flex-col">
             
-            {/* Tagline Materiali */}
-            <p className="text-[11px] uppercase tracking-widest text-gray-500 mb-3">
-              {product.materials} {product.plating && product.plating !== 'Nessuna' ? ` • ${product.plating}` : ''}
-            </p>
+            {/* Tagline Materiali & Anteprima Specifiche */}
+            {(() => {
+              const baseMaterial = 'Argento 925 Nichel-Free';
+              let cleanPlating = '';
+              if (product.plating && product.plating !== 'Nessuna') {
+                if (product.plating.toLowerCase().includes('oro')) {
+                  cleanPlating = 'Placcatura Oro 18K (1.0µm) + E-Coating';
+                } else if (product.plating.toLowerCase().includes('rodio')) {
+                  cleanPlating = 'Rodio Puro (0.1µm) + E-Coating';
+                } else {
+                  cleanPlating = product.plating;
+                }
+              }
+
+              let cleanGemstone = '';
+              if (product.gemstone && product.gemstone !== 'Nessuna') {
+                if (product.gemstone.toLowerCase().includes('moissanite')) {
+                  cleanGemstone = 'Moissanite Certificata GRA VVS1';
+                } else if (product.gemstone.toLowerCase().includes('perle')) {
+                  cleanGemstone = "Perle d'Acqua Dolce Naturali";
+                } else if (product.gemstone.toLowerCase().includes('rosa')) {
+                  cleanGemstone = 'Cristalli di Luce Rosa';
+                } else {
+                  cleanGemstone = product.gemstone;
+                }
+              }
+
+              return (
+                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] sm:text-[11px] uppercase tracking-[0.16em] text-gray-500 font-medium mb-3 leading-relaxed">
+                  <span>{baseMaterial}</span>
+                  {cleanPlating && (
+                    <>
+                      <span className="text-[#C0A09A] font-bold">•</span>
+                      <span>{cleanPlating}</span>
+                    </>
+                  )}
+                  {cleanGemstone && (
+                    <>
+                      <span className="text-[#C0A09A] font-bold">•</span>
+                      <span className="text-[#9E7D77] font-semibold">{cleanGemstone}</span>
+                    </>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Titolo Principale e Bottone Modifica */}
             <div className="flex items-center justify-between gap-4 mb-4">
