@@ -88,34 +88,19 @@ export async function addProduct(formData: FormData) {
 
     const timestamp = Date.now();
 
-    for (let i = 0; i < slotFiles.length; i++) {
+    for (let i = 0; i < 5; i++) {
       const file = slotFiles[i];
-      const selectedUrl = slotUrls[i];
+      const explicitUrl = slotUrls[i]?.trim();
       const customName = `isabel-pepe-${productSlug}-slot${i+1}-${timestamp}`;
       
-      if (file && file.size > 0) {
+      if (explicitUrl) {
+        galleryUrls[i] = explicitUrl;
+      } else if (file && file.size > 0) {
         try {
           const publicUrl = await uploadToR2(file, 'products', customName);
           galleryUrls[i] = publicUrl;
         } catch (error) {
           console.error(`Errore caricamento Slot ${i+1} su R2:`, error);
-        }
-      } else if (selectedUrl) {
-        const publicUrlBase = process.env.R2_PUBLIC_URL || '';
-        const cleanUrl = selectedUrl.split('?')[0];
-        const selectedKey = cleanUrl.replace(`${publicUrlBase}/`, '');
-        const ext = selectedKey.split('.').pop() || 'webp';
-        const expectedKey = `products/${customName}.${ext}`;
-        
-        if (selectedKey !== expectedKey) {
-          const renamed = await renameR2Object(selectedKey, expectedKey);
-          if (renamed) {
-            galleryUrls[i] = `${publicUrlBase}/${expectedKey}`;
-          } else {
-            galleryUrls[i] = `${cleanUrl}?v=${timestamp}`;
-          }
-        } else {
-          galleryUrls[i] = `${cleanUrl}?v=${timestamp}`;
         }
       }
     }
@@ -242,36 +227,21 @@ export async function updateFullProduct(id: string, formData: FormData) {
 
     const timestamp = Date.now();
 
-    for (let i = 0; i < slotFiles.length; i++) {
+    for (let i = 0; i < 5; i++) {
       const file = slotFiles[i];
-      const selectedUrl = slotUrls[i];
+      const explicitUrl = slotUrls[i]?.trim();
       const customName = `isabel-pepe-${productSlug}-slot${i+1}-${timestamp}`;
       
       if (slotCleared[i]) {
         newGalleryUrls[i] = "";
+      } else if (explicitUrl) {
+        newGalleryUrls[i] = explicitUrl;
       } else if (file && file.size > 0) {
         try {
           const publicUrl = await uploadToR2(file, 'products', customName);
           newGalleryUrls[i] = publicUrl;
         } catch (error) {
           console.error(`Errore caricamento Slot ${i+1} su R2:`, error);
-        }
-      } else if (selectedUrl) {
-        const publicUrlBase = process.env.R2_PUBLIC_URL || '';
-        const cleanUrl = selectedUrl.split('?')[0];
-        const selectedKey = cleanUrl.replace(`${publicUrlBase}/`, '');
-        const ext = selectedKey.split('.').pop() || 'webp';
-        const expectedKey = `products/${customName}.${ext}`;
-        
-        if (selectedKey !== expectedKey) {
-          const renamed = await renameR2Object(selectedKey, expectedKey);
-          if (renamed) {
-            newGalleryUrls[i] = `${publicUrlBase}/${expectedKey}`;
-          } else {
-            newGalleryUrls[i] = `${cleanUrl}?v=${timestamp}`;
-          }
-        } else {
-          newGalleryUrls[i] = `${cleanUrl}?v=${timestamp}`;
         }
       }
     }

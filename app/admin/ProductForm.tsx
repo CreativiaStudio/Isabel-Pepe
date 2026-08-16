@@ -3,14 +3,68 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { addProduct, updateFullProduct } from './actions';
-import { Plus, Loader2, Save, X, Image as ImageIcon, Upload, Trash2 } from 'lucide-react';
+import { Plus, Loader2, Save, X, Image as ImageIcon, Trash2, CheckCircle2 } from 'lucide-react';
 import { MediaLibraryModal } from './MediaLibraryModal';
+
+async function compressImageClient(file: File): Promise<File> {
+  if (file.size < 1024 * 1024 || !file.type.startsWith('image/')) {
+    return file;
+  }
+  return new Promise((resolve) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1800;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(file);
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                type: 'image/webp',
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          'image/webp',
+          0.85
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
 
 export default function ProductForm({ initialData, onCancel }: { initialData?: any, onCancel?: () => void }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mediaModalSlot, setMediaModalSlot] = useState<string | null>(null);
-  const [selectedMedia, setSelectedMedia] = useState<Record<string, string>>({});
+  const [slotUrls, setSlotUrls] = useState<Record<string, string>>({});
+  const [uploadingSlots, setUploadingSlots] = useState<Record<string, boolean>>({});
   const [clearedSlots, setClearedSlots] = useState<Record<string, boolean>>({});
   const [message, setMessage] = useState('');
   const [category, setCategory] = useState('Collane');
@@ -22,29 +76,72 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       setCategory(initialData.category || 'Collane');
       setMessage('');
       setPreviews({});
-      setSelectedMedia({});
       setClearedSlots({});
+      setUploadingSlots({});
+
+      const initialSlotUrls: Record<string, string> = {};
+      const gallery = Array.isArray(initialData.gallery) ? initialData.gallery : [];
+      if (gallery.length > 0) {
+        gallery.forEach((url: string, idx: number) => {
+          if (url) initialSlotUrls[`slot${idx + 1}`] = url;
+        });
+      } else {
+        if (initialData.image_secondary) initialSlotUrls['slot1'] = initialData.image_secondary;
+        if (initialData.image_primary) initialSlotUrls['slot2'] = initialData.image_primary;
+      }
+      setSlotUrls(initialSlotUrls);
     } else {
       setCategory('Collane');
       setPreviews({});
-      setSelectedMedia({});
       setClearedSlots({});
+      setUploadingSlots({});
+      setSlotUrls({});
     }
   }, [initialData]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, slotKey: string) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, slotKey: string) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviews(prev => ({ ...prev, [slotKey]: url }));
-      setClearedSlots(prev => ({ ...prev, [slotKey]: false }));
+    if (!file) return;
+
+    // Show preview immediately
+    const localUrl = URL.createObjectURL(file);
+    setPreviews(prev => ({ ...prev, [slotKey]: localUrl }));
+    setClearedSlots(prev => ({ ...prev, [slotKey]: false }));
+    setUploadingSlots(prev => ({ ...prev, [slotKey]: true }));
+    setMessage('');
+
+    try {
+      const compressedFile = await compressImageClient(file);
+      const formData = new FormData();
+      formData.append('file', compressedFile);
+      formData.append('folder', 'products');
+
+      const customName = `isabel-pepe-${(initialData?.name || 'gioiello').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${slotKey}-${Date.now()}`;
+      formData.append('customName', customName);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Errore nel caricamento R2');
+      }
+
+      setSlotUrls(prev => ({ ...prev, [slotKey]: data.url }));
+    } catch (err: any) {
+      console.error('Upload error:', err);
+      setMessage(`❌ Errore caricamento foto (${slotKey}): ${err.message}`);
+    } finally {
+      setUploadingSlots(prev => ({ ...prev, [slotKey]: false }));
     }
   };
 
   const handleRemovePhoto = (slotKey: string) => {
     setClearedSlots(prev => ({ ...prev, [slotKey]: true }));
     setPreviews(prev => ({ ...prev, [slotKey]: '' }));
-    setSelectedMedia(prev => ({ ...prev, [slotKey]: '' }));
+    setSlotUrls(prev => ({ ...prev, [slotKey]: '' }));
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -52,6 +149,13 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
     setLoading(true);
     setMessage('');
     
+    // Check if any slot is currently uploading
+    if (Object.values(uploadingSlots).some(Boolean)) {
+      setMessage('⏳ Attendi il completamento del caricamento delle foto prima di salvare.');
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
     
     let result;
@@ -69,11 +173,14 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         router.refresh();
         if (!isEditing) {
           (e.target as HTMLFormElement).reset();
+          setSlotUrls({});
+          setPreviews({});
+          setClearedSlots({});
         }
       }
     } catch (err: any) {
       console.error(err);
-      setMessage(`❌ Errore di rete: il caricamento è fallito o il file era troppo grande.`);
+      setMessage(`❌ Errore di rete: il salvataggio è fallito.`);
     } finally {
       setLoading(false);
     }
@@ -101,7 +208,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         {/* 2. Corpo Centrale Scrollabile */}
         <div className="p-6 pt-4 overflow-y-auto flex-1 min-h-0 space-y-6">
           {message && (
-            <div className={`p-4 rounded-md text-sm ${message.includes('Errore') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'}`}>
+            <div className={`p-4 rounded-md text-sm ${message.includes('Errore') ? 'bg-red-50 text-red-700' : message.includes('Attendi') ? 'bg-amber-50 text-amber-700' : 'bg-green-50 text-green-700'}`}>
               {message}
             </div>
           )}
@@ -150,7 +257,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
               </div>
               <div className="w-1/2">
                 <label className="block text-xs font-medium text-gray-700 mb-1">Materiali</label>
-                <input type="text" name="materials" defaultValue={initialData?.materials} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+                <input type="text" name="materials" defaultValue={initialData?.materials || 'Argento 925 nichel free'} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
               </div>
             </div>
 
@@ -205,19 +312,13 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                 Gestione Galleria (5 Slot)
               </h3>
               
-                <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3">
                 {[1, 2, 3, 4, 5].map((slotNum) => {
                   const slotName = `slot${slotNum}`;
                   const isCleared = !!clearedSlots[slotName];
-                  
-                  let initialUrl = '';
-                  if (isEditing) {
-                    if (slotNum === 1) initialUrl = initialData?.gallery?.[0] || initialData?.image_secondary || '';
-                    else if (slotNum === 2) initialUrl = initialData?.gallery?.[1] || initialData?.image_primary || '';
-                    else initialUrl = initialData?.gallery?.[slotNum - 1] || '';
-                  }
-                  
-                  const currentPreview = isCleared ? '' : (previews[slotName as keyof typeof previews] || selectedMedia[slotName] || initialUrl);
+                  const isUploading = !!uploadingSlots[slotName];
+                  const currentUrl = isCleared ? '' : (slotUrls[slotName] || '');
+                  const currentPreview = isCleared ? '' : (previews[slotName] || currentUrl);
                   
                   let labelTitle = "";
                   if (slotNum === 1) labelTitle = "1: Modella (2:3)";
@@ -229,14 +330,16 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                   return (
                     <div key={slotNum} className="p-3 border border-gray-100 bg-white rounded-lg flex items-center gap-3 shadow-sm hover:border-gray-300 transition-colors">
                       {/* Preview Area */}
-                      <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer">
-                        {currentPreview ? (
+                      <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer overflow-hidden">
+                        {isUploading ? (
+                          <Loader2 className="w-5 h-5 animate-spin text-[#C0A09A]" />
+                        ) : currentPreview ? (
                           <>
-                            <img src={currentPreview} className="w-full h-full object-cover rounded-md" />
+                            <img src={currentPreview} alt={`Slot ${slotNum}`} className="w-full h-full object-cover rounded-md" />
                             
                             {/* Popup Ingrandito */}
                             <div className="absolute z-50 hidden group-hover:block top-1/2 -translate-y-1/2 left-16 w-48 h-48 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden pointer-events-none animate-in fade-in zoom-in-95 duration-200">
-                              <img src={currentPreview} className="w-full h-full object-cover" />
+                              <img src={currentPreview} alt="Zoom" className="w-full h-full object-cover" />
                             </div>
                           </>
                         ) : (
@@ -250,7 +353,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                           <label className="text-xs font-semibold text-gray-800 truncate">
                             {labelTitle}
                           </label>
-                          {currentPreview && (
+                          {currentPreview && !isUploading && (
                             <button
                               type="button"
                               onClick={() => handleRemovePhoto(slotName)}
@@ -268,6 +371,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                           id={`file_input_${slotName}`}
                           name={slotName} 
                           accept="image/*"
+                          disabled={isUploading}
                           onChange={(e) => handleFileChange(e, slotName)} 
                           className="hidden" 
                         />
@@ -276,43 +380,42 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                         <div className="flex items-center gap-2 mt-1">
                           <label 
                             htmlFor={`file_input_${slotName}`}
-                            className="cursor-pointer bg-gray-100 hover:bg-gray-200 text-gray-700 text-[11px] px-2.5 py-1 rounded border border-gray-200 font-medium transition flex items-center gap-1 select-none"
+                            className={`cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-200'} bg-gray-100 text-gray-700 text-[11px] px-2.5 py-1 rounded border border-gray-200 font-medium transition flex items-center gap-1 select-none`}
                           >
-                            + Foto
+                            {isUploading ? <Loader2 size={11} className="animate-spin" /> : '+ Foto'}
                           </label>
                           <button 
                             type="button"
+                            disabled={isUploading}
                             onClick={() => {
                               setMediaModalSlot(slotName);
                               setClearedSlots(prev => ({ ...prev, [slotName]: false }));
                             }}
-                            className="bg-[#F5EBE9] hover:bg-[#C0A09A] hover:text-white text-[#8A6A64] text-[11px] px-2.5 py-1 rounded border border-[#E8D8D5] font-medium transition flex items-center gap-1 shrink-0"
+                            className={`bg-[#F5EBE9] hover:bg-[#C0A09A] hover:text-white text-[#8A6A64] text-[11px] px-2.5 py-1 rounded border border-[#E8D8D5] font-medium transition flex items-center gap-1 shrink-0 ${isUploading ? 'opacity-50 pointer-events-none' : ''}`}
                           >
                             <ImageIcon size={12} /> Sfoglia
                           </button>
                         </div>
 
-                        {/* Status Label Stacked Below */}
+                        {/* Status Label */}
                         <div className="text-[11px] text-gray-500 mt-1 truncate">
-                          {previews[slotName] ? (
-                            <span className="text-green-700 font-medium">✓ File locale selezionato</span>
-                          ) : selectedMedia[slotName] ? (
-                            <span className="text-blue-700 font-medium truncate block" title={selectedMedia[slotName]}>
-                              ✓ Selezionato da R2
+                          {isUploading ? (
+                            <span className="text-amber-600 font-medium flex items-center gap-1">
+                              <Loader2 size={11} className="animate-spin inline" /> Caricamento su R2...
+                            </span>
+                          ) : currentUrl ? (
+                            <span className="text-emerald-700 font-medium truncate flex items-center gap-1" title={currentUrl}>
+                              <CheckCircle2 size={11} className="inline text-emerald-600 shrink-0" /> Foto salvata / pronta
                             </span>
                           ) : isCleared ? (
                             <span className="text-red-500 font-normal italic">Foto rimossa (salva per confermare)</span>
-                          ) : currentPreview ? (
-                            <span className="text-gray-600 font-normal truncate block" title={currentPreview}>
-                              Foto inserita
-                            </span>
                           ) : (
-                            <span className="text-gray-400 font-normal">Nessun file selezionato</span>
+                            <span className="text-gray-400 font-normal">Nessuna foto</span>
                           )}
                         </div>
                         
                         <input type="hidden" name={`${slotName}_cleared`} value={isCleared ? 'true' : 'false'} />
-                        <input type="hidden" name={`${slotName}_url`} value={isCleared ? '' : (selectedMedia[slotName] || '')} />
+                        <input type="hidden" name={`${slotName}_url`} value={isCleared ? '' : (slotUrls[slotName] || '')} />
                       </div>
                     </div>
                   );
@@ -331,8 +434,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
           )}
           <button 
             type="submit" 
-            disabled={loading}
-            className={`${isEditing ? 'w-2/3' : 'w-full'} bg-[#1A1A1A] hover:bg-[#C0A09A] text-white font-medium py-2.5 rounded-md transition-colors flex items-center justify-center gap-2 text-sm shadow-sm`}
+            disabled={loading || Object.values(uploadingSlots).some(Boolean)}
+            className={`${isEditing ? 'w-2/3' : 'w-full'} bg-[#1A1A1A] hover:bg-[#C0A09A] text-white font-medium py-2.5 rounded-md transition-colors flex items-center justify-center gap-2 text-sm shadow-sm disabled:opacity-50`}
           >
             {loading ? <Loader2 className="animate-spin" size={16} /> : (isEditing ? <Save size={16} /> : <Plus size={16} />)}
             {loading ? 'Salvataggio...' : (isEditing ? 'Salva Modifiche' : 'Salva Nuovo Prodotto')}
@@ -346,9 +449,10 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         initialSearch=""
         onSelect={(url) => {
           if (mediaModalSlot) {
-            setSelectedMedia(prev => ({ ...prev, [mediaModalSlot]: url }));
-            // Clear local file preview if selecting from media library
-            setPreviews(prev => ({ ...prev, [mediaModalSlot]: '' }));
+            setSlotUrls(prev => ({ ...prev, [mediaModalSlot]: url }));
+            setPreviews(prev => ({ ...prev, [mediaModalSlot]: url }));
+            setClearedSlots(prev => ({ ...prev, [mediaModalSlot]: false }));
+            setMediaModalSlot(null);
           }
         }} 
       />
