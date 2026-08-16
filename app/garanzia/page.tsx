@@ -49,7 +49,7 @@ export default function GaranziaPage() {
                 All'interno del tuo <strong>Cofanetto Luxury</strong> troverai il <strong>Certificato Ufficiale di Autenticità & Garanzia Isabel Pepe</strong>, un documento nominale che attesta la purezza e le specifiche tecniche della tua creazione.
               </p>
               <p>
-                <strong>Purezza Argento 925:</strong> Certifica l'utilizzo esclusivo di Argento Sterling 925 anallergico al 100%, totalmente privo di nichel, piombo e cadmio (conforme alle normative REACH europee).
+                <strong>Purezza Argento 925 & Incisione "IP":</strong> Certifica l'utilizzo esclusivo di Argento Sterling 925 anallergico al 100%, con punzonatura legale "S925" e incisione laser ufficiale delle iniziali del marchio <strong>"IP" (Isabel Pepe)</strong> su ogni gioiello.
               </p>
             </div>
 

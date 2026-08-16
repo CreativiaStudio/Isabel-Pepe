@@ -388,6 +388,10 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <strong className="text-gray-900 font-medium block mb-0.5">✨ Nano-Sigillo E-Coating:</strong>
                     <p>Uno scudo molecolare trasparente e ipoallergenico applicato sopra il metallo. Sigilla la superficie proteggendo il gioiello da acqua, sudore, ossidazione e piccoli graffi quotidiani.</p>
                   </div>
+                  <div>
+                    <strong className="text-gray-900 font-medium block mb-0.5">🏷️ Sigillo di Autenticità & Punzone:</strong>
+                    <p>Ogni singola creazione porta incise a laser le <strong>iniziali ufficiali "IP" (Isabel Pepe)</strong> e la punzonatura di garanzia legale <strong>"S925"</strong> che ne certifica l'autenticità e la purezza.</p>
+                  </div>
                   {product.gemstone && product.gemstone !== 'Nessuna' && (
                     <div>
                       <strong className="text-gray-900 font-medium block mb-0.5">⭐ Pietre & Perle:</strong>
