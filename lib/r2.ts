@@ -1,16 +1,39 @@
-import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
-export const r2Client = new S3Client({
-  region: 'auto',
-  endpoint: `https://${(process.env.R2_ACCOUNT_ID || '').trim()}.r2.cloudflarestorage.com`,
-  credentials: {
-    accessKeyId: (process.env.R2_ACCESS_KEY_ID || '').trim(),
-    secretAccessKey: (process.env.R2_SECRET_ACCESS_KEY || '').trim(),
-  },
-  requestChecksumCalculation: "WHEN_REQUIRED",
-  responseChecksumValidation: "WHEN_REQUIRED",
-  forcePathStyle: true,
+export function getR2Client(): S3Client {
+  const accountId = (process.env.R2_ACCOUNT_ID || '').trim();
+  const accessKeyId = (process.env.R2_ACCESS_KEY_ID || '').trim();
+  const secretAccessKey = (process.env.R2_SECRET_ACCESS_KEY || '').trim();
+
+  if (!accountId || !accessKeyId || !secretAccessKey) {
+    console.warn("Attenzione: Credenziali Cloudflare R2 non ancora caricate:", {
+      hasAccountId: !!accountId,
+      hasAccessKey: !!accessKeyId,
+      hasSecretKey: !!secretAccessKey,
+    });
+  }
+
+  return new S3Client({
+    region: 'auto',
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: {
+      accessKeyId,
+      secretAccessKey,
+    },
+    requestChecksumCalculation: "WHEN_REQUIRED",
+    responseChecksumValidation: "WHEN_REQUIRED",
+    forcePathStyle: true,
+  });
+}
+
+// Proxy getter for backwards compatibility
+export const r2Client = new Proxy({} as S3Client, {
+  get(_target, prop) {
+    const client = getR2Client();
+    const val = (client as any)[prop];
+    return typeof val === 'function' ? val.bind(client) : val;
+  }
 });
 
 export async function uploadToR2(file: File, folder: string = 'products', customName?: string): Promise<string> {
@@ -45,6 +68,7 @@ export async function uploadToR2(file: File, folder: string = 'products', custom
   }
 
   const uint8Array = new Uint8Array(buffer);
+  const client = getR2Client();
   const command = new PutObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME,
     Key: key,
@@ -53,11 +77,10 @@ export async function uploadToR2(file: File, folder: string = 'products', custom
     ContentType: contentType,
   });
 
-  await r2Client.send(command);
+  await client.send(command);
 
-  // Ritorna l'URL pubblico (necessita di R2_PUBLIC_URL in .env)
-  // Se R2_PUBLIC_URL non c'è, mettiamo un segnaposto temporaneo
-  const publicUrlBase = process.env.R2_PUBLIC_URL || 'https://INSERIRE_DOMINIO_PUBBLICO_R2';
+  // Ritorna l'URL pubblico
+  const publicUrlBase = process.env.R2_PUBLIC_URL || 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev';
   return `${publicUrlBase}/${key}`;
 }
 
@@ -65,16 +88,17 @@ export async function renameR2Object(oldKey: string, newKey: string): Promise<bo
   try {
     const bucket = process.env.R2_BUCKET_NAME;
     if (!bucket) return false;
+    const client = getR2Client();
 
     // 1. Copia l'oggetto
-    await r2Client.send(new CopyObjectCommand({
+    await client.send(new CopyObjectCommand({
       Bucket: bucket,
       CopySource: `${bucket}/${oldKey}`,
       Key: newKey
     }));
 
     // 2. Cancella il vecchio oggetto
-    await r2Client.send(new DeleteObjectCommand({
+    await client.send(new DeleteObjectCommand({
       Bucket: bucket,
       Key: oldKey
     }));

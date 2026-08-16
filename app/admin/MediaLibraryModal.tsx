@@ -44,13 +44,34 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
 
   async function loadMedia() {
     setLoading(true);
-    const files = await getMediaLibrary();
-    setMedia(files as MediaFile[]);
-    setLoading(false);
+    try {
+      const res = await fetch('/api/media');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.files && Array.isArray(data.files)) {
+          setMedia(data.files as MediaFile[]);
+          setLoading(false);
+          return;
+        }
+      }
+      // Fallback
+      const files = await getMediaLibrary();
+      setMedia(files as MediaFile[]);
+    } catch (err) {
+      console.error("Error loading media:", err);
+      try {
+        const files = await getMediaLibrary();
+        setMedia(files as MediaFile[]);
+      } catch (fallbackErr) {
+        console.error("Fallback error:", fallbackErr);
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   const handleDownload = async (e: React.MouseEvent, url: string, filename: string) => {
-    e.stopPropagation(); // Evita di selezionare la foto per lo slot quando si clicca il download
+    e.stopPropagation();
     try {
       const response = await fetch(url);
       const blob = await response.blob();
@@ -69,10 +90,12 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
 
   if (!isOpen) return null;
 
-  const filteredMedia = media.filter(m => 
-    m.name.toLowerCase().includes(search.toLowerCase()) || 
-    m.key.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredMedia = media.filter(m => {
+    const isImage = /\.(webp|jpg|jpeg|png|gif|svg|avif)$/i.test(m.key);
+    if (!isImage) return false;
+    const q = search.toLowerCase();
+    return m.name.toLowerCase().includes(q) || m.key.toLowerCase().includes(q);
+  });
 
   return (
     <div 
