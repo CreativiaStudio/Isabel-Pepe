@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Ruler, X, Check, Info, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Ruler, X, Sparkles, Check, Info, ShieldCheck } from 'lucide-react';
 
 export default function RingSizeSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Chiudi premendo ESC
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isModalOpen) {
@@ -19,143 +18,169 @@ export default function RingSizeSection() {
 
   return (
     <div className="mb-8">
-      {/* Box Selezione Misura */}
-      <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-4 rounded-xl">
+      {/* Box Selezione Misura Luxury */}
+      <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-4 sm:p-5 rounded-2xl shadow-sm">
         <div className="flex justify-between items-center mb-3">
-          <span className="text-xs font-semibold uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
-            <span>Misura Disponibile</span>
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#C0A09A]"></span>
+            <span className="font-sans text-xs uppercase tracking-[0.2em] font-semibold text-gray-900">
+              Misura Anello
+            </span>
+          </div>
           <button 
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="text-xs text-[#C0A09A] hover:text-[#A98983] font-medium flex items-center gap-1 hover:underline transition-all"
+            className="text-xs text-[#C0A09A] hover:text-[#9E7D77] font-medium flex items-center gap-1.5 transition-colors group cursor-pointer bg-white px-2.5 py-1 rounded-full border border-[#F0E6E1] shadow-2xs hover:shadow-xs"
           >
-            <Ruler size={13} />
-            <span>Guida alle Misure (Pop-up)</span>
+            <Ruler size={13} className="group-hover:scale-110 transition-transform" />
+            <span className="underline underline-offset-2">Guida alle Taglie (Pop-up)</span>
           </button>
         </div>
 
-        {/* Pill Taglia Unica Selezionata */}
-        <div className="flex items-center gap-3">
-          <div className="border-2 border-gray-900 bg-white px-4 py-2.5 rounded-lg flex items-center gap-3 shadow-sm">
-            <div className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse"></div>
+        {/* Pillola Misura Attiva Selezionata */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="bg-white border-2 border-gray-900 px-4 py-3 rounded-xl flex items-center gap-3 shadow-xs">
+            <div className="w-8 h-8 rounded-lg bg-[#FAF8F5] border border-[#F0E6E1] flex items-center justify-center font-serif text-sm font-bold text-gray-900">
+              6
+            </div>
             <div>
-              <div className="font-serif text-sm font-semibold text-gray-900 flex items-center gap-1.5">
-                <span>Taglia Unica US 6</span>
-                <span className="text-xs font-sans text-gray-500 font-normal">(Misura Italiana 12)</span>
+              <div className="flex items-center gap-2">
+                <span className="font-serif text-sm font-semibold text-gray-900">Taglia Unica US 6</span>
+                <span className="bg-[#F5EBE9] text-[#8A6A64] text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full">
+                  IT 12
+                </span>
               </div>
-              <span className="text-[10px] text-gray-500 block font-light">Ø Diametro interno: 16.5 mm • Circonferenza: 52 mm</span>
+              <span className="text-[11px] text-gray-500 font-light block mt-0.5">
+                Diametro interno: <strong>16.5 mm</strong> • Circonferenza: <strong>52 mm</strong>
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Avviso Trasparenza */}
-        <p className="text-[11px] text-gray-500 font-light mt-2.5 leading-relaxed flex items-start gap-1.5">
-          <Info size={13} className="text-[#C0A09A] shrink-0 mt-0.5" />
-          <span>
-            Creazione realizzata in <strong>Taglia Unica Standard US 6</strong> (la misura femminile più versatile per anulare, medio o indice).
-          </span>
-        </p>
+        {/* Informazione Trasparenza & Vestibilità */}
+        <div className="mt-3 pt-3 border-t border-[#F0E6E1]/70 flex items-start gap-2 text-xs text-gray-600 font-light leading-relaxed">
+          <Sparkles size={14} className="text-[#C0A09A] shrink-0 mt-0.5" />
+          <p>
+            Questo anello è realizzato nella <strong>misura standard femminile US 6 (IT 12)</strong>, la taglia più versatile e confortevole per anulare, medio o indice.
+          </p>
+        </div>
       </div>
 
-      {/* POPUP / MODAL GUIDA MISURE ANIELLO */}
+      {/* POPUP / MODAL INTERATTIVO GUIDA TAGLIE */}
       {isModalOpen && (
         <div 
-          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-200"
           onClick={() => setIsModalOpen(false)}
         >
           <div 
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-200"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden border border-gray-200 animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header Modal */}
-            <div className="px-6 py-4 border-b flex justify-between items-center bg-[#FAF8F5]">
-              <div className="flex items-center gap-2.5 text-gray-900">
-                <div className="p-2 bg-[#F5EBE9] text-[#C0A09A] rounded-lg">
-                  <Ruler size={18} />
+            <div className="px-6 py-5 border-b flex justify-between items-center bg-[#FAF8F5] shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#F5EBE9] text-[#C0A09A] flex items-center justify-center shadow-2xs">
+                  <Ruler size={20} />
                 </div>
                 <div>
-                  <h3 className="font-serif text-base uppercase tracking-wider text-gray-900">Guida alla Misura Anello</h3>
-                  <p className="text-[11px] text-gray-500 font-light">Specifiche e calcolo della Taglia Unica US 6</p>
+                  <h3 className="font-serif text-lg uppercase tracking-wider text-gray-900">Guida alla Misura Anello</h3>
+                  <p className="text-xs text-gray-500 font-light">Specifiche e verifica della Taglia Unica US 6 (IT 12)</p>
                 </div>
               </div>
               <button 
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="p-1.5 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-200/60 transition"
+                className="p-2 text-gray-400 hover:text-gray-900 rounded-full hover:bg-gray-200/60 transition cursor-pointer"
+                title="Chiudi (ESC)"
               >
-                <X size={18} />
+                <X size={20} />
               </button>
             </div>
 
-            {/* Contenuto Modal */}
-            <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+            {/* Contenuto Scrollabile */}
+            <div className="p-6 space-y-6 overflow-y-auto">
               
-              {/* Tabella Equivalenze */}
-              <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1]">
-                <span className="text-[10px] uppercase tracking-widest text-[#C0A09A] font-semibold block mb-2">
-                  Dati Tecnici di Questa Creazione
-                </span>
-                <div className="grid grid-cols-2 gap-3 text-xs">
-                  <div className="bg-white p-3 rounded-lg border border-gray-100">
-                    <span className="text-gray-400 text-[10px] uppercase block">Misura USA</span>
-                    <strong className="text-base text-gray-900 font-serif">US 6</strong>
+              {/* Box Scheda Tecnica Misura */}
+              <div className="bg-[#FAF8F5] p-5 rounded-2xl border border-[#F0E6E1]">
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold">
+                    Dati di Calibrazione Ufficiale
+                  </span>
+                  <span className="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Taglia di Collezione
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-center">
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Misura USA</span>
+                    <strong className="text-xl text-gray-900 font-serif">US 6</strong>
                   </div>
-                  <div className="bg-white p-3 rounded-lg border border-gray-100">
-                    <span className="text-gray-400 text-[10px] uppercase block">Misura Italia / Europa</span>
-                    <strong className="text-base text-gray-900 font-serif">IT 12 <span className="text-xs font-sans text-gray-400">(EU 52)</span></strong>
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Misura Italia (IT / EU)</span>
+                    <strong className="text-xl text-gray-900 font-serif">IT 12 <span className="text-xs font-sans text-gray-400 font-normal">(52)</span></strong>
                   </div>
-                  <div className="bg-white p-3 rounded-lg border border-gray-100">
-                    <span className="text-gray-400 text-[10px] uppercase block">Diametro Interno</span>
-                    <strong className="text-sm text-gray-900 font-mono font-bold">16.5 mm (1.65 cm)</strong>
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Diametro Interno</span>
+                    <strong className="text-sm text-[#C0A09A] font-mono font-bold">16.5 mm (1.65 cm)</strong>
                   </div>
-                  <div className="bg-white p-3 rounded-lg border border-gray-100">
-                    <span className="text-gray-400 text-[10px] uppercase block">Circonferenza Dito</span>
-                    <strong className="text-sm text-gray-900 font-mono font-bold">51.8 - 52.0 mm</strong>
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Circonferenza Dito</span>
+                    <strong className="text-sm text-gray-800 font-mono font-bold">51.8 - 52.0 mm</strong>
                   </div>
                 </div>
               </div>
 
-              {/* Come verificare in 30 secondi */}
-              <div className="space-y-3 text-xs text-gray-600 font-light leading-relaxed">
-                <h4 className="font-serif text-sm text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+              {/* Istruzioni pratiche in 2 passaggi */}
+              <div className="space-y-3.5">
+                <h4 className="font-serif text-sm text-gray-900 uppercase tracking-wider flex items-center gap-2">
                   <Sparkles size={14} className="text-[#C0A09A]" />
-                  Come verificare che sia la tua misura:
+                  Come verificare la tua misura a casa:
                 </h4>
 
-                <div className="border border-gray-100 p-3.5 rounded-lg bg-gray-50/50 space-y-1.5">
-                  <strong className="text-gray-900 block font-medium">Metodo 1 • Con un anello che possiedi già</strong>
-                  <p className="text-gray-600">
-                    Prendi un anello della giusta misura e misura con un righello il <strong>diametro interno</strong> da bordo a bordo (escludendo lo spessore del metallo). Se misura <strong>circa 16.5 mm</strong>, l'anello calzerà alla perfezione.
+                {/* Metodo 1 */}
+                <div className="border border-gray-100 bg-gray-50/70 p-4 rounded-xl space-y-1.5">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold text-xs">
+                    <span className="w-5 h-5 rounded-full bg-[#C0A09A] text-white text-[10px] flex items-center justify-center font-bold">1</span>
+                    <span>Con un anello che indossi già (Metodo più preciso)</span>
+                  </div>
+                  <p className="text-xs text-gray-600 font-light leading-relaxed pl-7">
+                    Prendi un anello della misura giusta e misura con un righello il <strong>diametro interno</strong> (la distanza da bordo a bordo interno, senza considerare lo spessore del metallo). Se misura <strong>circa 16.5 mm</strong>, la taglia US 6 è perfetta!
                   </p>
                 </div>
 
-                <div className="border border-gray-100 p-3.5 rounded-lg bg-gray-50/50 space-y-1.5">
-                  <strong className="text-gray-900 block font-medium">Metodo 2 • Con una striscia di carta o filo</strong>
-                  <p className="text-gray-600">
-                    Avvolgi una strisciolina di carta attorno alla base del dito desiderato, segna con una penna il punto in cui si sovrappone e misura la lunghezza con un righello. Se corrisponde a <strong>circa 5.2 cm (52 mm)</strong>, la taglia US 6 è esatta.
+                {/* Metodo 2 */}
+                <div className="border border-gray-100 bg-gray-50/70 p-4 rounded-xl space-y-1.5">
+                  <div className="flex items-center gap-2 text-gray-900 font-semibold text-xs">
+                    <span className="w-5 h-5 rounded-full bg-[#C0A09A] text-white text-[10px] flex items-center justify-center font-bold">2</span>
+                    <span>Con una striscia di carta o un filo</span>
+                  </div>
+                  <p className="text-xs text-gray-600 font-light leading-relaxed pl-7">
+                    Avvolgi una strisciolina di carta attorno al dito, segna con una penna il punto di incontro e stendila su un righello. Se misura <strong>circa 5.2 cm (52 mm)</strong>, corrisponde alla taglia US 6.
                   </p>
                 </div>
               </div>
 
-              {/* Consiglio di Stile & Vestibilità */}
-              <div className="bg-[#FAF8F5] p-3.5 rounded-lg border border-[#F0E6E1] text-[11px] text-gray-600 space-y-1">
-                <span className="font-semibold text-gray-900 block">✨ Consiglio di Vestibilità:</span>
-                <p>
-                  La taglia US 6 (IT 12) è la misura standard femminile più richiesta: è ideale per l'anulare della maggior parte delle mani, ma può essere indossata splendidamente anche su medio o indice a seconda della conformazione della mano.
+              {/* Consiglio Vestibilità */}
+              <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1] text-xs text-gray-600 space-y-1">
+                <span className="font-semibold text-gray-900 block flex items-center gap-1.5">
+                  <Info size={14} className="text-[#C0A09A]" /> Consiglio di Vestibilità:
+                </span>
+                <p className="font-light leading-relaxed">
+                  La taglia US 6 (IT 12) è la misura standard regina della gioielleria femminile: se per l'anulare della tua mano dovesse risultare leggermente comoda o aderente, calzerà con grazia su dito medio o indice.
                 </p>
               </div>
 
             </div>
 
             {/* Footer Modal */}
-            <div className="p-4 bg-gray-50 border-t flex justify-end">
+            <div className="p-4 bg-gray-50 border-t flex justify-end shrink-0">
               <button 
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="bg-[#1A1A1A] hover:bg-[#C0A09A] text-white text-xs uppercase tracking-widest font-semibold px-6 py-2.5 rounded-lg transition-colors flex items-center gap-1.5"
+                className="bg-[#1A1A1A] hover:bg-[#C0A09A] text-white text-xs uppercase tracking-widest font-semibold px-6 py-3 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow cursor-pointer"
               >
-                <Check size={14} /> Ho Capito
+                <Check size={14} /> Ho Verificato la Mia Misura
               </button>
             </div>
 
