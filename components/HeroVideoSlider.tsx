@@ -12,6 +12,7 @@ interface Slide {
   description: string;
   ctaText: string;
   ctaLink: string;
+  mobileObjectPosition?: string;
 }
 
 const slides: Slide[] = [
@@ -24,6 +25,7 @@ const slides: Slide[] = [
     description: 'La nuova collezione. Lusso accessibile senza tempo disegnato con etica e passione.',
     ctaText: 'Scopri la Collezione',
     ctaLink: '/shop',
+    mobileObjectPosition: 'object-[75%_center]',
   },
   {
     id: 2,
@@ -34,6 +36,7 @@ const slides: Slide[] = [
     description: 'Pietre ad altissima rifrazione con Taglio Brillante su Argento 925 e finiture in Oro 18K.',
     ctaText: 'Esplora i Gioielli',
     ctaLink: '/shop',
+    mobileObjectPosition: 'object-[85%_center]',
   },
   {
     id: 3,
@@ -44,6 +47,7 @@ const slides: Slide[] = [
     description: 'Creazioni senza tempo nate per illuminare ed esaltare ogni momento della tua vita.',
     ctaText: 'Vedi i Set Royale',
     ctaLink: '/shop?category=Set',
+    mobileObjectPosition: 'object-[94%_center]',
   },
 ];
 
@@ -70,7 +74,7 @@ export default function HeroVideoSlider() {
   return (
     <section className="relative w-full h-[88vh] sm:h-[90vh] md:h-screen overflow-hidden bg-[#181312] flex items-end pb-24 md:pb-0 md:items-center">
       
-      {/* 1. LAYER VIDEO — Inquadratura mobile calibrata sulla modella (78% a destra) e tonalità calda costante */}
+      {/* 1. LAYER VIDEO — Inquadratura mobile calibrata per ciascuna modella (fino al 94% a destra per orecchino) */}
       <div className="absolute inset-0 overflow-hidden bg-[#181312]">
         {slides.map((slide, index) => {
           const isActive = index === currentSlide;
@@ -98,7 +102,7 @@ export default function HeroVideoSlider() {
                 muted
                 playsInline
                 preload="auto"
-                className="w-full h-full object-cover object-[78%_center] md:object-center filter brightness-[1.02] contrast-[1.04] saturate-[1.10]"
+                className={`w-full h-full object-cover ${slide.mobileObjectPosition || 'object-[85%_center]'} md:object-center filter brightness-[1.02] contrast-[1.04] saturate-[1.10]`}
               />
             </div>
           );
