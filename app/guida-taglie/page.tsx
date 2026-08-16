@@ -71,22 +71,37 @@ export default function GuidaTagliePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-xs text-gray-700 font-light">
-                {ringSizes.map((row, idx) => (
-                  <tr key={row.sizeIT} className={idx % 2 === 0 ? 'bg-white' : 'bg-[#FAF8F5]/50 hover:bg-[#FAF8F5] transition-colors'}>
-                    <td className="py-3.5 px-6 font-semibold font-serif text-sm text-gray-900">
-                      Taglia {row.sizeIT}
-                    </td>
-                    <td className="py-3.5 px-6 font-mono text-[#C0A09A] font-medium">
-                      {row.diameterMM}
-                    </td>
-                    <td className="py-3.5 px-6 font-mono">
-                      {row.circumferenceMM}
-                    </td>
-                    <td className="py-3.5 px-6 text-gray-500">
-                      US {row.sizeUS}
-                    </td>
-                  </tr>
-                ))}
+                {ringSizes.map((row, idx) => {
+                  const isStandardSize = row.sizeIT === '12';
+                  return (
+                    <tr 
+                      key={row.sizeIT} 
+                      className={
+                        isStandardSize 
+                          ? 'bg-[#F5EBE9]/80 border-2 border-[#C0A09A] font-medium' 
+                          : (idx % 2 === 0 ? 'bg-white' : 'bg-[#FAF8F5]/50 hover:bg-[#FAF8F5] transition-colors')
+                      }
+                    >
+                      <td className="py-3.5 px-6 font-semibold font-serif text-sm text-gray-900 flex items-center gap-2">
+                        <span>Taglia {row.sizeIT}</span>
+                        {isStandardSize && (
+                          <span className="bg-[#C0A09A] text-white text-[9px] uppercase tracking-wider font-sans font-bold px-2 py-0.5 rounded-full">
+                            Taglia Collezione Isabel Pepe
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-6 font-mono text-[#C0A09A] font-bold">
+                        {row.diameterMM}
+                      </td>
+                      <td className="py-3.5 px-6 font-mono">
+                        {row.circumferenceMM}
+                      </td>
+                      <td className="py-3.5 px-6 text-gray-900 font-medium">
+                        US {row.sizeUS}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

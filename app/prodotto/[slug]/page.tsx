@@ -7,6 +7,7 @@ import { ChevronRight, ShieldCheck, Truck, RotateCcw, Gift, Heart } from 'lucide
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductGallery from '@/components/ProductGallery';
 import StickyMobileAddToCart from '@/components/StickyMobileAddToCart';
+import RingSizeSection from '@/components/RingSizeSection';
 
 // Questa funzione genera in automatico i Meta Tag SEO per Google e Facebook
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -201,20 +202,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             )}
 
             {/* Misure (Se è un anello) */}
-            {product.category === 'Anelli' && product.sizes && product.sizes.length > 0 && (
-              <div className="mb-8">
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-sm font-medium text-gray-900">Seleziona Misura</span>
-                  <button className="text-[11px] underline text-gray-500 hover:text-gray-900">Guida alle Taglie</button>
-                </div>
-                <div className="flex flex-wrap gap-3">
-                  {product.sizes.map((size: string | number) => (
-                    <button key={size} className="w-12 h-12 border border-gray-200 rounded flex items-center justify-center text-sm hover:border-gray-900 transition">
-                      {size}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            {(product.category === 'Anelli' || product.name.toLowerCase().includes('anello')) && (
+              <RingSizeSection />
             )}
 
             {/* Bottone Aggiungi al Carrello Reattivo */}
