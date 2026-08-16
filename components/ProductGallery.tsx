@@ -69,8 +69,8 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
         </div>
       </div>
 
-      {/* GALLERIA DESKTOP: MASONRY ZARA-STYLE (>= md) */}
-      <div className="hidden md:block w-full lg:w-3/5">
+      {/* GALLERIA DESKTOP: MASONRY ZARA-STYLE STICKY (>= md) */}
+      <div className="hidden md:block w-full lg:w-3/5 lg:sticky lg:top-32 self-start">
         {/* LAYOUT 1 FOTO */}
         {validImages.length === 1 && (
           <div 
