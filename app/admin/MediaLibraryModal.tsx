@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { getMediaLibrary } from './actions';
-import { X, Search, Image as ImageIcon, RotateCcw, Download } from 'lucide-react';
+import { X, Search, Image as ImageIcon, RotateCcw, Download, Upload, Loader2, Check } from 'lucide-react';
 
 interface MediaFile {
   key: string;
@@ -22,16 +22,18 @@ interface Props {
 export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '' }: Props) {
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState(initialSearch);
+  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setSearch(initialSearch); // Resetta la ricerca ogni volta che si apre
+      setSearch(initialSearch);
       loadMedia();
     }
   }, [isOpen, initialSearch]);
 
-  // Chiudi premendo il tasto ESC
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
@@ -45,7 +47,7 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
   async function loadMedia() {
     setLoading(true);
     try {
-      const res = await fetch('/api/media');
+      const res = await fetch('/api/media', { cache: 'no-store' });
       if (res.ok) {
         const data = await res.json();
         if (data.files && Array.isArray(data.files)) {
@@ -54,7 +56,6 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
           return;
         }
       }
-      // Fallback
       const files = await getMediaLibrary();
       setMedia(files as MediaFile[]);
     } catch (err) {
@@ -69,6 +70,40 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
       setLoading(false);
     }
   }
+
+  const handleModalUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('folder', 'products');
+      formData.append('customName', `isabel-pepe-media-${Date.now()}`);
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.url) {
+        throw new Error(data.error || 'Errore durante il caricamento');
+      }
+
+      // Reload media library and automatically select the newly uploaded image
+      await loadMedia();
+      onSelect(data.url);
+      onClose();
+    } catch (err: any) {
+      console.error("Modal upload error:", err);
+      alert(`Errore caricamento: ${err.message}`);
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const handleDownload = async (e: React.MouseEvent, url: string, filename: string) => {
     e.stopPropagation();
@@ -93,7 +128,8 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
   const filteredMedia = media.filter(m => {
     const isImage = /\.(webp|jpg|jpeg|png|gif|svg|avif)$/i.test(m.key);
     if (!isImage) return false;
-    const q = search.toLowerCase();
+    const q = search.toLowerCase().trim();
+    if (!q) return true;
     return m.name.toLowerCase().includes(q) || m.key.toLowerCase().includes(q);
   });
 
@@ -114,18 +150,37 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
               <ImageIcon className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-serif tracking-wide text-gray-900">Libreria Media R2</h2>
-              <p className="text-xs text-gray-500 font-sans">Seleziona un'immagine per lo slot o usa l'icona Download per scaricarla sul PC</p>
+              <h2 className="text-lg font-serif tracking-wide text-gray-900">Libreria Media Cloudflare R2</h2>
+              <p className="text-xs text-gray-500 font-sans">Clicca su una foto per associarla allo slot selezionato</p>
             </div>
           </div>
-          <button 
-            type="button"
-            onClick={onClose} 
-            className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-200/60 rounded-full transition-colors"
-            title="Chiudi (ESC)"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          
+          <div className="flex items-center gap-2">
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              accept="image/*" 
+              onChange={handleModalUpload} 
+              className="hidden" 
+            />
+            <button 
+              type="button"
+              disabled={uploading}
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-[#1A1A1A] hover:bg-[#C0A09A] text-white text-xs px-3 py-1.5 rounded-md font-medium transition flex items-center gap-1.5 shadow-sm disabled:opacity-50"
+            >
+              {uploading ? <Loader2 size={13} className="animate-spin" /> : <Upload size={13} />}
+              {uploading ? 'Caricamento...' : 'Carica Nuova Foto'}
+            </button>
+            <button 
+              type="button"
+              onClick={onClose} 
+              className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-200/60 rounded-full transition-colors"
+              title="Chiudi (ESC)"
+            >
+              <X className="w-6 h-6" />
+            </button>
+          </div>
         </div>
 
         {/* Toolbar */}
@@ -134,7 +189,7 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input 
               type="text" 
-              placeholder="Cerca per nome file o codice SKU..." 
+              placeholder="Cerca per nome gioiello o SKU..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-9 pr-8 py-2 text-sm border border-gray-200 rounded-lg outline-none focus:border-[#C0A09A] focus:ring-2 focus:ring-[#C0A09A]/20 transition-all"
@@ -162,7 +217,7 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
               </button>
             )}
             <span className="bg-gray-100 px-3 py-1 rounded-full text-gray-700 font-medium">
-              {filteredMedia.length} file trovati
+              {filteredMedia.length} file trovati in R2
             </span>
           </div>
         </div>
@@ -172,25 +227,32 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
           {loading ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400 space-y-4">
               <div className="w-8 h-8 border-4 border-[#C0A09A] border-t-transparent rounded-full animate-spin"></div>
-              <p className="text-sm font-sans">Caricamento media da Cloudflare R2...</p>
+              <p className="text-sm font-sans">Connessione e lettura da Cloudflare R2...</p>
             </div>
           ) : filteredMedia.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400 py-12">
               <ImageIcon className="w-16 h-16 mb-4 opacity-40 text-gray-300" />
-              <p className="text-base font-medium text-gray-700 mb-1">Nessun file trovato per "{search}"</p>
-              <p className="text-xs text-gray-500 mb-4">Prova a cancellare i filtri per vedere tutti gli asset in libreria.</p>
-              <button 
-                type="button"
-                onClick={() => setSearch('')}
-                className="bg-white border border-gray-200 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm"
-              >
-                Resetta Ricerca
-              </button>
+              <p className="text-base font-medium text-gray-700 mb-1">
+                {search ? `Nessun file trovato per "${search}"` : 'Nessuna immagine trovata su R2'}
+              </p>
+              <p className="text-xs text-gray-500 mb-4">
+                {search ? 'Prova a cancellare i filtri per vedere tutti gli asset.' : 'Carica la tua prima foto premendo il tasto "Carica Nuova Foto" in alto.'}
+              </p>
+              {search && (
+                <button 
+                  type="button"
+                  onClick={() => setSearch('')}
+                  className="bg-white border border-gray-200 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-xs font-medium transition shadow-sm"
+                >
+                  Resetta Ricerca
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {filteredMedia.map((file) => {
                 const isVideo = file.name.endsWith('.mp4') || file.name.endsWith('.webm');
+                const safeUrl = encodeURI(file.url);
                 return (
                   <div 
                     key={file.key} 
@@ -211,9 +273,14 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
                     </button>
 
                     {isVideo ? (
-                      <video src={file.url} className="w-full h-full object-cover" />
+                      <video src={safeUrl} className="w-full h-full object-cover" />
                     ) : (
-                      <img src={file.url} alt={file.name} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      <img 
+                        src={safeUrl} 
+                        alt={file.name} 
+                        loading="lazy" 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                      />
                     )}
                     
                     {/* Hover Info Overlay */}
@@ -238,17 +305,6 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
               })}
             </div>
           )}
-        </div>
-
-        {/* Footer */}
-        <div className="px-6 py-3 border-t bg-white flex justify-end shrink-0">
-          <button 
-            type="button"
-            onClick={onClose}
-            className="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-lg text-xs transition"
-          >
-            Chiudi (ESC)
-          </button>
         </div>
 
       </div>

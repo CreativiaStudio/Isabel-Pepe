@@ -255,6 +255,9 @@ export async function updateFullProduct(id: string, formData: FormData) {
     if (error) throw new Error(error.message);
 
     revalidatePath('/admin');
+    revalidatePath('/shop');
+    revalidatePath('/');
+    revalidatePath(`/prodotto/${productSlug}`);
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
