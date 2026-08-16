@@ -104,12 +104,12 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
           </div>
         )}
 
-        {/* LAYOUT 3 FOTO (1 GRANDE + 2 PICCOLE A DESTRA) */}
+        {/* LAYOUT 3 FOTO (1 GRANDE + 2 PICCOLE A DESTRA CON ALLINEAMENTO PERFETTO) */}
         {validImages.length === 3 && (
-          <div className="grid grid-cols-5 gap-4">
+          <div className="grid grid-cols-5 gap-4 items-stretch">
             <div 
               onClick={() => openLightbox(0)} 
-              className="col-span-3 bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-[4/5] rounded-xl shadow-sm"
+              className="col-span-3 bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-[4/5] rounded-2xl shadow-sm"
             >
               <img 
                 src={validImages[0]} 
@@ -117,17 +117,17 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
               />
             </div>
-            <div className="col-span-2 flex flex-col gap-4">
+            <div className="col-span-2 grid grid-rows-2 gap-4 h-full">
               {validImages.slice(1, 3).map((img, idx) => (
                 <div 
                   key={idx} 
                   onClick={() => openLightbox(idx + 1)} 
-                  className="flex-1 bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group rounded-xl shadow-sm min-h-[140px]"
+                  className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group rounded-2xl shadow-sm w-full h-full"
                 >
                   <img 
                     src={img} 
                     alt={`${productName} - Vista ${idx + 2}`} 
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
                   />
                 </div>
               ))}
@@ -142,7 +142,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
               <div 
                 key={idx} 
                 onClick={() => openLightbox(idx)} 
-                className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-square rounded-xl shadow-sm"
+                className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-square rounded-2xl shadow-sm"
               >
                 <img 
                   src={img} 
@@ -154,38 +154,53 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
           </div>
         )}
 
-        {/* LAYOUT 5 FOTO (MASONRY COMPLETO) */}
+        {/* LAYOUT 5 FOTO (SIMMETRICO E PERFETTAMENTE ALLINEATO) */}
         {validImages.length >= 5 && (
-          <div className="grid grid-cols-5 gap-4">
-            <div className="col-span-3 flex flex-col gap-4">
+          <div className="space-y-4">
+            {/* Blocco Superiore: 1 Grande + 2 Piccole Allineate */}
+            <div className="grid grid-cols-5 gap-4 items-stretch">
               <div 
                 onClick={() => openLightbox(0)} 
-                className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-[4/5] rounded-xl shadow-sm"
+                className="col-span-3 bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-[4/5] rounded-2xl shadow-sm"
               >
-                <img src={validImages[0]} alt={`${productName} - Vista 1`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img 
+                  src={validImages[0]} 
+                  alt={`${productName} - Vista 1`} 
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                />
               </div>
-              {validImages[3] && (
-                <div 
-                  onClick={() => openLightbox(3)} 
-                  className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-square rounded-xl shadow-sm"
-                >
-                  <img src={validImages[3]} alt={`${productName} - Vista 4`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                </div>
-              )}
-            </div>
-            <div className="col-span-2 flex flex-col gap-4">
-              {[validImages[1], validImages[2], validImages[4]].filter(Boolean).map((img, idx) => {
-                const actualIdx = img === validImages[1] ? 1 : img === validImages[2] ? 2 : 4;
-                return (
+              <div className="col-span-2 grid grid-rows-2 gap-4 h-full">
+                {[validImages[1], validImages[2]].map((img, idx) => (
                   <div 
                     key={idx} 
-                    onClick={() => openLightbox(actualIdx)} 
-                    className="flex-1 bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group rounded-xl shadow-sm min-h-[140px]"
+                    onClick={() => openLightbox(idx + 1)} 
+                    className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group rounded-2xl shadow-sm w-full h-full"
                   >
-                    <img src={img} alt={`${productName} - Vista ${actualIdx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <img 
+                      src={img} 
+                      alt={`${productName} - Vista ${idx + 2}`} 
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                    />
                   </div>
-                );
-              })}
+                ))}
+              </div>
+            </div>
+
+            {/* Blocco Inferiore: Le altre 2 foto affiancate al 50% */}
+            <div className="grid grid-cols-2 gap-4">
+              {[validImages[3], validImages[4]].filter(Boolean).map((img, idx) => (
+                <div 
+                  key={idx} 
+                  onClick={() => openLightbox(idx + 3)} 
+                  className="bg-[#F9F8F6] relative cursor-zoom-in overflow-hidden group aspect-square rounded-2xl shadow-sm"
+                >
+                  <img 
+                    src={img} 
+                    alt={`${productName} - Vista ${idx + 4}`} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                  />
+                </div>
+              ))}
             </div>
           </div>
         )}
