@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { HeartHandshake, Truck, Heart } from 'lucide-react';
+import { HeartHandshake, Heart } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -227,17 +227,12 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Impegno & Spedizioni */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-gray-400 font-light w-full lg:w-auto">
+          {/* Impegno Etico */}
+          <div className="flex items-center justify-center text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-gray-400 font-light w-full lg:w-auto">
             <Link href="/impegno-animali" className="text-[#C0A09A] hover:text-white transition-colors flex items-center justify-center gap-2 font-medium text-center">
               <HeartHandshake size={15} className="shrink-0" />
-              <span className="text-center">L'Arte del Dono — Insieme per gli Animali</span>
+              <span className="text-center">L'Arte del Dono — Il 5% per gli Animali</span>
             </Link>
-            <span className="hidden sm:inline text-gray-600">•</span>
-            <span className="flex items-center justify-center gap-2 text-center">
-              <Truck size={15} className="text-[#C0A09A] shrink-0" />
-              <span className="text-center">Spedizioni Express Packlink & Poste Italiane</span>
-            </span>
           </div>
 
         </div>
