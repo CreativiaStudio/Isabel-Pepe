@@ -1,5 +1,16 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Ordine Confermato',
+  description:
+    'Grazie per il tuo acquisto su Isabel Pepe. Il tuo ordine è stato confermato con successo e stiamo preparando i tuoi gioielli con la massima cura.',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default function SuccessPage() {
   return (

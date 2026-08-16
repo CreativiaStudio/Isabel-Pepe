@@ -49,7 +49,7 @@ async function mergeSet() {
     category: 'Set',
     carats: 'Variabile',
     plating: 'Oro 18K 1um',
-    gemstone: 'Moissanite con certificato GRA',
+    gemstone: 'Pietre di Pura Luce ad Altissima Rifrazione (Taglio Brillante VVS1 D-Color)',
     description: 'Parure completa Set Vivienne. Include Collana e Orecchini abbinati a prezzo speciale.',
     materials: 'Argento 925 nichel free',
     stripe_product_id: stripeProduct.id,

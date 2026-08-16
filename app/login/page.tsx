@@ -91,9 +91,9 @@ export default function LoginPage() {
             </button>
           </div>
 
-          <h3 className="font-serif text-2xl tracking-widest uppercase mb-8 text-[#1A1A1A]">
-            {isLogin ? 'Bentornato' : 'Nuovo Cliente'}
-          </h3>
+          <h1 className="font-serif text-2xl tracking-widest uppercase mb-8 text-[#1A1A1A]">
+            {isLogin ? 'Accedi al tuo Account' : 'Crea il tuo Account'}
+          </h1>
 
           {error && (
             <div className="bg-red-50 text-red-500 p-4 text-[11px] uppercase tracking-widest mb-6">

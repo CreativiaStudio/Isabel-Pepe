@@ -1,4 +1,16 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Informativa Cookie",
+  description:
+    "Informativa completa sui cookie tecnici e analitici utilizzati sul sito Isabel Pepe per garantire una navigazione sicura ed un acquisto fluido.",
+  openGraph: {
+    title: "Informativa Cookie | Isabel Pepe",
+    description:
+      "Informativa completa sui cookie tecnici e analitici utilizzati sul sito Isabel Pepe per garantire una navigazione sicura ed un acquisto fluido.",
+  },
+};
 
 export default function CookiePolicyPage() {
   return (
@@ -39,7 +51,7 @@ export default function CookiePolicyPage() {
               3. Gestione dei Consensi
             </h2>
             <p>
-              Puoi modificare o revocare il tuo consenso all'uso dei cookie in qualsiasi momento attraverso le impostazioni del tuo browser o inviando una richiesta a <a href="mailto:sviluppo@creativiastudio.com" className="text-[#C0A09A] underline">sviluppo@creativiastudio.com</a>.
+              Puoi modificare o revocare il tuo consenso all'uso dei cookie in qualsiasi momento attraverso le impostazioni del tuo browser o inviando una richiesta a <a href="mailto:privacy@isabelpepe.com" className="text-[#C0A09A] underline">privacy@isabelpepe.com</a>.
             </p>
           </section>
         </div>

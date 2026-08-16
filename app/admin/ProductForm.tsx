@@ -175,17 +175,17 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                 <label className="block text-xs font-medium text-gray-700 mb-1">Placcatura</label>
                 <select name="plating" defaultValue={initialData?.plating || 'Nessuna'} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 bg-white">
                   <option value="Nessuna">Nessuna</option>
-                  <option value="Oro 18K 1 micron + e-coating">Oro 18K 1 micron + e-coating</option>
-                  <option value="Rodio + 1 micron">Rodio + 1 micron</option>
+                  <option value="Placcatura Oro 18K (1.0µm) + Nano-Coating (1.0µm)">Placcatura Oro 18K (1.0µm) + Nano-Coating (1.0µm)</option>
+                  <option value="Finitura Rodio Puro (0.1µm) + Nano-Coating (1.0µm)">Finitura Rodio Puro (0.1µm) + Nano-Coating (1.0µm)</option>
                 </select>
               </div>
               <div className="w-1/3">
                 <label className="block text-xs font-medium text-gray-700 mb-1">Pietre</label>
                 <select name="gemstone" defaultValue={initialData?.gemstone || 'Nessuna'} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 bg-[#FAF8F7]">
                   <option value="Nessuna">Nessuna</option>
-                  <option value="Moissanite con certificato GRA">Moissanite con certificato GRA</option>
-                  <option value="Perle di acqua dolce">Perle di acqua dolce</option>
-                  <option value="Zirconi">Zirconi</option>
+                  <option value="Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)">Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)</option>
+                  <option value="Perle Naturali d'Acqua Dolce Selezionate a Mano">Perle Naturali d'Acqua Dolce Selezionate a Mano</option>
+                  <option value="Cristalli di Luce Rosa (Taglio Brillante)">Cristalli di Luce Rosa (Taglio Brillante)</option>
                 </select>
               </div>
               <div className="w-1/3">

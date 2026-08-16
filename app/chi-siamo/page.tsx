@@ -1,6 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Sparkles, HeartHandshake, ShieldCheck, Gem, Compass, Feather, Heart } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "Chi Siamo — L'Arte di Splendere",
+  description:
+    "Scopri la storia e i valori di Isabel Pepe: gioielli Demi-Fine in Argento 925, placcatura Oro 18K, pietre di pura luce e impegno per gli animali.",
+  openGraph: {
+    title: "Chi Siamo — L'Arte di Splendere | Isabel Pepe",
+    description:
+      "Scopri la storia e i valori di Isabel Pepe: gioielli Demi-Fine in Argento 925, placcatura Oro 18K, pietre di pura luce e impegno per gli animali.",
+  },
+};
 
 export default function ChiSiamoPage() {
   return (
@@ -19,7 +31,7 @@ export default function ChiSiamoPage() {
         </p>
       </section>
 
-      {/* MANIFESTO / MUSA ISPRATRICE */}
+      {/* MANIFESTO / MUSA ISPIRATRICE */}
       <section className="px-6 mb-24 max-w-5xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
@@ -31,7 +43,7 @@ export default function ChiSiamoPage() {
               Isabel è la donna che non ha bisogno di ostentare per farsi notare. È colei che cerca la luce nei dettagli impercettibili, che riconosce la vera qualità al primo tocco e che sceglie l'eterno al posto dell'effimero.
             </p>
             <p>
-              <strong>Elena</strong> ha fondato questo brand con una visione nitida e coraggiosa: portare la maestria e l'emozione dell'alta gioielleria nella vita di tutti i giorni. I gioielli non dovrebbero rimanere custoditi nell'oscurità di una cassaforte per le occasioni speciali, ma accompagnarti nelle tue avventure quotidiane.
+              <strong>Elena e Mario</strong> hanno fondato questo brand con una visione nitida e coraggiosa: portare l'emozione ed il valore del gioiello demi-fine nella vita di tutti i giorni. I gioielli non dovrebbero rimanere custoditi nell'oscurità di una cassaforte, ma accompagnarti nelle tue avventure quotidiane.
             </p>
           </div>
 
@@ -43,7 +55,7 @@ export default function ChiSiamoPage() {
               </span>
               <h3 className="font-serif text-2xl text-gray-900 tracking-widest uppercase">ISABEL</h3>
               <p className="text-xs text-gray-500 font-light mt-2 leading-relaxed">
-                Rappresenta l'eleganza senza tempo, la grazia, la luce della Moissanite più pura e le linee armoniose dell'alta oreficeria.
+                Rappresenta l'eleganza senza tempo, la grazia, la luce delle pietre più pure ed un design sofisticato.
               </p>
             </div>
 
@@ -53,7 +65,7 @@ export default function ChiSiamoPage() {
               </span>
               <h3 className="font-serif text-2xl text-gray-900 tracking-widest uppercase">PEPE</h3>
               <p className="text-xs text-gray-500 font-light mt-2 leading-relaxed">
-                Rappresenta il carattere, la forza, la realtà di ogni giorno, la determinazione e la concretezza di materiali preziosi creati per durare.
+                Rappresenta il carattere, la forza, la realtà di ogni giorno, la determinazione e la concretezza di creazioni progettate per durare.
               </p>
             </div>
           </div>
@@ -111,9 +123,9 @@ export default function ChiSiamoPage() {
             <div className="w-12 h-12 rounded-full bg-[#FAF8F5] text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
               <Gem size={22} strokeWidth={1.5} />
             </div>
-            <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-2">Moissanite Più Pura</h3>
+            <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-2">Pietre di Pura Luce</h3>
             <p className="text-xs text-gray-500 font-light leading-relaxed">
-              Pietre selezionate con la massima brillantezza e rifrazione di luce superiore al diamante naturale, certificate ed inalterabili.
+              Pietre selezionate con Taglio Brillante VVS1 D-Color e perle d'acqua dolce naturali ad altissima rifrazione di luce ed inalterabili.
             </p>
           </div>
 
@@ -121,9 +133,9 @@ export default function ChiSiamoPage() {
             <div className="w-12 h-12 rounded-full bg-[#FAF8F5] text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
               <Feather size={22} strokeWidth={1.5} />
             </div>
-            <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-2">Argento 925 & Oro 18K</h3>
+            <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-2">Doppio Scudo Protettivo</h3>
             <p className="text-xs text-gray-500 font-light leading-relaxed">
-              Base in Argento Sterling con placcatura in Oro 18K spessa fino a 20 volte lo standard di mercato e protezione anti-ossidazione.
+              Base in Argento Sterling con placcatura Oro 18K (1.0µm) o Rodio (0.1µm) e sigillo Nano-Protective E-Coating anti-ossidazione.
             </p>
           </div>
 

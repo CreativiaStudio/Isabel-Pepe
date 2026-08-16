@@ -1,4 +1,16 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Termini e Condizioni di Vendita",
+  description:
+    "Condizioni generali di vendita e-commerce Isabel Pepe: pagamenti protetti, garanzia legale di conformità 24 mesi e diritto di recesso 14 giorni.",
+  openGraph: {
+    title: "Termini e Condizioni di Vendita | Isabel Pepe",
+    description:
+      "Condizioni generali di vendita e-commerce Isabel Pepe: pagamenti protetti, garanzia legale di conformità 24 mesi e diritto di recesso 14 giorni.",
+  },
+};
 
 export default function TerminiCondizioniPage() {
   return (
@@ -23,7 +35,7 @@ export default function TerminiCondizioniPage() {
               <p><strong>Creativia Digital Studio di Mario Pepe</strong></p>
               <p><strong>P.IVA:</strong> 02100840683</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
-              <p><strong>Email Assistenza:</strong> sviluppo@creativiastudio.com</p>
+              <p><strong>Email Assistenza:</strong> assistenza@isabelpepe.com</p>
             </div>
           </section>
 
@@ -41,7 +53,7 @@ export default function TerminiCondizioniPage() {
               3. Spedizioni e Consegna
             </h2>
             <p>
-              Le spedizioni vengono affidate al corriere espresso convenzionato (Packlink / Poste Italiane) entro 24/48 ore lavorative dalla conferma dell'ordine. Il cliente riceverà via email il codice di tracciamento (Tracking Code) per seguire la spedizione in tempo reale.
+              Le spedizioni con corriere espresso (Packlink / Poste Italiane) sono sempre gratuite su tutti gli ordini e vengono affidate entro 24/48 ore lavorative dalla conferma del pagamento. Il cliente riceverà via email il codice di tracciamento (Tracking Code) per seguire la spedizione in tempo reale.
             </p>
           </section>
 
@@ -59,7 +71,7 @@ export default function TerminiCondizioniPage() {
               5. Garanzia Legale di Conformità (24 mesi)
             </h2>
             <p>
-              Ogni gioiello Isabel Pepe è coperto dalla Garanzia Legale di Conformità di 24 mesi per qualsiasi difetto di fabbricazione dei materiali (Argento 925, placcatura Oro 18K e Moissanite).
+              Ogni gioiello Isabel Pepe è coperto dalla Garanzia Legale di Conformità di 24 mesi per qualsiasi difetto di fabbricazione dei materiali (Argento 925, placcatura Oro 18K / Rodio, pietre e perle naturali).
             </p>
           </section>
         </div>

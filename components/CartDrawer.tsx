@@ -242,6 +242,10 @@ export default function CartDrawer() {
                     <span className="font-sans text-[11px] uppercase tracking-widest">Subtotale</span>
                     <span className="font-serif text-lg">€{subtotal.toFixed(2)}</span>
                   </div>
+                  <div className="flex justify-between items-center mb-2 text-gray-500">
+                    <span className="font-sans text-[11px] uppercase tracking-widest">Spedizione Express 24/48h</span>
+                    <span className="font-sans text-xs uppercase tracking-wider text-green-600 font-semibold">Gratis</span>
+                  </div>
                   {appliedDiscount && (
                     <div className="flex justify-between items-center mb-2 text-green-600">
                       <span className="font-sans text-[11px] uppercase tracking-widest">Sconto ({appliedDiscount.code})</span>
@@ -256,9 +260,15 @@ export default function CartDrawer() {
 
               </div>
             ) : (
-              <div className="flex justify-between items-center mb-6">
-                <span className="font-sans text-[11px] uppercase tracking-widest text-gray-500">Subtotale</span>
-                <span className="font-serif text-2xl text-gray-900">€{subtotal.toFixed(2)}</span>
+              <div className="mb-6 space-y-2">
+                <div className="flex justify-between items-center text-gray-500">
+                  <span className="font-sans text-[11px] uppercase tracking-widest">Spedizione Express 24/48h</span>
+                  <span className="font-sans text-xs uppercase tracking-wider text-green-600 font-semibold">Sempre Gratuita</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-sans text-[11px] uppercase tracking-widest text-gray-500">Subtotale</span>
+                  <span className="font-serif text-2xl text-gray-900">€{subtotal.toFixed(2)}</span>
+                </div>
               </div>
             )}
             

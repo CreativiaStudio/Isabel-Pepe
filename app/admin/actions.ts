@@ -328,11 +328,11 @@ export async function updateProductImage(id: string, file: File, type: 'primary'
 // -- Dati di Esempio --
 export async function seedSampleProducts() {
   const sampleProducts = [
-    { name: 'Bracciale Sospeso Luce', price: 120, stock: 5, category: 'Bracciali', plating: 'Oro 18K 1 micron + e-coating', gemstone: 'Zirconi', materials: 'Argento 925 nichel free' },
-    { name: 'Collana Lusso Intrecci', price: 185, stock: 3, category: 'Collane', plating: 'Rodio + 1 micron', gemstone: 'Moissanite con certificato GRA', materials: 'Argento 925 nichel free' },
-    { name: 'Orecchini Moissanite Goccia', price: 210, stock: 8, category: 'Orecchini', plating: 'Rodio + 1 micron', gemstone: 'Moissanite con certificato GRA', materials: 'Argento 925 nichel free' },
-    { name: 'Anello Eternità', price: 150, stock: 12, category: 'Anelli', plating: 'Oro 18K 1 micron + e-coating', gemstone: 'Zirconi', materials: 'Argento 925 nichel free', sizes: [10, 12, 14] },
-    { name: 'Set Lusso Perle Acqua Dolce', price: 290, stock: 2, category: 'Set', plating: 'Nessuna', gemstone: 'Perle di acqua dolce', materials: 'Argento 925 nichel free' }
+    { name: 'Bracciale Sospeso Luce', price: 120, stock: 5, category: 'Bracciali', plating: 'Placcatura Oro 18K (1.0µm) + Nano-Coating (1.0µm)', gemstone: 'Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)', materials: 'Argento 925 nichel free' },
+    { name: 'Collana Lusso Intrecci', price: 185, stock: 3, category: 'Collane', plating: 'Finitura Rodio Puro (0.1µm) + Nano-Coating (1.0µm)', gemstone: 'Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)', materials: 'Argento 925 nichel free' },
+    { name: 'Orecchini Goccia di Luce', price: 210, stock: 8, category: 'Orecchini', plating: 'Finitura Rodio Puro (0.1µm) + Nano-Coating (1.0µm)', gemstone: 'Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)', materials: 'Argento 925 nichel free' },
+    { name: 'Anello Eternità', price: 150, stock: 12, category: 'Anelli', plating: 'Placcatura Oro 18K (1.0µm) + Nano-Coating (1.0µm)', gemstone: 'Pietre di Pura Luce (Taglio Brillante VVS1 D-Color)', materials: 'Argento 925 nichel free', sizes: [10, 12, 14] },
+    { name: 'Set Lusso Perle Acqua Dolce', price: 290, stock: 2, category: 'Set', plating: 'Placcatura Oro 18K (1.0µm) + Nano-Coating (1.0µm)', gemstone: 'Perle Naturali d\'Acqua Dolce Selezionate a Mano', materials: 'Argento 925 nichel free' }
   ];
 
   for (const p of sampleProducts) {

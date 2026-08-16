@@ -43,7 +43,7 @@ const suffixMap: Record<string, string> = {
   '2': '-dettaglio-sfondo',
   '3': '-panoramica',
   '4': '-video-packaging',
-  '5': '-video-moissanite'
+  '5': '-video-brillante'
 };
 
 async function seoAndSync() {

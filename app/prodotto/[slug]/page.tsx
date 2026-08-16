@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ChevronRight, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { ChevronRight, ShieldCheck, Truck, RotateCcw, Gift, Heart } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 import ProductGallery from '@/components/ProductGallery';
 import StickyMobileAddToCart from '@/components/StickyMobileAddToCart';
@@ -13,19 +13,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resolvedParams = await params;
   const { data: product } = await supabase
     .from('products')
-    .select('seo_title, seo_description, image_primary')
+    .select('name, category, seo_title, seo_description, image_primary')
     .eq('slug', resolvedParams.slug)
     .single();
 
-  if (!product) return { title: 'Prodotto non trovato' };
+  if (!product) return { title: 'Gioiello non trovato | Isabel Pepe' };
+
+  const title = product.seo_title || `${product.name} — Gioiello Demi-Fine in Argento 925 & Oro 18K | Isabel Pepe`;
+  const description = product.seo_description || `Scopri ${product.name} di Isabel Pepe: creazione demi-fine in Argento 925 con doppio scudo protettivo, pietre di pura luce e cofanetto di lusso incluso.`;
 
   return {
-    title: product.seo_title,
-    description: product.seo_description,
+    title: {
+      absolute: title,
+    },
+    description,
     openGraph: {
-      title: product.seo_title,
-      description: product.seo_description,
-      images: [product.image_primary],
+      title,
+      description,
+      images: product.image_primary ? [product.image_primary] : [],
     },
   };
 }
@@ -44,7 +49,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   }
 
   // Check auth per mostrare il tasto "Modifica Prodotto"
-  const ADMIN_EMAILS = ['sviluppo@creativiastudio.com'];
+  const ADMIN_EMAILS = ['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'mario@isabelpepe.com'];
   let isAdmin = false;
   try {
     const supabaseAuth = await createClient();
@@ -60,14 +65,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? product.gallery
     : [product.image_secondary, product.image_primary].filter(Boolean);
 
-  // 3. Fetch varianti del gioiello (es. Oro / Argento per lo stesso modello)
-  const baseSku = product.sku ? product.sku.split('-')[0] : null;
+  // 3. Fetch varianti colore reali dello stesso modello (es. Oro 18K / Rodio Silver per BTN005 o White/Pink per ASB4054)
+  const skuParts = product.sku ? product.sku.split('-') : [];
   let variants: any[] = [];
-  if (baseSku && baseSku.length >= 3) {
+  if (skuParts.length >= 2 && ['GOLD', 'SILVER', 'WHITE', 'PINK'].includes(skuParts[1]?.toUpperCase())) {
+    const basePrefix = skuParts[0];
     const { data: siblings } = await supabase
       .from('products')
-      .select('id, name, sku, slug, plating, image_primary, gallery')
-      .ilike('sku', `${baseSku}%`);
+      .select('id, name, sku, slug, plating, gemstone, image_primary, gallery')
+      .eq('category', product.category)
+      .ilike('sku', `${basePrefix}-%`);
     if (siblings && siblings.length > 1) {
       variants = siblings;
     }
@@ -160,19 +167,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </span>
             </div>
 
-            {/* Selettore Variante (es. Oro 18K / Argento) */}
+            {/* Selettore Finitura (solo per gli unici modelli con reale variante in fattura es. Brera Gold/Silver) */}
             {variants.length > 1 && (
               <div className="mb-6 bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1]">
                 <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2.5 font-medium">
-                  Seleziona Variante: <span className="text-gray-900 font-semibold">{product.plating || product.name}</span>
+                  Finitura: <span className="text-gray-900 font-semibold">{product.name}</span>
                 </label>
                 <div className="flex flex-wrap gap-2.5">
                   {variants.map((v) => {
                     const isCurrent = v.id === product.id;
-                    const isGold = v.sku?.includes('GOLD') || v.plating?.toLowerCase().includes('oro') || v.name?.toLowerCase().includes('gold');
-                    const isSilver = v.sku?.includes('SILVER') || v.plating?.toLowerCase().includes('argento') || v.name?.toLowerCase().includes('silver');
-                    const label = v.plating || (isGold ? 'Oro 18K' : isSilver ? 'Argento' : v.name);
-                    const dotColor = isGold ? 'bg-amber-400 border-amber-500' : isSilver ? 'bg-gray-300 border-gray-400' : 'bg-rose-300 border-rose-400';
+                    const isGold = v.sku?.includes('GOLD') || v.plating?.toLowerCase().includes('oro');
+                    const isPink = v.sku?.includes('PINK') || v.gemstone?.toLowerCase().includes('rosa');
+                    const label = isGold ? 'Placcatura Oro 18K' : isPink ? 'Cristalli Rosa' : 'Rodio Puro Silver';
+                    const dotColor = isGold ? 'bg-amber-400 border-amber-500' : isPink ? 'bg-rose-300 border-rose-400' : 'bg-gray-300 border-gray-400';
 
                     return (
                       <Link
@@ -213,25 +220,117 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Bottone Aggiungi al Carrello Reattivo */}
             <AddToCartButton product={product} />
 
-            {/* Mini-Banner Fiducia */}
-            <div className="grid grid-cols-3 gap-4 border-y border-gray-100 py-6 mb-8">
-              <div className="flex flex-col items-center text-center gap-2">
-                <Truck size={20} className="text-[#C0A09A]" />
-                <span className="text-[10px] uppercase tracking-wider text-gray-500">Spedizione Gratuita</span>
+            {/* Mini-Banner Fiducia & 4 Pilastri — 100% Simmetrico & Responsive Mobile/Desktop */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 border-y border-gray-100 py-4 sm:py-5 mb-8 items-stretch">
+              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
+                <ShieldCheck size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
+                  Doppio<br />Scudo
+                </span>
+                <span className="text-[9px] text-gray-500 font-light leading-snug">
+                  18K & Rodio
+                </span>
               </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <RotateCcw size={20} className="text-[#C0A09A]" />
-                <span className="text-[10px] uppercase tracking-wider text-gray-500">Reso 30 Giorni</span>
+              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
+                <Gift size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
+                  Cofanetto<br />Luxury
+                </span>
+                <span className="text-[9px] text-gray-500 font-light leading-snug">
+                  Panno & Garanzia 24M
+                </span>
               </div>
-              <div className="flex flex-col items-center text-center gap-2">
-                <ShieldCheck size={20} className="text-[#C0A09A]" />
-                <span className="text-[10px] uppercase tracking-wider text-gray-500">Qualità Garantita</span>
+              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
+                <Truck size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
+                  Consegna<br />Express
+                </span>
+                <span className="text-[9px] text-gray-500 font-light leading-snug">
+                  24/48h • Reso 30gg
+                </span>
+              </div>
+              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
+                <Heart size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
+                  L'Arte del<br />Dono
+                </span>
+                <span className="text-[9px] text-gray-500 font-light leading-snug">
+                  Sostegno Animali
+                </span>
               </div>
             </div>
 
-            {/* Descrizione */}
-            <div className="prose prose-sm text-gray-600 mb-8 leading-relaxed">
-              <p>{product.description}</p>
+            {/* Descrizione Formattata ad Alta Leggibilità */}
+            <div className="mb-8">
+              {(() => {
+                const text = product.description || '';
+                const firstBulletIndex = text.indexOf('•');
+                
+                let intro = text;
+                let bullets: string[] = [];
+
+                if (firstBulletIndex !== -1) {
+                  intro = text.substring(0, firstBulletIndex)
+                    .replace(/CARATTERISTICHE & VALORI ISABEL PEPE:?/gi, '')
+                    .replace(/DETTAGLI ESCLUSIVI & ARTIGIANALITÀ:?/gi, '')
+                    .trim();
+                  bullets = text.substring(firstBulletIndex)
+                    .split('•')
+                    .map((b: string) => b.trim())
+                    .filter(Boolean);
+                } else {
+                  const paragraphs = text.split('\n').map((p: string) => p.trim()).filter(Boolean);
+                  intro = paragraphs[0] || text;
+                  bullets = paragraphs.slice(1);
+                }
+
+                return (
+                  <div className="space-y-6">
+                    {intro && (
+                      <p className="text-gray-700 text-sm sm:text-[15px] leading-relaxed font-light">
+                        {intro}
+                      </p>
+                    )}
+
+                    {bullets.length > 0 && (
+                      <div className="bg-[#FAF8F5] border border-[#F0E6E1] rounded-2xl p-5 sm:p-6 shadow-sm">
+                        <span className="font-sans text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-4">
+                          Caratteristiche & Dettagli
+                        </span>
+                        <ul className="space-y-3">
+                          {bullets.map((b: string, idx: number) => {
+                            const clean = b
+                              .replace(/^(CARATTERISTICHE & VALORI ISABEL PEPE:?|DETTAGLI ESCLUSIVI & ARTIGIANALITÀ:?)/gi, '')
+                              .trim();
+                            if (!clean) return null;
+
+                            const colonIdx = clean.indexOf(':');
+                            if (colonIdx > 0 && colonIdx < 45) {
+                              const title = clean.substring(0, colonIdx + 1);
+                              const rest = clean.substring(colonIdx + 1);
+                              return (
+                                <li key={idx} className="flex items-start gap-3 text-xs sm:text-[13px] text-gray-600 leading-relaxed font-light">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#C0A09A] shrink-0 mt-2"></span>
+                                  <span>
+                                    <strong className="font-medium text-gray-900">{title}</strong>{rest}
+                                  </span>
+                                </li>
+                              );
+                            }
+
+                            return (
+                              <li key={idx} className="flex items-start gap-3 text-xs sm:text-[13px] text-gray-600 leading-relaxed font-light">
+                                <span className="w-1.5 h-1.5 rounded-full bg-[#C0A09A] shrink-0 mt-2"></span>
+                                <span>{clean}</span>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* Dettagli Tecnici (Accordion semplice) */}
@@ -263,7 +362,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   </span>
                 </summary>
                 <div className="text-gray-500 text-sm mt-4 leading-relaxed">
-                  Per mantenere inalterata la lucentezza della speciale placcatura Isabel Pepe, si consiglia di pulire il gioiello con un panno morbido. Pur essendo resistente all'acqua, evitare il contatto prolungato con profumi e detergenti aggressivi aiuterà a conservarne lo splendore per anni.
+                  Per mantenere inalterata la lucentezza della speciale placcatura Isabel Pepe, si consiglia di pulire delicatamente il gioiello con il <strong>panno morbido in microfibra incluso nel tuo cofanetto luxury</strong>. Pur essendo resistente all'acqua, evitare il contatto prolungato con profumi e detergenti aggressivi aiuterà a conservarne lo splendore per anni.
                 </div>
               </details>
             </div>

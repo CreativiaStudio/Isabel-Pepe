@@ -1,6 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Ruler, Sparkles, HelpCircle, CheckCircle2, MessageCircle } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "Guida alle Taglie Anelli",
+  description:
+    "Trova la misura perfetta per il tuo anello Isabel Pepe. Consulta la tabella millimetrica comparativa IT/US e segui i consigli dei nostri esperti.",
+  openGraph: {
+    title: "Guida alle Taglie Anelli | Isabel Pepe",
+    description:
+      "Trova la misura perfetta per il tuo anello Isabel Pepe. Consulta la tabella millimetrica comparativa IT/US e segui i consigli dei nostri esperti.",
+  },
+};
 
 export default function GuidaTagliePage() {
   const ringSizes = [
@@ -132,7 +144,7 @@ export default function GuidaTagliePage() {
         <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-10 rounded-2xl mb-16">
           <h3 className="font-serif text-xl text-gray-900 tracking-wider uppercase mb-6 flex items-center gap-3">
             <Sparkles size={20} className="text-[#C0A09A]" />
-            Consigli degli Esperti Orafi Isabel Pepe
+            I Consigli degli Esperti Isabel Pepe
           </h3>
           <ul className="space-y-4 text-xs text-gray-600 font-light leading-relaxed">
             <li className="flex items-start gap-3">

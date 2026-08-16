@@ -3,7 +3,7 @@ import ProductCard from '@/components/ProductCard';
 import HeroVideoSlider from '@/components/HeroVideoSlider';
 import CategoryCardSlider from '@/components/CategoryCardSlider';
 import Link from 'next/link';
-import { Sparkles, Crown, PackageCheck } from 'lucide-react';
+import { Sparkles, ShieldCheck, Gift, HeartHandshake } from 'lucide-react';
 
 export default async function Home() {
   // Fetch di 4 prodotti in evidenza dal DB per la sezione "I Più Amati"
@@ -42,7 +42,7 @@ export default async function Home() {
             {/* Categoria 1: Collane (3 Foto Modella) */}
             <CategoryCardSlider
               title="Collane"
-              subtitle="Haute Joaillerie"
+              subtitle="Punti Luce & Pendenti"
               categoryLink="/shop?category=Collane"
               ctaText="Scopri la selezione"
               images={[
@@ -72,9 +72,9 @@ export default async function Home() {
               categoryLink="/shop?category=Anelli"
               ctaText="Trova la misura"
               images={[
-                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-moissanite-slot1-1786131084980.webp',
-                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-multi-moissanite-slot1-1786110533604.webp',
-                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-s925-moissanite-silver-slot1-1786102405179.webp',
+                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-imperial-slot1.webp',
+                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-ch-telaine-silver-slot1.webp',
+                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-lune-d-argent-slot1.webp',
               ]}
             />
 
@@ -131,47 +131,60 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 4. Sezione Valori & Garanzia Materiali Preziosi (Icone Vettoriali Premium Rose-Gold) */}
+      {/* 4. I 4 Pilastri Isabel Pepe (Doppio Scudo, Cofanetto Signature, Pietre di Luce, L'Arte del Dono) */}
       <section className="py-24 bg-[#141414] text-white border-y border-white/10">
         <div className="max-w-[1400px] mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
             
-            {/* Valore 1: Argento 925 & Moissanite */}
-            <div className="flex flex-col items-center px-4">
+            {/* Pilastro 1: Doppio Scudo Protettivo */}
+            <div className="flex flex-col items-center px-3">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+                <ShieldCheck size={28} className="text-[#C0A09A]" />
+              </div>
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
+                Doppio Scudo Protettivo
+              </h4>
+              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
+                Placcatura Oro 18K (1.0µm) o Rodio Puro sigillata con Nano-Protective E-Coating: anallergico, anti-ossidazione e waterproof.
+              </p>
+            </div>
+
+            {/* Pilastro 2: Cofanetto Regalo Signature */}
+            <div className="flex flex-col items-center px-3">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+                <Gift size={28} className="text-[#C0A09A]" />
+              </div>
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
+                Cofanetto Regalo Signature
+              </h4>
+              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
+                Astuccio rigido di lusso, panno in microfibra per lucidatura e certificato di garanzia 24 mesi inclusi in ogni ordine.
+              </p>
+            </div>
+
+            {/* Pilastro 3: Pietre di Pura Luce */}
+            <div className="flex flex-col items-center px-3">
               <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
                 <Sparkles size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-xl tracking-widest uppercase mb-3 text-white">
-                Argento 925 & Moissanite
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
+                Pietre di Pura Luce
               </h4>
-              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-sm">
-                Utilizziamo solo Argento 925 anallergico nichel-free ed incastoniamo Moissanite di altissima purezza.
+              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
+                Pietre ad altissima rifrazione con Taglio Brillante VVS1 D-Color e perle d'acqua dolce naturali selezionate a mano.
               </p>
             </div>
 
-            {/* Valore 2: Placcatura Oro 18K */}
-            <div className="flex flex-col items-center px-4 border-y md:border-y-0 md:border-x border-white/10 py-10 md:py-0">
+            {/* Pilastro 4: L'Arte del Dono */}
+            <div className="flex flex-col items-center px-3">
               <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
-                <Crown size={28} className="text-[#C0A09A]" />
+                <HeartHandshake size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-xl tracking-widest uppercase mb-3 text-white">
-                Placcatura Oro 18K
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
+                L'Arte del Dono
               </h4>
-              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-sm">
-                Placcatura ad alto spessore in Oro 18K per garantire una brillantezza inalterabile ed una resistenza unica nel tempo.
-              </p>
-            </div>
-
-            {/* Valore 3: Packaging & Consegna */}
-            <div className="flex flex-col items-center px-4">
-              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
-                <PackageCheck size={28} className="text-[#C0A09A]" />
-              </div>
-              <h4 className="font-serif text-xl tracking-widest uppercase mb-3 text-white">
-                Packaging & Consegna 24/48h
-              </h4>
-              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-sm">
-                Ogni gioiello viaggia all'interno del nostro speciale cofanetto regalo con etichetta express e reso garantito 30 giorni.
+              <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
+                Isabel Pepe sostiene attivamente gli animali: una parte di ogni acquisto viene devoluta a rifugi e cure veterinarie.
               </p>
             </div>
 
@@ -188,10 +201,10 @@ export default async function Home() {
             className="h-14 mx-auto mb-10 opacity-90 invert brightness-200" 
           />
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-widest leading-tight mb-8">
-            L'arte orafa incontra l'essenza dell'anima.
+            L'eleganza senza tempo incontra l'essenza dell'anima.
           </h2>
           <p className="font-sans text-gray-400 text-xs sm:text-sm tracking-[0.25em] uppercase leading-loose max-w-xl mx-auto font-light mb-10">
-            Disegnati a mano, realizzati con etica e passione. Perché il vero lusso non si ostenta, si vive.
+            Gioielli demi-fine disegnati per vivere, viaggiare e risplendere ogni giorno. Perché il vero lusso è sentirsi uniche.
           </p>
           <Link 
             href="/shop" 

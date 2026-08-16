@@ -1,6 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Truck, RotateCcw, ShieldCheck, Clock, PackageCheck, MapPin, ChevronRight } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "Spedizioni e Resi",
+  description:
+    "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 30 giorni garantito.",
+  openGraph: {
+    title: "Spedizioni e Resi | Isabel Pepe",
+    description:
+      "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 30 giorni garantito.",
+  },
+};
 
 export default function SpedizioniResiPage() {
   return (
@@ -16,7 +28,7 @@ export default function SpedizioniResiPage() {
             Spedizioni & Resi
           </h1>
           <p className="font-sans text-gray-600 text-sm max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
-            Consegne rapide e sicure in tutta Italia ed un servizio di reso semplificato entro 30 giorni per garantirti un'esperienza di acquisto in totale serenità.
+            Consegne rapide 24/48h sempre gratuite in tutta Italia ed un servizio di reso semplificato entro 30 giorni per garantirti un'esperienza di acquisto in totale serenità.
           </p>
         </div>
 
@@ -37,7 +49,7 @@ export default function SpedizioniResiPage() {
                 Tutti gli ordini ricevuti su <strong>Isabel Pepe</strong> vengono elaborati con massima cura e spediti tramite il nostro partner logistico <strong>Packlink PRO</strong> e corriere espresso <strong>Poste Italiane / SDA</strong>.
               </p>
               <p>
-                <strong>Spedizione Gratuita:</strong> Offriamo la spedizione espressa gratuita in tutta Italia per tutti gli ordini d'importo pari o superiore a <strong>150€</strong>. Per ordini inferiori a tale soglia, il contributo di spedizione è di soli <strong>6,90€</strong>.
+                <strong>Spedizione Sempre Gratuita:</strong> Offriamo la spedizione espressa <strong>100% gratuita in tutta Italia</strong> per qualsiasi ordine, senza alcun importo o soglia minima di spesa.
               </p>
             </div>
 
@@ -60,8 +72,8 @@ export default function SpedizioniResiPage() {
             </div>
             <div className="bg-white p-5 rounded-xl border border-gray-100 text-center">
               <PackageCheck className="text-[#C0A09A] mx-auto mb-2" size={20} />
-              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold block">Soglia Gratis</span>
-              <span className="font-serif text-lg text-gray-900 font-medium">Ordini {'>'} 150€</span>
+              <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold block">Costo Spedizione</span>
+              <span className="font-serif text-lg text-gray-900 font-medium text-green-700">Sempre Gratuita</span>
             </div>
             <div className="bg-white p-5 rounded-xl border border-gray-100 text-center">
               <MapPin className="text-[#C0A09A] mx-auto mb-2" size={20} />
@@ -107,7 +119,7 @@ export default function SpedizioniResiPage() {
               </span>
               <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Richiedi l'Autorizzazione</h4>
               <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Contatta il nostro supporto via WhatsApp o via email a <a href="mailto:sviluppo@creativiastudio.com" className="text-[#C0A09A] underline">sviluppo@creativiastudio.com</a> specificando il tuo codice ordine.
+                Contatta il nostro supporto via WhatsApp o via email a <a href="mailto:resi@isabelpepe.com" className="text-[#C0A09A] underline">resi@isabelpepe.com</a> (o <a href="mailto:assistenza@isabelpepe.com" className="text-[#C0A09A] underline">assistenza@isabelpepe.com</a>) specificando il tuo codice ordine.
               </p>
             </div>
 

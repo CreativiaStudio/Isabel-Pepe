@@ -18,7 +18,7 @@ export default function Header() {
     <>
       {/* Service Bar */}
       <div className="bg-[#FAFAFA] text-[#1A1A1A]/70 text-[9px] uppercase tracking-widest py-2 px-4 text-center flex items-center justify-center gap-3 flex-wrap">
-        <span>Spedizione gratuita over 150€</span>
+        <span className="font-medium text-gray-900">Spedizione Sempre Gratuita 24/48h</span>
         <span className="hidden sm:inline text-gray-300">•</span>
         <Link href="/impegno-animali" className="text-[#C0A09A] hover:underline font-semibold flex items-center gap-1">
           <span>🐾 L'Arte del Dono: Sosteniamo gli Animali</span>
@@ -126,7 +126,7 @@ export default function Header() {
           {/* Center Logo */}
           <div className="flex-shrink-0 flex justify-center w-full md:w-1/3 absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0">
             <Link href="/">
-              <h1 className="font-serif tracking-widest text-xl sm:text-2xl uppercase text-[#C0A09A]">Isabel Pepe</h1>
+              <span className="font-serif tracking-widest text-xl sm:text-2xl uppercase text-[#C0A09A] block">Isabel Pepe</span>
             </Link>
           </div>
 

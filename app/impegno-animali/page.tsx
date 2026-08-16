@@ -1,6 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Heart, ShieldCheck, Sparkles, Footprints, Home, Stethoscope, Gift, ArrowRight, HeartHandshake } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "L'Arte del Dono",
+  description:
+    "Per ogni gioiello Isabel Pepe acquistato, doniamo una quota a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+  openGraph: {
+    title: "L'Arte del Dono | Isabel Pepe",
+    description:
+      "Per ogni gioiello Isabel Pepe acquistato, doniamo una quota a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+  },
+};
 
 export default function ImpegnoAnimaliPage() {
   return (
@@ -34,10 +46,10 @@ export default function ImpegnoAnimaliPage() {
               Una Passione Nata dal Cuore
             </h2>
             <p>
-              Per noi di <strong>Isabel Pepe</strong>, l'amore per gli animali non è una semplice campagna di marketing o un dettaglio marginale: <strong>è la nostra missione di vita</strong> ed uno dei valori fondamentali attorno a cui abbiamo costruito l'intero brand.
+              Per noi di <strong>Isabel Pepe</strong>, l'amore per gli animali non è una semplice campagna o un dettaglio marginale: <strong>è la nostra missione di vita</strong> ed uno dei valori fondamentali attorno a cui abbiamo costruito l'intero brand.
             </p>
             <p>
-              Fin dal primo giorno, io (Elena) e Mario abbiamo desiderato che ogni creazione orafa Isabel Pepe non fosse soltanto un simbolo di bellezza da indossare, ma un vero e proprio <strong>veicolo di speranza e salvezza</strong> per gli animali che ogni giorno soffrono la solitudine, l'abbandono ed il maltrattamento.
+              Fin dal primo giorno, io (Elena) e Mario abbiamo desiderato che ogni creazione Isabel Pepe non fosse soltanto un simbolo di bellezza da indossare, ma un vero e proprio <strong>veicolo di speranza e salvezza</strong> per gli animali che ogni giorno soffrono la solitudine, l'abbandono ed il maltrattamento.
             </p>
             <p className="italic font-serif text-[#C0A09A] text-base">
               "Dare una voce a chi non ce l'ha, trasformando la luce dei nostri gioielli in cibo, cure e calore."
@@ -153,7 +165,7 @@ export default function ImpegnoAnimaliPage() {
             Sostieni la Nostra Missione
           </h2>
           <p className="text-xs text-gray-400 font-light leading-relaxed max-w-xl mx-auto mb-8">
-            Esplora le nostre collezioni orafe e diventa parte attiva del nostro progetto di salvataggio ed amore per gli animali.
+            Esplora le nostre collezioni demi-fine e diventa parte attiva del nostro progetto di salvataggio ed amore per gli animali.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

@@ -1,6 +1,17 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import LogoutButton from './LogoutButton';
+
+export const metadata: Metadata = {
+  title: 'Il Mio Account',
+  description:
+    "Accedi all'area riservata Isabel Pepe per visualizzare lo stato dei tuoi ordini, i dettagli di spedizione e le impostazioni del tuo account.",
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 export default async function AccountPage() {
   const supabase = await createClient();
@@ -32,7 +43,7 @@ export default async function AccountPage() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            {user.email === 'sviluppo@creativiastudio.com' && (
+            {['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'mario@isabelpepe.com'].includes(user.email || '') && (
               <a 
                 href="/admin" 
                 className="font-sans text-[11px] uppercase tracking-[0.2em] border border-[#1A1A1A] text-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-white px-6 py-3 transition-colors"

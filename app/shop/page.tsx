@@ -1,6 +1,62 @@
 import { supabase } from '@/lib/supabase';
 import ProductCard from '@/components/ProductCard';
 import Link from 'next/link';
+import type { Metadata } from 'next';
+
+const categorySeo: Record<string, { title: string; desc: string; h1: string; intro: string }> = {
+  Collane: {
+    title: 'Collane Demi-Fine in Oro 18K',
+    desc: 'Scopri le collane demi-fine Isabel Pepe: punti luce, pendenti e catene in Argento 925 placcate Oro 18K (1.0µm) o Rodio con nano-protective E-coating.',
+    h1: 'Collane & Pendenti',
+    intro: 'Punti luce e pendenti progettati per catturare ogni raggio di luce. Argento 925 rifinito in Oro 18K (1.0µm) o Rodio con E-Coating protettivo e cofanetto luxury incluso.',
+  },
+  Orecchini: {
+    title: 'Orecchini Demi-Fine in Oro 18K',
+    desc: 'Orecchini demi-fine Isabel Pepe in Argento 925 nichel free con placcatura Oro 18K o Rodio Puro. Massima lucentezza e comfort per pelli sensibili.',
+    h1: 'Orecchini di Luce',
+    intro: 'Cerchi, pendenti e punti luce ipoallergenici in Argento 925 con doppio scudo protettivo per una brillantezza inalterabile tutti i giorni.',
+  },
+  Anelli: {
+    title: 'Anelli Solitari & Pavé Demi-Fine',
+    desc: 'Scopri gli anelli demi-fine Isabel Pepe: solitari taglio brillante e fasce pavé in Argento 925 con doppio scudo protettivo e cofanetto di lusso.',
+    h1: 'Anelli Solitari & Pavé',
+    intro: 'Linee pure e scintillio eterno: creazioni nate per celebrare i momenti più speciali con l’eleganza del lusso accessibile e pietre VVS1 D-Color.',
+  },
+  Bracciali: {
+    title: 'Bracciali Tennis & Rigidi Demi-Fine',
+    desc: 'Bracciali demi-fine Isabel Pepe con placcatura Oro 18K (1.0µm) ed E-Coating protettivo anti-ossidazione. Eleganza senza tempo per ogni giorno.',
+    h1: 'Bracciali & Tennis',
+    intro: 'Scintille al polso per ogni occasione: bracciali in Argento 925 con finiture nobili in Oro 18K o Rodio Puro e chiusure di sicurezza rinforzate.',
+  },
+  Set: {
+    title: 'Set Parure Royale Demi-Fine',
+    desc: 'Parure esclusive Isabel Pepe: set coordinati in Argento 925 e Oro 18K con cofanetto regalo signature, panno microfibra e certificato ufficiale.',
+    h1: 'I Set Royale',
+    intro: 'Parure coordinate pensate per un regalo memorabile o per un look impeccabile. Cofanetto rigido di lusso, panno microfibra e certificato 24 mesi sempre inclusi.',
+  },
+};
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}): Promise<Metadata> {
+  const resolvedParams = await searchParams;
+  const cat = resolvedParams.category as string | undefined;
+
+  if (cat && categorySeo[cat]) {
+    return {
+      title: categorySeo[cat].title,
+      description: categorySeo[cat].desc,
+    };
+  }
+
+  return {
+    title: 'Catalogo Gioielli Demi-Fine & Parure',
+    description:
+      'Esplora il catalogo gioielli Demi-Fine Isabel Pepe: Argento 925, placcatura Oro 18K, pietre taglio brillante e cofanetto regalo luxury incluso.',
+  };
+}
 
 // Gestione dei parametri in Next.js 15 (asincroni)
 export default async function ShopPage({ 
@@ -10,6 +66,7 @@ export default async function ShopPage({
 }) {
   const resolvedParams = await searchParams;
   const categoryFilter = resolvedParams.category as string | undefined;
+  const activeSeo = categoryFilter ? categorySeo[categoryFilter] : null;
 
   // Query al database: mostra solo prodotti attivi (is_active = true)
   let query = supabase.from('products').select('*').eq('is_active', true);
@@ -30,12 +87,18 @@ export default async function ShopPage({
     <div className="bg-white min-h-screen pt-12 pb-24">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 max-w-2xl mx-auto">
+          <span className="font-sans text-[11px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-2">
+            Demi-Fine Jewelry
+          </span>
           <h1 className="font-serif text-4xl md:text-5xl tracking-widest text-[#1A1A1A] mb-4 uppercase">
-            {categoryFilter || 'Tutta la Collezione'}
+            {activeSeo?.h1 || categoryFilter || 'Tutta la Collezione'}
           </h1>
-          <p className="font-sans text-gray-500 text-sm tracking-widest uppercase">
-            {products?.length || 0} Gioielli
+          <p className="font-sans text-gray-500 text-xs sm:text-sm tracking-wide leading-relaxed mb-3">
+            {activeSeo?.intro || 'Creazioni demi-fine realizzate con Argento 925 Sterling, placcatura Oro 18K (1.0µm) o Rodio (0.1µm) e sigillo Nano-Protective E-Coating.'}
+          </p>
+          <p className="font-sans text-gray-400 text-xs tracking-widest uppercase">
+            {products?.length || 0} Gioielli Disponibili
           </p>
         </div>
 

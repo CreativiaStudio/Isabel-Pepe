@@ -1,5 +1,16 @@
-import Metadata from 'next';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: "Informativa sulla Privacy & GDPR",
+  description:
+    "Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR). Trasparenza e sicurezza per i tuoi acquisti su Isabel Pepe.",
+  openGraph: {
+    title: "Informativa sulla Privacy & GDPR | Isabel Pepe",
+    description:
+      "Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR). Trasparenza e sicurezza per i tuoi acquisti su Isabel Pepe.",
+  },
+};
 
 export default function PrivacyPage() {
   return (
@@ -25,7 +36,7 @@ export default function PrivacyPage() {
               <p><strong>P.IVA:</strong> 02100840683</p>
               <p><strong>Sede Legale:</strong> Italia</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
-              <p><strong>Email di Contatto:</strong> sviluppo@creativiastudio.com</p>
+              <p><strong>Email di Contatto:</strong> info@isabelpepe.com</p>
             </div>
           </section>
 
@@ -63,7 +74,7 @@ export default function PrivacyPage() {
               4. Diritti dell'Interessato
             </h2>
             <p>
-              Ai sensi degli artt. 15-22 del GDPR, hai il diritto di accedere, rettificare, cancellare o limitare il trattamento dei tuoi dati personali in qualsiasi momento, inviando una semplice richiesta all'indirizzo email <a href="mailto:sviluppo@creativiastudio.com" className="text-[#C0A09A] underline">sviluppo@creativiastudio.com</a>.
+              Ai sensi degli artt. 15-22 del GDPR, hai il diritto di accedere, rettificare, cancellare o limitare il trattamento dei tuoi dati personali in qualsiasi momento, inviando una semplice richiesta all'indirizzo email <a href="mailto:privacy@isabelpepe.com" className="text-[#C0A09A] underline">privacy@isabelpepe.com</a> (oppure a <a href="mailto:info@isabelpepe.com" className="text-[#C0A09A] underline">info@isabelpepe.com</a>).
             </p>
           </section>
         </div>

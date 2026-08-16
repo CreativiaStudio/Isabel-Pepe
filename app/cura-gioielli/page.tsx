@@ -1,6 +1,18 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Sparkles, ShieldCheck, Gem, Gift, Droplets, Sun, Feather } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: "Cura dei Gioielli Demi-Fine",
+  description:
+    "Scopri come preservare i tuoi gioielli Isabel Pepe: guida alla manutenzione della placcatura Oro 18K (1.0µm), Rodio, E-Coating e panno incluso.",
+  openGraph: {
+    title: "Cura dei Gioielli Demi-Fine | Isabel Pepe",
+    description:
+      "Scopri come preservare i tuoi gioielli Isabel Pepe: guida alla manutenzione della placcatura Oro 18K (1.0µm), Rodio, E-Coating e panno incluso.",
+  },
+};
 
 export default function CuraGioielliPage() {
   return (
@@ -10,17 +22,17 @@ export default function CuraGioielliPage() {
         {/* Intestazione */}
         <div className="text-center mb-16">
           <span className="font-sans text-xs text-[#C0A09A] uppercase tracking-[0.3em] font-semibold block mb-3">
-            Qualità & Manutenzione Haute Joaillerie
+            Qualità & Manutenzione Demi-Fine
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl tracking-widest uppercase mb-6 text-gray-900">
             Cura del Gioiello
           </h1>
           <p className="font-sans text-gray-600 text-sm max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
-            Ogni creazione Isabel Pepe è un’opera d’arte orafa concepita per risplendere al tuo fianco per sempre. Scopri i nostri standard di eccellenza ed i consigli per preservare la lucentezza dei tuoi gioielli.
+            Ogni creazione Isabel Pepe è un gioiello demi-fine concepito per risplendere al tuo fianco ogni giorno. Scopri i nostri standard di eccellenza ed i consigli per preservare la lucentezza dei tuoi gioielli.
           </p>
         </div>
 
-        {/* HIGHLIGHT PRODOTTO: PLACCATURA ORO 18K & TRATTAMENTO */}
+        {/* HIGHLIGHT PRODOTTO: DOPPIO SCUDO PROTETTIVO & E-COATING */}
         <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-12 rounded-2xl mb-16 shadow-sm">
           <div className="flex items-center gap-3 text-[#C0A09A] mb-4">
             <Sparkles size={20} />
@@ -28,25 +40,25 @@ export default function CuraGioielliPage() {
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
-            Placcatura Oro 18K 20 Volte Superiore ed Anti-Ossidazione
+            Doppio Scudo Protettivo: Oro 18K (1.0µm), Rodio ed E-Coating
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light">
             <div className="space-y-4">
               <p>
-                A differenza della gioielleria comune che applica micron sottilissimi destinati a sbiadire velocemente, le creazioni <strong>Isabel Pepe</strong> sono realizzate su base <strong>Argento Sterling 925</strong> impreziosite da una placcatura in <strong>Oro 18 Karati fino a 20 volte più spessa</strong> dello standard di mercato.
+                A differenza della gioielleria comune che applica micron sottilissimi destinati a sbiadire velocemente, le creazioni <strong>Isabel Pepe</strong> sono realizzate su base <strong>Argento Sterling 925</strong> impreziosite da una placcatura in <strong>Oro 18 Karati ad alto spessore (1.0 µm)</strong> o da una finitura brillante in <strong>Rodio Puro (0.1 µm)</strong>.
               </p>
               <p>
-                Questo elevato spessore assicura una tonalità dorata profonda, calda ed incredibilmente durevole nel tempo, resistente ai piccoli graffi quotidiani ed all'usura.
+                Questo standard assicura una tonalità profonda, calda ed incredibilmente durevole nel tempo, resistente ai piccoli urti quotidiani ed all'usura.
               </p>
             </div>
 
             <div className="space-y-4">
               <p>
-                Ogni gioiello viene sottoposto a un esclusivo <strong>trattamento protettivo molecolare anti-ossidazione</strong> e sigillatura nano-tecnologica che impedisce l'imbrunire naturale dell'argento.
+                Ogni pezzo viene inoltre sigillato con uno speciale strato di <strong>E-Coating da 1.0 µm</strong>: una barriera invisibile nano-protettiva elettroforetica che impedisce l'ossidazione naturale dell'argento e rende il gioiello resistente all'acqua.
               </p>
               <p>
-                I nostri pezzi sono <strong>100% anallergici</strong>, rigorosamente privi di Nichel, Piombo e Cadmio, sicuri anche sulle pelli più sensibili.
+                I nostri gioielli sono <strong>100% anallergici</strong>, rigorosamente privi di Nichel, Piombo e Cadmio, sicuri anche sulle pelli più delicate.
               </p>
             </div>
           </div>
@@ -57,7 +69,7 @@ export default function CuraGioielliPage() {
               <Gift size={28} strokeWidth={1.5} />
             </div>
             <div>
-              <h3 className="font-serif text-lg text-gray-900 tracking-wide uppercase">Panno in Microfibra in Omaggio in Ogni Kit</h3>
+              <h3 className="font-serif text-lg text-gray-900 tracking-wide uppercase">Panno in Microfibra Incluso in Ogni Cofanetto</h3>
               <p className="text-xs text-gray-500 font-light mt-1">
                 All'interno di ciascun cofanetto d'acquisto Isabel Pepe troverai in omaggio il nostro speciale <strong>panno in microfibra lucidante delicata</strong> per la pulizia quotidiana dei tuoi preziosi.
               </p>
