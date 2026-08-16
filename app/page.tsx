@@ -145,7 +145,7 @@ export default async function Home() {
                 Doppio Scudo Protettivo
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Placcatura Oro 18K (1.0µm) o Rodio Puro sigillata con Nano-Protective E-Coating: anallergico, anti-ossidazione e waterproof.
+                Base in puro Argento 925 con placcatura Oro 18K da 1 Micron (20 volte più spessa della media) o Rodio Puro, sigillati dall'invisibile nano-protezione E-Coating.
               </p>
             </div>
 

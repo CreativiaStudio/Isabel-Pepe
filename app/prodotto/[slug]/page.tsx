@@ -114,9 +114,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               let cleanPlating = '';
               if (product.plating && product.plating !== 'Nessuna') {
                 if (product.plating.toLowerCase().includes('oro')) {
-                  cleanPlating = 'Placcatura Oro 18K (1.0µm) + E-Coating';
+                  cleanPlating = 'Oro 18K 1 Micron (20x Spessore) + E-Coating';
                 } else if (product.plating.toLowerCase().includes('rodio')) {
-                  cleanPlating = 'Rodio Puro (0.1µm) + E-Coating';
+                  cleanPlating = 'Finitura Rodio Puro a Specchio + E-Coating';
                 } else {
                   cleanPlating = product.plating;
                 }
@@ -372,14 +372,33 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                     <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                   </span>
                 </summary>
-                <div className="text-gray-500 text-sm mt-4 space-y-2">
-                  <p><span className="text-gray-800 font-medium">Materiale base:</span> {product.materials}</p>
-                  <p><span className="text-gray-800 font-medium">Placcatura:</span> {product.plating}</p>
+                <div className="text-gray-600 text-xs sm:text-[13px] mt-4 space-y-3 font-light leading-relaxed">
+                  <div>
+                    <strong className="text-gray-900 font-medium block mb-0.5">💎 Metallo Nobile di Base:</strong>
+                    <p>100% Argento Sterling 925 anallergico e nichel-free (conforme agli standard europei REACH per la massima tollerabilità cutanea).</p>
+                  </div>
+                  <div>
+                    <strong className="text-gray-900 font-medium block mb-0.5">🛡️ Trattamento & Placcatura:</strong>
+                    <p>{product.plating?.toLowerCase().includes('oro') 
+                      ? "Placcatura in Oro 18K da 1.0 Micron — uno spessore fino a 20 volte superiore rispetto alla comune bigiotteria (che usa solo 0.05 micron), per una lucentezza calda e duratura che non si usura."
+                      : "Finitura in Rodio Puro a specchio — il metallo più raro e nobile del platino, per una brillantezza metallica purissima e una protezione naturale contro l'annerimento dell'argento."
+                    }</p>
+                  </div>
+                  <div>
+                    <strong className="text-gray-900 font-medium block mb-0.5">✨ Nano-Sigillo E-Coating:</strong>
+                    <p>Uno scudo molecolare trasparente e ipoallergenico applicato sopra il metallo. Sigilla la superficie proteggendo il gioiello da acqua, sudore, ossidazione e piccoli graffi quotidiani.</p>
+                  </div>
                   {product.gemstone && product.gemstone !== 'Nessuna' && (
-                    <p><span className="text-gray-800 font-medium">Pietra principale:</span> {product.gemstone}</p>
+                    <div>
+                      <strong className="text-gray-900 font-medium block mb-0.5">⭐ Pietre & Perle:</strong>
+                      <p>{product.gemstone}</p>
+                    </div>
                   )}
                   {product.carats && (
-                    <p><span className="text-gray-800 font-medium">Carati:</span> {product.carats}</p>
+                    <div>
+                      <strong className="text-gray-900 font-medium block mb-0.5">📏 Specifiche / Caratura:</strong>
+                      <p>{product.carats}</p>
+                    </div>
                   )}
                 </div>
               </details>

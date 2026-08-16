@@ -40,16 +40,16 @@ export default function CuraGioielliPage() {
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
-            Doppio Scudo Protettivo: Oro 18K (1.0µm), Rodio ed E-Coating
+            Doppio Scudo Protettivo: Oro 18K (1.0 Micron • 20x Spessore), Rodio ed E-Coating
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light">
             <div className="space-y-4">
               <p>
-                A differenza della gioielleria comune che applica micron sottilissimi destinati a sbiadire velocemente, le creazioni <strong>Isabel Pepe</strong> sono realizzate su base <strong>Argento Sterling 925</strong> impreziosite da una placcatura in <strong>Oro 18 Karati ad alto spessore (1.0 µm)</strong> o da una finitura brillante in <strong>Rodio Puro (0.1 µm)</strong>.
+                A differenza della comune bigiotteria che applica micro-veli dorati sottilissimi (0.05 µm) destinati a sbiadire in poche settimane, le creazioni <strong>Isabel Pepe</strong> sono forgiate su base <strong>100% Argento Sterling 925</strong> impreziosite da una placcatura in <strong>Oro 18K da 1.0 Micron</strong> — fino a <strong>20 volte più spessa della media</strong> — o da una finitura a specchio in <strong>Rodio Puro</strong> (il metallo nobile più raro del platino).
               </p>
               <p>
-                Questo standard assicura una tonalità profonda, calda ed incredibilmente durevole nel tempo, resistente ai piccoli urti quotidiani ed all'usura.
+                Questo standard garantisce una tonalità calda, nobile ed eccezionalmente durevole nel tempo, resistente all'usura e al contatto quotidiano.
               </p>
             </div>
 

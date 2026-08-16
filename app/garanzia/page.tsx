@@ -55,7 +55,7 @@ export default function GaranziaPage() {
 
             <div className="space-y-4">
               <p>
-                <strong>Doppio Scudo Protettivo:</strong> Certifica lo spessore della placcatura in Oro 18K (1.0 µm) o della finitura in Rodio Puro (0.1 µm), sigillate dal trattamento Nano-Protective E-Coating (1.0 µm) anti-ossidazione.
+                <strong>Doppio Scudo Protettivo:</strong> Certifica la placcatura in Oro 18K da 1.0 Micron (20 volte più spessa dello standard) o la finitura a specchio in Rodio Puro, sigillate dall'invisibile nano-trattamento molecolare protettivo E-Coating anti-ossidazione.
               </p>
               <p>
                 <strong>Selezione Pietre & Perle:</strong> Attesta il taglio brillante di massima rifrazione o la provenienza naturale delle perle d'acqua dolce selezionate a mano.

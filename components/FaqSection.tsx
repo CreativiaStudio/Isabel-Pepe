@@ -27,7 +27,7 @@ const defaultFaqs: FaqItem[] = [
   },
   {
     question: "I gioielli sono resistenti all'acqua e anallergici?",
-    answer: "Sì, ogni creazione Isabel Pepe è protetta dal nostro esclusivo Doppio Scudo Protettivo: placcatura ad alto spessore in Oro 18K (1.0 µm) o Rodio Puro (0.1 µm) sigillata con Nano-Protective E-Coating (1.0 µm) anti-ossidazione e waterproof. Tutti i gioielli sono 100% anallergici, nichel-free, piombo e cadmio free."
+    answer: "Sì, tutti i nostri gioielli hanno una base in 100% Argento Sterling 925 anallergico e nichel-free. Per le versioni dorate utilizziamo una placcatura in Oro 18K da 1 Micron (fino a 20 volte più spessa della comune bigiotteria), mentre per le versioni silver utilizziamo una finitura a specchio in Rodio Puro. Il tutto è sigillato dallo scudo invisibile E-Coating, un nano-trattamento molecolare trasparente che protegge il metallo da acqua, sudore e ossidazione."
   }
 ];
 
