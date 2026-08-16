@@ -149,16 +149,16 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* Pilastro 2: Cofanetto Regalo Signature */}
+            {/* Pilastro 2: Cofanetto Luxury */}
             <div className="flex flex-col items-center px-3">
               <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
                 <Gift size={28} className="text-[#C0A09A]" />
               </div>
               <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
-                Cofanetto Regalo Signature
+                Cofanetto Luxury
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Astuccio rigido di lusso, panno in microfibra per lucidatura e certificato di garanzia 24 mesi inclusi in ogni ordine.
+                Astuccio rigido di lusso, panno in microfibra per lucidatura e Certificato Ufficiale di Autenticità inclusi in ogni ordine.
               </p>
             </div>
 

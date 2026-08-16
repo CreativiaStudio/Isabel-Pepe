@@ -102,7 +102,7 @@ export default function SpedizioniResiPage() {
               Desideriamo che tu sia al 100% soddisfatto del tuo gioiello Isabel Pepe. In conformità con la normativa italiana ed europea (Codice del Consumo), hai il diritto di recedere dal contratto di acquisto e restituire il gioiello entro <strong>14 giorni di calendario</strong> a partire dal giorno di effettiva ricezione del pacco.
             </p>
             <p>
-              Per poter esercitare il diritto di reso, il gioiello deve essere restituito <strong>integro, mai indossato, non alterato o danneggiato</strong> e custodito nella sua confezione originale completa di cofanetto rigido signature Isabel Pepe, certificato di garanzia e panno in microfibra in omaggio.
+              Per poter esercitare il diritto di reso, il gioiello deve essere restituito <strong>integro, mai indossato, non alterato o danneggiato</strong> e custodito nella sua confezione originale completa di Cofanetto Luxury Isabel Pepe, certificato di garanzia e panno in microfibra in omaggio.
             </p>
           </div>
 

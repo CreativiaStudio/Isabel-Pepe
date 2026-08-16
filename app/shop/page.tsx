@@ -30,9 +30,9 @@ const categorySeo: Record<string, { title: string; desc: string; h1: string; int
   },
   Set: {
     title: 'Set Parure Royale Demi-Fine',
-    desc: 'Parure esclusive Isabel Pepe: set coordinati in Argento 925 e Oro 18K con cofanetto regalo signature, panno microfibra e certificato ufficiale.',
+    desc: 'Parure esclusive Isabel Pepe: set coordinati in Argento 925 e Oro 18K con Cofanetto Luxury, panno microfibra e Certificato di Autenticità.',
     h1: 'I Set Royale',
-    intro: 'Parure coordinate pensate per un regalo memorabile o per un look impeccabile. Cofanetto rigido di lusso, panno microfibra e certificato 24 mesi sempre inclusi.',
+    intro: 'Parure coordinate pensate per un regalo memorabile o per un look impeccabile. Cofanetto Luxury, panno microfibra e Certificato di Autenticità sempre inclusi.',
   },
 };
 

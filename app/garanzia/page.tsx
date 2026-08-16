@@ -36,7 +36,7 @@ export default function GaranziaPage() {
         <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-12 rounded-2xl mb-16 shadow-sm">
           <div className="flex items-center gap-3 text-[#C0A09A] mb-4">
             <Award size={24} />
-            <span className="text-xs uppercase tracking-[0.25em] font-semibold">Certificato Signature Incluso</span>
+            <span className="text-xs uppercase tracking-[0.25em] font-semibold">Certificato Ufficiale Incluso</span>
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
@@ -46,7 +46,7 @@ export default function GaranziaPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light mb-8">
             <div className="space-y-4">
               <p>
-                All'interno del tuo cofanetto rigido di lusso troverai il <strong>Certificato Ufficiale di Autenticità & Garanzia Isabel Pepe</strong>, un documento nominale che attesta la purezza e le specifiche tecniche della tua creazione.
+                All'interno del tuo <strong>Cofanetto Luxury</strong> troverai il <strong>Certificato Ufficiale di Autenticità & Garanzia Isabel Pepe</strong>, un documento nominale che attesta la purezza e le specifiche tecniche della tua creazione.
               </p>
               <p>
                 <strong>Purezza Argento 925:</strong> Certifica l'utilizzo esclusivo di Argento Sterling 925 anallergico al 100%, totalmente privo di nichel, piombo e cadmio (conforme alle normative REACH europee).
