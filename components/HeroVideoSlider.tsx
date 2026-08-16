@@ -68,44 +68,50 @@ export default function HeroVideoSlider() {
   };
 
   return (
-    <section className="relative w-full h-[88vh] sm:h-[90vh] md:h-screen overflow-hidden bg-black flex items-end pb-24 md:pb-0 md:items-center">
+    <section className="relative w-full h-[88vh] sm:h-[90vh] md:h-screen overflow-hidden bg-[#181312] flex items-end pb-24 md:pb-0 md:items-center">
       
-      {/* 1. LAYER VIDEO — Inquadratura mobile calibrata sulla modella (78% a destra) e desktop centrata */}
-      {slides.map((slide, index) => {
-        const isActive = index === currentSlide;
+      {/* 1. LAYER VIDEO — Inquadratura mobile calibrata sulla modella (78% a destra) e tonalità calda costante */}
+      <div className="absolute inset-0 overflow-hidden bg-[#181312]">
+        {slides.map((slide, index) => {
+          const isActive = index === currentSlide;
 
-        return (
-          <div
-            key={slide.id}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-            }`}
-          >
-            <video
-              ref={(el) => {
-                videoRefs.current[index] = el;
-              }}
-              src={slide.videoUrl}
-              onEnded={() => handleVideoEnded(index)}
-              onError={(e) => {
-                const target = e.currentTarget;
-                if (!target.src.includes(slide.fallbackUrl)) {
-                  target.src = slide.fallbackUrl;
-                  target.play().catch(() => {});
-                }
-              }}
-              muted
-              playsInline
-              preload="auto"
-              className="w-full h-full object-cover object-[78%_center] md:object-center"
-            />
-            
-            {/* OVERLAY SFUMATO DINAMICO: Gradiente dal basso su Mobile per massima leggibilità, laterale su Desktop */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10 md:hidden"></div>
-            <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent"></div>
-          </div>
-        );
-      })}
+          return (
+            <div
+              key={slide.id}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+              }`}
+            >
+              <video
+                ref={(el) => {
+                  videoRefs.current[index] = el;
+                }}
+                src={slide.videoUrl}
+                onEnded={() => handleVideoEnded(index)}
+                onError={(e) => {
+                  const target = e.currentTarget;
+                  if (!target.src.includes(slide.fallbackUrl)) {
+                    target.src = slide.fallbackUrl;
+                    target.play().catch(() => {});
+                  }
+                }}
+                muted
+                playsInline
+                preload="auto"
+                className="w-full h-full object-cover object-[78%_center] md:object-center filter brightness-[1.02] contrast-[1.04] saturate-[1.10]"
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* OVERLAY SFUMATO STATICO: Rimane fisso e costante senza causare sbalzi o desaturazione durante il cambio video */}
+      <div className="absolute inset-0 pointer-events-none z-15">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent md:hidden"></div>
+        <div className="hidden md:block absolute inset-0 bg-gradient-to-r from-black/50 via-black/15 to-transparent"></div>
+        {/* Tonalità calda unificante dorata a bassa opacità */}
+        <div className="absolute inset-0 bg-[#C0A09A]/[0.03] mix-blend-color"></div>
+      </div>
 
       {/* 2. TESTO E CALL TO ACTION FISSI (In basso su mobile per lasciare visibile il viso, a sinistra su desktop) */}
       <div className="relative z-20 max-w-[1400px] w-full mx-auto px-5 sm:px-10 lg:px-16 pointer-events-none">
