@@ -87,7 +87,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/spedizioni-resi" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
-                  Spedizioni Express & Resi 30gg
+                  Spedizioni & Resi (14gg)
+                </Link>
+              </li>
+              <li>
+                <Link href="/garanzia" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                  Garanzia & Autenticità
                 </Link>
               </li>
               <li>

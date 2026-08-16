@@ -111,11 +111,11 @@ export default function AssistenzaClientiPage() {
               <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
                 <ShieldCheck size={22} strokeWidth={1.5} />
               </div>
-              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Garanzia 24 Mesi</h3>
-              <p className="text-xs text-gray-500 font-light mb-4">Ogni pezzo è coperto da garanzia ufficiale 24 mesi e doppio scudo protettivo.</p>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Garanzia & Autenticità</h3>
+              <p className="text-xs text-gray-500 font-light mb-4">Ogni creazione include il certificato di autenticità e la garanzia legale di conformità.</p>
             </div>
-            <Link href="/cura-gioielli" className="text-xs uppercase tracking-widest text-[#C0A09A] font-medium hover:underline block pt-2">
-              Guida Cura del Gioiello →
+            <Link href="/garanzia" className="text-xs uppercase tracking-widest text-[#C0A09A] font-medium hover:underline block pt-2">
+              Termini della Garanzia →
             </Link>
           </div>
 

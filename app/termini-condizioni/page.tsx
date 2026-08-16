@@ -73,7 +73,7 @@ export default function TerminiCondizioniPage() {
               5. Garanzia Legale di Conformità (24 mesi)
             </h2>
             <p>
-              Ogni gioiello Isabel Pepe è coperto dalla Garanzia Legale di Conformità di 24 mesi per qualsiasi difetto di fabbricazione dei materiali (Argento 925, placcatura Oro 18K / Rodio, pietre e perle naturali).
+              Ogni gioiello Isabel Pepe è coperto dalla Garanzia Legale di Conformità di 24 mesi ai sensi degli artt. 128 e ss. del Codice del Consumo per qualsiasi difetto originario di fabbricazione dei materiali. La garanzia non copre la normale usura, graffi, ossidazione superficiale, danni accidentali o alterazioni provocate da sostanze chimiche e profumi. Per l'informativa completa, consulta la pagina dedicata: <Link href="/garanzia" className="text-[#C0A09A] underline font-medium">Garanzia & Certificato di Autenticità</Link>.
             </p>
           </section>
         </div>
