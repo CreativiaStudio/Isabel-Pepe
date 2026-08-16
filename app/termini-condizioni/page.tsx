@@ -64,7 +64,7 @@ export default function TerminiCondizioniPage() {
               4. Diritto di Recesso e Resi (14 giorni)
             </h2>
             <p>
-              Ai sensi dell'art. 52 del Codice del Consumo, il Cliente ha il diritto di recedere dal contratto di acquisto entro il termine di <strong>14 giorni lavorativi</strong> dal ricevimento dei prodotti, senza alcuna penalità. I prodotti restituiti devono essere integri, nel loro cofanetto ed imballo originale.
+              Ai sensi dell'art. 52 del Codice del Consumo (D.Lgs. 206/2005), il Cliente ha il diritto di recedere dal contratto di acquisto entro il termine di <strong>14 giorni di calendario</strong> dall'avvenuta consegna dei prodotti, senza alcuna penalità. I gioielli restituiti devono essere integri, mai indossati o danneggiati, e custoditi nel loro cofanetto rigido e confezione originale completa di certificato di garanzia.
             </p>
           </section>
 

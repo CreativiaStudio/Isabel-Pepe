@@ -19,7 +19,7 @@ const defaultFaqs: FaqItem[] = [
   },
   {
     question: "Come posso effettuare un reso?",
-    answer: "Offriamo la garanzia 'Soddisfatti o Rimborsati' entro 30 giorni dalla ricezione del pacco. Per avviare la procedura di reso ti basterà contattare la nostra boutique via WhatsApp o inviare un'email a resi@isabelpepe.com (o assistenza@isabelpepe.com) indicando il tuo numero d'ordine."
+    answer: "In conformità al Codice del Consumo, puoi restituire il gioiello entro 14 giorni di calendario dalla consegna. Il gioiello deve essere integro, mai indossato e nella sua confezione originale completa di cofanetto signature e certificato. Per avviare la procedura ti basterà inviare un'email a resi@isabelpepe.com indicando il tuo numero d'ordine."
   },
   {
     question: "La confezione regalo e la garanzia sono incluse?",

@@ -24,7 +24,7 @@ export default function Header() {
           <span>🐾 L'Arte del Dono: Sosteniamo gli Animali</span>
         </Link>
         <span className="hidden sm:inline text-gray-300">•</span>
-        <span className="hidden sm:inline">Resi gratuiti 30 giorni</span>
+        <span className="hidden sm:inline">Reso Facile 14 Giorni</span>
       </div>
       
       <header className="sticky top-0 z-50 backdrop-blur-md bg-white/90 border-b border-gray-100">

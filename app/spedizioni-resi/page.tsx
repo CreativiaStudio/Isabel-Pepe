@@ -6,11 +6,11 @@ import { Truck, RotateCcw, ShieldCheck, Clock, PackageCheck, MapPin, ChevronRigh
 export const metadata: Metadata = {
   title: "Spedizioni e Resi",
   description:
-    "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 30 giorni garantito.",
+    "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
   openGraph: {
     title: "Spedizioni e Resi | Isabel Pepe",
     description:
-      "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 30 giorni garantito.",
+      "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
   },
 };
 
@@ -28,7 +28,7 @@ export default function SpedizioniResiPage() {
             Spedizioni & Resi
           </h1>
           <p className="font-sans text-gray-600 text-sm max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
-            Consegne rapide 24/48h sempre gratuite in tutta Italia ed un servizio di reso semplificato entro 30 giorni per garantirti un'esperienza di acquisto in totale serenità.
+            Consegne rapide 24/48h sempre gratuite in tutta Italia ed un servizio di reso garantito entro 14 giorni per offrirti un'esperienza di acquisto in totale serenità.
           </p>
         </div>
 
@@ -83,26 +83,26 @@ export default function SpedizioniResiPage() {
           </div>
         </div>
 
-        {/* SEZIONE 2: RESI E RECESSO 30 GIORNI */}
+        {/* SEZIONE 2: RESI E RECESSO 14 GIORNI */}
         <div className="mb-16">
           <div className="text-center mb-10">
             <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-3">
               <RotateCcw size={24} />
             </div>
             <h2 className="font-serif text-3xl tracking-widest uppercase text-gray-900 mb-3">
-              Politica di Reso & Recesso (30 Giorni)
+              Politica di Reso & Recesso (14 Giorni)
             </h2>
             <p className="text-xs text-gray-500 font-light tracking-wide uppercase">
-              Garanzia Soddisfatti o Rimborsati estesa oltre i termini di legge
+              Diritto di Recesso ai sensi dell'Art. 52 del Codice del Consumo (D.Lgs. 206/2005)
             </p>
           </div>
 
           <div className="bg-white border border-gray-200 p-8 sm:p-10 rounded-2xl shadow-sm space-y-6 text-xs text-gray-600 font-light leading-relaxed mb-10">
             <p>
-              Desideriamo che tu sia al 100% entusiasta delle tue creazioni Isabel Pepe. Se per qualsiasi motivo il tuo acquisto non soddisfa le tue aspettative, hai la possibilità di restituire il gioiello entro <strong>30 giorni</strong> dalla data di ricezione dell'ordine.
+              Desideriamo che tu sia al 100% soddisfatto del tuo gioiello Isabel Pepe. In conformità con la normativa italiana ed europea (Codice del Consumo), hai il diritto di recedere dal contratto di acquisto e restituire il gioiello entro <strong>14 giorni di calendario</strong> a partire dal giorno di effettiva ricezione del pacco.
             </p>
             <p>
-              Per far valere il diritto di reso, il prodotto deve essere integro, mai indossato, non danneggiato e restituito nella sua confezione originale completa di certificato di garanzia e panno microfibra in omaggio.
+              Per poter esercitare il diritto di reso, il gioiello deve essere restituito <strong>integro, mai indossato, non alterato o danneggiato</strong> e custodito nella sua confezione originale completa di cofanetto rigido signature Isabel Pepe, certificato di garanzia e panno in microfibra in omaggio.
             </p>
           </div>
 
@@ -117,9 +117,9 @@ export default function SpedizioniResiPage() {
               <span className="w-8 h-8 rounded-full bg-[#C0A09A] text-white text-xs font-serif flex items-center justify-center font-bold mb-4">
                 1
               </span>
-              <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Richiedi l'Autorizzazione</h4>
+              <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Richiedi il Reso</h4>
               <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Contatta il nostro supporto via WhatsApp o via email a <a href="mailto:resi@isabelpepe.com" className="text-[#C0A09A] underline">resi@isabelpepe.com</a> (o <a href="mailto:assistenza@isabelpepe.com" className="text-[#C0A09A] underline">assistenza@isabelpepe.com</a>) specificando il tuo codice ordine.
+                Invia un'email entro 14 giorni a <a href="mailto:resi@isabelpepe.com" className="text-[#C0A09A] underline">resi@isabelpepe.com</a> indicando il numero d'ordine e il nome del gioiello che desideri restituire.
               </p>
             </div>
 
@@ -129,7 +129,7 @@ export default function SpedizioniResiPage() {
               </span>
               <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Prepara il Pacco</h4>
               <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Riponi i prodotti nel cofanetto rigido originale. Riceverai le istruzioni per applicare l'etichetta di reso ed il punto di consegna o ritiro a domicilio.
+                Riponi il gioiello nel cofanetto rigido originale con tutti gli accessori. Riceverai le istruzioni e l'indirizzo logistico per la spedizione del reso.
               </p>
             </div>
 
@@ -139,7 +139,7 @@ export default function SpedizioniResiPage() {
               </span>
               <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Ricevi il Rimborso</h4>
               <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Una volta rientrato ed ispezionato il reso presso la nostra sede logistica, emetteremo il rimborso sullo stesso metodo di pagamento (Stripe, PayPal, Klarna) entro 3-5 giorni.
+                Non appena il reso rientra ed è verificata l'integrità del gioiello, emetteremo il rimborso completo sullo stesso metodo di pagamento utilizzato in fase d'ordine entro 3-5 giorni lavorativi.
               </p>
             </div>
 

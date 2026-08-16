@@ -246,7 +246,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   Consegna<br />Express
                 </span>
                 <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  24/48h • Reso 30gg
+                  24/48h • Reso 14gg
                 </span>
               </div>
               <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
