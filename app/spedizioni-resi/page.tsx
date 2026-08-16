@@ -139,7 +139,7 @@ export default function SpedizioniResiPage() {
               </span>
               <h4 className="font-serif text-base text-gray-900 uppercase mb-2">Ricevi il Rimborso</h4>
               <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Una volta rientrato ed ispezionato il reso presso il nostro atelier, emetteremo il rimborso sullo stesso metodo di pagamento (Stripe, PayPal, Klarna) entro 3-5 giorni.
+                Una volta rientrato ed ispezionato il reso presso la nostra sede logistica, emetteremo il rimborso sullo stesso metodo di pagamento (Stripe, PayPal, Klarna) entro 3-5 giorni.
               </p>
             </div>
 

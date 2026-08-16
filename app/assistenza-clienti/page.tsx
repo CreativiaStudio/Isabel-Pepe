@@ -67,34 +67,55 @@ export default function AssistenzaClientiPage() {
         {/* CANALI DI CONTATTO & INFO */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
           
-          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
-              <Mail size={22} strokeWidth={1.5} />
+          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
+                <Mail size={22} strokeWidth={1.5} />
+              </div>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Email Ufficiali</h3>
+              <p className="text-xs text-gray-500 font-light mb-3">Scrivici per qualsiasi richiesta. Ti risponderemo entro 24 ore.</p>
             </div>
-            <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Email Direct</h3>
-            <p className="text-xs text-gray-500 font-light mb-4">Scrivici in qualsiasi momento. Ti risponderemo entro 24 ore.</p>
-            <a href="mailto:assistenza@isabelpepe.com" className="text-xs font-mono font-medium text-[#C0A09A] underline">
-              assistenza@isabelpepe.com
-            </a>
+            <div className="space-y-1.5 text-xs font-mono font-medium text-[#C0A09A]">
+              <div>
+                <span className="text-[10px] text-gray-400 font-sans uppercase block">Assistenza Ordini:</span>
+                <a href="mailto:assistenza@isabelpepe.com" className="hover:underline">assistenza@isabelpepe.com</a>
+              </div>
+              <div className="pt-1">
+                <span className="text-[10px] text-gray-400 font-sans uppercase block">Resi & Garanzie:</span>
+                <a href="mailto:resi@isabelpepe.com" className="hover:underline">resi@isabelpepe.com</a>
+              </div>
+              <div className="pt-1">
+                <span className="text-[10px] text-gray-400 font-sans uppercase block">Info & Comunicazione:</span>
+                <a href="mailto:info@isabelpepe.com" className="hover:underline">info@isabelpepe.com</a>
+              </div>
+            </div>
           </div>
 
-          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
-              <Clock size={22} strokeWidth={1.5} />
+          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
+                <Clock size={22} strokeWidth={1.5} />
+              </div>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Boutique Digitale</h3>
+              <p className="text-xs text-gray-500 font-light mb-4">Siamo un brand 100% online, sempre a tua disposizione.</p>
             </div>
-            <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Orari Atelier</h3>
-            <p className="text-xs text-gray-500 font-light mb-2">Lunedì – Venerdì: 09:00 – 19:00</p>
-            <p className="text-xs text-gray-500 font-light">Sabato: 10:00 – 18:00</p>
+            <div className="bg-[#FAF8F5] p-3 rounded-lg border border-[#F0E6E1]/60 text-xs text-gray-600 font-light space-y-1">
+              <p className="font-medium text-gray-900">Supporto Clienti</p>
+              <p>Lunedì – Sabato: 09:00 – 19:00</p>
+              <p className="text-[10px] text-gray-400">Ordini online attivi 24/7</p>
+            </div>
           </div>
 
-          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm">
-            <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
-              <ShieldCheck size={22} strokeWidth={1.5} />
+          <div className="border border-gray-100 p-8 text-center hover:border-[#C0A09A]/50 transition-colors duration-300 bg-white shadow-sm flex flex-col justify-between">
+            <div>
+              <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
+                <ShieldCheck size={22} strokeWidth={1.5} />
+              </div>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Garanzia 24 Mesi</h3>
+              <p className="text-xs text-gray-500 font-light mb-4">Ogni pezzo è coperto da garanzia ufficiale 24 mesi e doppio scudo protettivo.</p>
             </div>
-            <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Garanzia 24 Mesi</h3>
-            <p className="text-xs text-gray-500 font-light mb-4">Ogni pezzo è coperto da garanzia ufficiale e assistenza tecnica.</p>
-            <Link href="/cura-gioielli" className="text-xs uppercase tracking-widest text-[#C0A09A] font-medium hover:underline">
-              Cura del Gioiello →
+            <Link href="/cura-gioielli" className="text-xs uppercase tracking-widest text-[#C0A09A] font-medium hover:underline block pt-2">
+              Guida Cura del Gioiello →
             </Link>
           </div>
 

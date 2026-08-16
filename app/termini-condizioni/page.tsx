@@ -32,10 +32,12 @@ export default function TerminiCondizioniPage() {
               Le presenti Condizioni Generali di Vendita disciplinano l'acquisto dei prodotti firmati <strong>Isabel Pepe</strong> effettuato tramite il sito e-commerce gestito da:
             </p>
             <div className="bg-[#FAF8F5] p-5 rounded-lg border border-[#F0E6E1] text-xs text-gray-800 space-y-1 font-mono my-4">
-              <p><strong>Creativia Digital Studio di Mario Pepe</strong></p>
+              <p><strong>Ditta Individuale:</strong> Creativia Digital Studio di Mario Pepe</p>
               <p><strong>P.IVA:</strong> 02100840683</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
               <p><strong>Email Assistenza:</strong> assistenza@isabelpepe.com</p>
+              <p><strong>Email Resi & Recesso:</strong> resi@isabelpepe.com</p>
+              <p><strong>Informazioni Generali:</strong> info@isabelpepe.com</p>
             </div>
           </section>
 

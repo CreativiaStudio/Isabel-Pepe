@@ -99,7 +99,7 @@ export default function ChiSiamoPage() {
               <span>Il Nostro Impegno Concreto</span>
             </div>
             <p className="text-xs text-gray-500 font-light leading-relaxed">
-              Una quota di ogni tua creazione Isabel Pepe viene devoluta direttamente a rifugi ed enti no-profit dedicati alla salvaguardia degli animali. Scegliere un nostro gioiello significa indossare un simbolo di luce che custodisce una promessa d'amore verso i più deboli.
+              Il 5% di ogni tua creazione Isabel Pepe viene devoluto direttamente a rifugi ed enti no-profit dedicati alla salvaguardia degli animali. Scegliere un nostro gioiello significa indossare un simbolo di luce che custodisce una promessa d'amore verso i più deboli.
             </p>
           </div>
 

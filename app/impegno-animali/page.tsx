@@ -4,13 +4,13 @@ import type { Metadata } from 'next';
 import { Heart, ShieldCheck, Sparkles, Footprints, Home, Stethoscope, Gift, ArrowRight, HeartHandshake } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "L'Arte del Dono",
+  title: "L'Arte del Dono — Il 5% per il Benessere Animale",
   description:
-    "Per ogni gioiello Isabel Pepe acquistato, doniamo una quota a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+    "Il 5% di ogni gioiello Isabel Pepe acquistato viene donato direttamente a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
   openGraph: {
-    title: "L'Arte del Dono | Isabel Pepe",
+    title: "L'Arte del Dono — Il 5% per il Benessere Animale | Isabel Pepe",
     description:
-      "Per ogni gioiello Isabel Pepe acquistato, doniamo una quota a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+      "Il 5% di ogni gioiello Isabel Pepe acquistato viene donato direttamente a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
   },
 };
 
@@ -64,11 +64,11 @@ export default function ImpegnoAnimaliPage() {
             </div>
 
             <h3 className="font-serif text-2xl text-gray-900 tracking-wider">
-              Una Quota di Ogni Acquisto va a Salvare Vite
+              Il 5% di Ogni Acquisto va a Salvare Vite
             </h3>
 
             <p className="text-xs text-gray-600 font-light leading-relaxed">
-              Per <strong>ogni singolo ordine</strong> effettuato nel nostro atelier digitale, destiniamo direttamente una quota fissa del ricavato a rifugi indipendenti, canili, gattili e volontari sul campo che dedicano le proprie giornate al salvataggio degli animali.
+              Per <strong>ogni singolo ordine</strong> effettuato nella nostra boutique online, destiniamo direttamente <strong>il 5% del ricavato</strong> a rifugi indipendenti, canili, gattili e volontari sul campo che dedicano le proprie giornate al salvataggio degli animali.
             </p>
 
             <div className="space-y-3 pt-4 border-t border-[#F0E6E1]">

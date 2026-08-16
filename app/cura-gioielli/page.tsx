@@ -133,7 +133,7 @@ export default function CuraGioielliPage() {
           <ShieldCheck size={36} className="text-[#C0A09A] mx-auto mb-4" />
           <h2 className="font-serif text-2xl tracking-widest uppercase mb-3">Hai Bisogno di Assistenza o Riparazioni?</h2>
           <p className="text-xs text-gray-400 font-light tracking-wide max-w-xl mx-auto mb-8">
-            I nostri esperti in atelier sono sempre disponibili per consigli di pulizia straordinaria o supporto sulla garanzia di 24 mesi.
+            Il nostro team di assistenza è sempre disponibile per consigli di cura straordinaria o supporto sulla garanzia ufficiale di 24 mesi.
           </p>
           <Link href="/assistenza-clienti" className="inline-block bg-[#C0A09A] hover:bg-white text-white hover:text-[#1A1A1A] text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300">
             Contatta Concierge Boutique

@@ -255,7 +255,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                   L'Arte del<br />Dono
                 </span>
                 <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  Sostegno Animali
+                  5% agli Animali
                 </span>
               </div>
             </div>
