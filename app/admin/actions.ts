@@ -3,7 +3,8 @@
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
 import { revalidatePath } from 'next/cache';
-import { uploadToR2, renameR2Object } from '@/lib/r2';
+import { uploadToR2, renameR2Object, getR2Client, getR2Config } from '@/lib/r2';
+import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -147,6 +148,8 @@ export async function addProduct(formData: FormData) {
     if (dbError) throw new Error('Errore salvataggio DB: ' + dbError.message);
 
     revalidatePath('/admin');
+    revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true };
     
   } catch (error: any) {
@@ -161,6 +164,8 @@ export async function updateProductField(id: string, field: string, value: strin
     const { error } = await supabaseAdmin.from('products').update({ [field]: value }).eq('id', id);
     if (error) throw new Error(error.message);
     revalidatePath('/admin');
+    revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
@@ -269,6 +274,8 @@ export async function deleteProduct(id: string) {
     const { error } = await supabaseAdmin.from('products').delete().eq('id', id);
     if (error) throw new Error(error.message);
     revalidatePath('/admin');
+    revalidatePath('/shop');
+    revalidatePath('/');
     return { success: true };
   } catch (error: any) {
     return { error: error.message };
@@ -327,36 +334,52 @@ export async function seedSampleProducts() {
 // --- MEDIA LIBRARY ACTIONS ---
 export async function getMediaLibrary() {
   try {
-    const { ListObjectsV2Command } = await import('@aws-sdk/client-s3');
-    const { getR2Client, getR2Config } = await import('@/lib/r2');
-    
     const config = getR2Config();
     const client = getR2Client();
 
-    // Lista tutti gli oggetti nella cartella 'products'
-    const command = new ListObjectsV2Command({
-      Bucket: config.bucketName,
-      Prefix: 'products/',
-    });
+    let continuationToken: string | undefined = undefined;
+    let isTruncated = true;
+    const allContents: any[] = [];
 
-    const response = await client.send(command);
-    
-    if (!response.Contents) return [];
+    // Loop through all pages of objects in R2
+    while (isTruncated) {
+      const command: InstanceType<typeof ListObjectsV2Command> = new ListObjectsV2Command({
+        Bucket: config.bucketName,
+        Prefix: 'products/',
+        ContinuationToken: continuationToken,
+      });
+
+      const response = await client.send(command);
+      if (response.Contents && response.Contents.length > 0) {
+        allContents.push(...response.Contents);
+      }
+
+      isTruncated = response.IsTruncated ?? false;
+      continuationToken = response.NextContinuationToken;
+    }
 
     const publicUrlBase = config.publicUrl;
 
-    // Mappiamo i risultati estraendo URL e dettagli
-    const mediaFiles = response.Contents.map(item => {
+    // Filter out virtual directory keys (ending with / or size 0) and missing keys
+    const validContents = allContents.filter(item => {
+      if (!item.Key) return false;
+      if (item.Key.endsWith('/')) return false;
+      if (item.Size === 0) return false;
+      return true;
+    });
+
+    // Map results extracting URL and metadata
+    const mediaFiles = validContents.map(item => {
       return {
-        key: item.Key,
+        key: item.Key!,
         url: `${publicUrlBase}/${item.Key}`,
-        size: item.Size,
+        size: item.Size || 0,
         lastModified: item.LastModified?.toISOString(),
-        name: item.Key?.split('/').pop() || item.Key
+        name: item.Key!.split('/').pop() || item.Key!
       };
     });
 
-    // Ordiniamo per data (più recenti prima)
+    // Sort by date (newest first)
     mediaFiles.sort((a, b) => {
       const dateA = new Date(a.lastModified || 0).getTime();
       const dateB = new Date(b.lastModified || 0).getTime();
@@ -367,6 +390,6 @@ export async function getMediaLibrary() {
 
   } catch (error) {
     console.error("Errore nel fetch della Media Library da R2:", error);
-    return [];
+    throw error;
   }
 }

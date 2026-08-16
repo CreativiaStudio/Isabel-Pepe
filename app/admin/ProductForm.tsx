@@ -63,6 +63,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [mediaModalSlot, setMediaModalSlot] = useState<string | null>(null);
+  const [productName, setProductName] = useState(initialData?.name || '');
+  const [productSku, setProductSku] = useState(initialData?.sku || '');
   const [slotUrls, setSlotUrls] = useState<Record<string, string>>({});
   const [uploadingSlots, setUploadingSlots] = useState<Record<string, boolean>>({});
   const [clearedSlots, setClearedSlots] = useState<Record<string, boolean>>({});
@@ -73,6 +75,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
 
   useEffect(() => {
     if (initialData) {
+      setProductName(initialData.name || '');
+      setProductSku(initialData.sku || '');
       setCategory(initialData.category || 'Collane');
       setMessage('');
       setPreviews({});
@@ -91,6 +95,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       }
       setSlotUrls(initialSlotUrls);
     } else {
+      setProductName('');
+      setProductSku('');
       setCategory('Collane');
       setPreviews({});
       setClearedSlots({});
@@ -116,7 +122,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       formData.append('file', compressedFile);
       formData.append('folder', 'products');
 
-      const customName = `isabel-pepe-${(initialData?.name || 'gioiello').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${slotKey}-${Date.now()}`;
+      const customName = `isabel-pepe-${(productName || initialData?.name || 'gioiello').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${slotKey}-${Date.now()}`;
       formData.append('customName', customName);
 
       const res = await fetch('/api/upload', {
@@ -173,6 +179,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         router.refresh();
         if (!isEditing) {
           (e.target as HTMLFormElement).reset();
+          setProductName('');
+          setProductSku('');
           setSlotUrls({});
           setPreviews({});
           setClearedSlots({});
@@ -218,13 +226,27 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
             {/* Riga 1: Nome */}
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Nome Gioiello</label>
-              <input type="text" name="name" defaultValue={initialData?.name} required className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" />
+              <input 
+                type="text" 
+                name="name" 
+                value={productName} 
+                onChange={(e) => setProductName(e.target.value)} 
+                required 
+                className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900" 
+              />
             </div>
 
             {/* Riga 2: SKU */}
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Codice (SKU)</label>
-              <input type="text" name="sku" defaultValue={initialData?.sku} className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 placeholder:text-gray-500" placeholder="Es. IP-001" />
+              <input 
+                type="text" 
+                name="sku" 
+                value={productSku} 
+                onChange={(e) => setProductSku(e.target.value)} 
+                className="w-full border border-gray-200 rounded-md p-2 focus:ring-2 focus:ring-[#C0A09A] outline-none text-sm text-gray-900 placeholder:text-gray-500" 
+                placeholder="Es. IP-001" 
+              />
             </div>
 
             {/* Riga 3: Prezzo, Sconto e Stock */}
@@ -330,12 +352,12 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                   return (
                     <div key={slotNum} className="p-3 border border-gray-100 bg-white rounded-lg flex items-center gap-3 shadow-sm hover:border-gray-300 transition-colors">
                       {/* Preview Area */}
-                      <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer overflow-hidden">
+                      <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer">
                         {isUploading ? (
                           <Loader2 className="w-5 h-5 animate-spin text-[#C0A09A]" />
                         ) : currentPreview ? (
                           <>
-                            <img src={currentPreview} alt={`Slot ${slotNum}`} className="w-full h-full object-cover rounded-md" />
+                            <img src={currentPreview} alt={`Slot ${slotNum}`} className="w-full h-full object-cover rounded-md overflow-hidden" />
                             
                             {/* Popup Ingrandito */}
                             <div className="absolute z-50 hidden group-hover:block top-1/2 -translate-y-1/2 left-16 w-48 h-48 bg-white border border-gray-200 rounded-lg shadow-2xl overflow-hidden pointer-events-none animate-in fade-in zoom-in-95 duration-200">
@@ -446,7 +468,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       <MediaLibraryModal 
         isOpen={mediaModalSlot !== null} 
         onClose={() => setMediaModalSlot(null)} 
-        initialSearch=""
+        initialSearch={productName || productSku || initialData?.name || initialData?.sku || ''}
         onSelect={(url) => {
           if (mediaModalSlot) {
             setSlotUrls(prev => ({ ...prev, [mediaModalSlot]: url }));

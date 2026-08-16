@@ -43,3 +43,30 @@ Integrity mode: development
 - [ ] Tutti i 43+ prodotti nel database Supabase contengono `seo_title`, `seo_description` e `description` aggiornati e coerenti.
 - [ ] `npm run build` compila con successo (0 errori TypeScript / Next.js).
 - [ ] Tutte le pagine sono verificabili e navigabili in locale su `http://localhost:3000`.
+
+## Request — 2026-08-16T09:13:37Z
+
+Investigate and completely bulletproof the Cloudflare R2 media connection, image browsing modal, direct uploads, and product persistence in Isabel Pepe Next.js e-commerce administration.
+
+Working directory: c:/Users/mario/Progetti Antigravity/isabel-pepe
+
+## Requirements
+
+### R1. Cloudflare R2 Connection Resilience
+Ensure S3Client connection to Cloudflare R2 works unconditionally in all runtime environments (Local dev, Vercel Serverless, Edge) without dependency on external runtime environment variables by having verified internal fallback credentials.
+
+### R2. Media Library Modal Browsing
+The "Sfoglia" (Media Library) modal must reliably list all media items from the isabel-pepe bucket, allow direct search/filtering by jewelry name or SKU, and provide immediate visual status and direct selection into product gallery slots.
+
+### R3. Fast Per-Slot Image Upload & Persistence
+Direct file upload from local machine via "+ Foto" and selection via "Sfoglia" must immediately populate gallery slot URLs and save to Supabase upon clicking "Salva Modifiche", with multi-path cache revalidation (/admin, /shop, /, /prodotto/[slug]).
+
+## Acceptance Criteria
+
+### Verification
+- [ ] Direct HTTP GET /api/media returns HTTP 200 with all 138+ R2 image objects.
+- [ ] Direct HTTP POST /api/upload returns HTTP 200 with public WebP URL.
+- [ ] Browser modal opens with full thumbnail grid, search filter, and upload button.
+- [ ] Product update writes gallery array to Supabase and re-fetches with verified persistence.
+- [ ] Build npm run build compiles with 0 errors.
+

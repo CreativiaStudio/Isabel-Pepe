@@ -19,6 +19,59 @@ interface Props {
   initialSearch?: string;
 }
 
+async function compressImageClient(file: File): Promise<File> {
+  if (file.size < 1024 * 1024 || !file.type.startsWith('image/')) {
+    return file;
+  }
+  return new Promise((resolve) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      img.src = e.target?.result as string;
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1800;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(file);
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+                type: 'image/webp',
+              });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          'image/webp',
+          0.85
+        );
+      };
+      img.onerror = () => resolve(file);
+    };
+    reader.onerror = () => resolve(file);
+    reader.readAsDataURL(file);
+  });
+}
+
 export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '' }: Props) {
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -77,8 +130,9 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
 
     setUploading(true);
     try {
+      const compressedFile = await compressImageClient(file);
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', compressedFile);
       formData.append('folder', 'products');
       formData.append('customName', `isabel-pepe-media-${Date.now()}`);
 
@@ -130,7 +184,21 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
     if (!isImage) return false;
     const q = search.toLowerCase().trim();
     if (!q) return true;
-    return m.name.toLowerCase().includes(q) || m.key.toLowerCase().includes(q);
+
+    const tokens = q.split(/\s+/).filter(Boolean);
+    if (tokens.length === 0) return true;
+
+    const normalizedName = m.name.toLowerCase().replace(/[-_]+/g, ' ');
+    const normalizedKey = m.key.toLowerCase().replace(/[-_]+/g, ' ');
+    const rawName = m.name.toLowerCase();
+    const rawKey = m.key.toLowerCase();
+
+    return tokens.every(token => 
+      rawName.includes(token) || 
+      rawKey.includes(token) || 
+      normalizedName.includes(token) || 
+      normalizedKey.includes(token)
+    );
   });
 
   return (

@@ -1,9 +1,9 @@
 import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
-const DEFAULT_R2_ACCOUNT_ID = '1e5fb92e860959f6d4d1421fec22aee7';
-const DEFAULT_R2_ACCESS_KEY_ID = 'e26a7eef46c26b5289f666f437021707';
-const DEFAULT_R2_SECRET_ACCESS_KEY = 'b8b548b8137350cb4a5e2f7c006fcbb5dbb1a806ea5561a007f59d57a2c67ce7';
+const DEFAULT_R2_ACCOUNT_ID = 'cdc3d1bfef17f23cb453fe2737b2ede8';
+const DEFAULT_R2_ACCESS_KEY_ID = 'a15ba732cf75ed7cb171a095e794a479';
+const DEFAULT_R2_SECRET_ACCESS_KEY = '4f09e1eb767175bf174301dfb41ea4c38c9aac8648aafb78d9914239d6a6093f';
 const DEFAULT_R2_BUCKET_NAME = 'isabel-pepe';
 const DEFAULT_R2_PUBLIC_URL = 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev';
 
@@ -81,6 +81,7 @@ export async function uploadToR2(file: File, folder: string = 'products', custom
     Body: uint8Array,
     ContentLength: uint8Array.length,
     ContentType: contentType,
+    CacheControl: 'public, max-age=31536000, immutable',
   });
 
   await client.send(command);
