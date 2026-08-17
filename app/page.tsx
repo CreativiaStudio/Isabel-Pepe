@@ -132,59 +132,60 @@ export default async function Home() {
       </section>
 
       {/* 4. I 4 Pilastri Isabel Pepe (Doppio Scudo, Cofanetto Signature, Pietre di Luce, L'Arte del Dono) */}
+      {/* 4. Pilastri del Valore Isabel Pepe */}
       <section className="py-24 bg-[#141414] text-white border-y border-white/10">
         <div className="max-w-[1400px] mx-auto px-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 text-center items-stretch">
             
             {/* Pilastro 1: Doppio Scudo Protettivo */}
-            <div className="flex flex-col items-center px-3">
-              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+            <div className="flex flex-col items-center px-2 h-full">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner shrink-0">
                 <ShieldCheck size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
-                Doppio Scudo Protettivo
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white leading-snug min-h-[48px] flex items-center justify-center">
+                Doppio Scudo<br />Protettivo
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Base in puro Argento 925 con placcatura Oro 18K da 1 Micron (20 volte più spessa della media) o Rodio Puro, sigillati dall'invisibile nano-protezione E-Coating.
+                Base in puro Argento 925 con placcatura Oro 18K da 1 Micron (20 volte più spessa) o Rodio a specchio e nanoprotezione E-Coating.
               </p>
             </div>
 
             {/* Pilastro 2: Cofanetto Luxury */}
-            <div className="flex flex-col items-center px-3">
-              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+            <div className="flex flex-col items-center px-2 h-full">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner shrink-0">
                 <Gift size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
-                Cofanetto Luxury
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white leading-snug min-h-[48px] flex items-center justify-center">
+                Cofanetto Luxury<br />& Certificato
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Astuccio rigido di lusso, panno in microfibra per lucidatura e Certificato Ufficiale di Autenticità inclusi in ogni ordine.
+                Astuccio rigido di alta gamma, panno in microfibra per la cura del gioiello e Certificato Ufficiale di Autenticità in ogni ordine.
               </p>
             </div>
 
             {/* Pilastro 3: Pietre di Pura Luce */}
-            <div className="flex flex-col items-center px-3">
-              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+            <div className="flex flex-col items-center px-2 h-full">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner shrink-0">
                 <Sparkles size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
-                Pietre di Pura Luce
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white leading-snug min-h-[48px] flex items-center justify-center">
+                Pietre Scelte<br />di Pura Luce
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Pietre ad altissima rifrazione con Taglio Brillante VVS1 D-Color e perle d'acqua dolce naturali selezionate a mano.
+                Moissanite certificata GRA Taglio Brillante VVS1 D-Color e perle d'acqua dolce naturali ad altissima rifrazione di luce eterna.
               </p>
             </div>
 
             {/* Pilastro 4: L'Arte del Dono */}
-            <div className="flex flex-col items-center px-3">
-              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner">
+            <div className="flex flex-col items-center px-2 h-full">
+              <div className="w-16 h-16 rounded-full bg-[#C0A09A]/10 border border-[#C0A09A]/30 flex items-center justify-center mb-6 shadow-inner shrink-0">
                 <HeartHandshake size={28} className="text-[#C0A09A]" />
               </div>
-              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white">
-                L'Arte del Dono
+              <h4 className="font-serif text-lg tracking-widest uppercase mb-3 text-white leading-snug min-h-[48px] flex items-center justify-center">
+                L'Arte del Dono<br />per gli Animali
               </h4>
               <p className="font-sans text-gray-400 text-xs tracking-wider leading-relaxed font-light max-w-xs">
-                Isabel Pepe sostiene attivamente gli animali: una parte di ogni acquisto viene devoluta a rifugi e cure veterinarie.
+                Il 5% di ogni tuo acquisto sostiene direttamente i volontari sul campo dedicati alla salvezza e alla cura di animali in pericolo.
               </p>
             </div>
 
