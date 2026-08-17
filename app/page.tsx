@@ -211,16 +211,16 @@ export default async function Home() {
         {/* Contenuto Manifesto */}
         <div className="max-w-[850px] mx-auto relative z-10">
           
-          {/* Logo Monogramma IP con Bagliore & Scintillio Dinamico */}
+          {/* Logo Monogramma IP in Puro Rosa Champagne con Shimmer Dinamico */}
           <div className="relative inline-block mx-auto mb-8 sm:mb-10 group">
-            <img 
-              src="/Brand/logotipo-isabel.png" 
-              alt="Isabel Pepe Monogramma Ufficiale" 
-              className="h-20 sm:h-24 w-auto object-contain mx-auto animate-luxury-logo cursor-pointer transition-transform duration-700 group-hover:scale-105" 
+            <div 
+              role="img"
+              aria-label="Isabel Pepe Monogramma Ufficiale Rosa Champagne"
+              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto logo-champagne-shimmer cursor-pointer transition-transform duration-700 group-hover:scale-105" 
             />
             
             {/* Scintillio di Luce Dinamico 1 (Angolo Superiore Destro) */}
-            <span className="absolute -top-1 -right-1 text-[#F0E6E1] text-xs pointer-events-none animate-glint-1">
+            <span className="absolute -top-1 -right-1 text-[#FFF2EE] text-xs pointer-events-none animate-glint-1">
               ✦
             </span>
             

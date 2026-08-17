@@ -62,17 +62,45 @@ body {
   /* Leggero bagliore esterno */
 }
 
-/* Animazione Bagliore & Scintillio Luxury per Monogramma Isabel Pepe */
-@keyframes luxuryLogoShine {
-  0%, 100% {
-    filter: brightness(0) invert(1) drop-shadow(0 0 14px rgba(192, 160, 154, 0.7)) drop-shadow(0 0 28px rgba(255, 230, 220, 0.45));
-    opacity: 0.95;
+/* Logo Monogramma IP in Puro Rosa Champagne Metallico con Shimmer Dinamico */
+.logo-champagne-shimmer {
+  mask-image: url('/Brand/logotipo-isabel.png');
+  -webkit-mask-image: url('/Brand/logotipo-isabel.png');
+  mask-size: contain;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  -webkit-mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-position: center;
+  background: linear-gradient(
+    115deg,
+    #8A5E58 0%,
+    #C0A09A 22%,
+    #FFF2EE 48%,
+    #E8D7D3 55%,
+    #C0A09A 78%,
+    #8A5E58 100%
+  );
+  background-size: 240% 100%;
+  animation: champagneFoilSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 16px rgba(192, 160, 154, 0.75)) drop-shadow(0 0 35px rgba(192, 160, 154, 0.4));
+}
+
+@keyframes champagneFoilSweep {
+  0% {
+    background-position: 100% 0%;
+    filter: drop-shadow(0 0 14px rgba(192, 160, 154, 0.6)) drop-shadow(0 0 25px rgba(247, 236, 232, 0.3));
     transform: scale(1);
   }
   50% {
-    filter: brightness(0) invert(1) drop-shadow(0 0 28px rgba(212, 178, 172, 1)) drop-shadow(0 0 50px rgba(255, 245, 240, 0.8));
-    opacity: 1;
+    background-position: 0% 0%;
+    filter: drop-shadow(0 0 28px rgba(212, 178, 172, 1)) drop-shadow(0 0 50px rgba(255, 240, 236, 0.7));
     transform: scale(1.03);
+  }
+  100% {
+    background-position: -100% 0%;
+    filter: drop-shadow(0 0 14px rgba(192, 160, 154, 0.6)) drop-shadow(0 0 25px rgba(247, 236, 232, 0.3));
+    transform: scale(1);
   }
 }
 
@@ -85,10 +113,6 @@ body {
     opacity: 1;
     transform: scale(1.3) rotate(90deg);
   }
-}
-
-.animate-luxury-logo {
-  animation: luxuryLogoShine 4.5s ease-in-out infinite;
 }
 
 .animate-glint-1 {
