@@ -26,9 +26,20 @@ export default function ChiSiamoPage() {
         <h1 className="font-serif text-4xl sm:text-6xl tracking-widest uppercase mb-8 text-gray-900 leading-tight">
           L'Arte di Splendere
         </h1>
-        <p className="font-serif italic text-xl sm:text-2xl text-gray-600 font-light leading-relaxed max-w-2xl mx-auto border-y border-[#F0E6E1] py-8">
-          «Tutti ci chiedono: Chi è Isabel? Isabel è l'ideale di donna che ispira ogni nostra scelta.»
-        </p>
+        <div className="max-w-3xl mx-auto my-8">
+          <div className="relative border-y border-[#F0E6E1] py-10 px-6 sm:px-12 bg-[#FAF8F5]/70 rounded-2xl shadow-xs">
+            <span className="text-[#C0A09A] font-serif text-5xl leading-none absolute -top-5 left-1/2 -translate-x-1/2 bg-white px-4 font-normal select-none">
+              “
+            </span>
+            <p className="font-serif text-2xl sm:text-3xl text-gray-900 font-light tracking-wide mb-3">
+              Chi è <span className="font-medium text-[#A8827B]">Isabel</span>?
+            </p>
+            <p className="font-serif italic text-lg sm:text-xl text-gray-600 font-light leading-relaxed max-w-xl mx-auto">
+              «Isabel è l'ideale di donna che ispira ogni nostra creazione, la luce che guida ogni nostra scelta.»
+            </p>
+            <div className="w-12 h-[1px] bg-[#C0A09A] mx-auto mt-6"></div>
+          </div>
+        </div>
       </section>
 
       {/* MANIFESTO / MUSA ISPIRATRICE */}
