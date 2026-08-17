@@ -168,21 +168,13 @@ export default function ImpegnoAnimaliPage() {
             Esplora le nostre collezioni demi-fine e diventa parte attiva del nostro progetto di salvataggio ed amore per gli animali.
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center">
             <Link 
               href="/shop" 
-              className="w-full sm:w-auto bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300 shadow-md flex items-center justify-center gap-2"
+              className="w-full sm:w-auto bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300 shadow-md flex items-center justify-center gap-2 rounded-xl"
             >
               <Gift size={16} />
               Scegli il Tuo Gioiello
-            </Link>
-
-            <Link 
-              href="/assistenza-clienti" 
-              className="w-full sm:w-auto bg-transparent border border-white/20 hover:border-white text-white text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              Sei un'Associazione? Scrivici
-              <ArrowRight size={14} />
             </Link>
           </div>
         </div>
