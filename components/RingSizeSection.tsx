@@ -41,13 +41,13 @@ export default function RingSizeSection() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="bg-white border-2 border-gray-900 px-4 py-3 rounded-xl flex items-center gap-3 shadow-xs">
             <div className="w-8 h-8 rounded-lg bg-[#FAF8F5] border border-[#F0E6E1] flex items-center justify-center font-serif text-sm font-bold text-gray-900">
-              6
+              12
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif text-sm font-semibold text-gray-900">Taglia Unica US 6</span>
+                <span className="font-serif text-sm font-semibold text-gray-900">Taglia Unica 12 (IT)</span>
                 <span className="bg-[#F5EBE9] text-[#8A6A64] text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full">
-                  IT 12
+                  Ø 16.5 mm
                 </span>
               </div>
               <span className="text-[11px] text-gray-500 font-light block mt-0.5">
@@ -61,7 +61,7 @@ export default function RingSizeSection() {
         <div className="mt-3 pt-3 border-t border-[#F0E6E1]/70 flex items-start gap-2 text-xs text-gray-600 font-light leading-relaxed">
           <Sparkles size={14} className="text-[#C0A09A] shrink-0 mt-0.5" />
           <p>
-            Questo anello è realizzato nella <strong>misura standard femminile US 6 (IT 12)</strong>, la taglia più versatile e confortevole per anulare, medio o indice.
+            Questo anello è realizzato nella <strong>misura standard italiana 12 (Ø 16.5 mm)</strong>, la taglia più versatile e confortevole per anulare, medio o indice.
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function RingSizeSection() {
                 </div>
                 <div>
                   <h3 className="font-serif text-lg uppercase tracking-wider text-gray-900">Guida alla Misura Anello</h3>
-                  <p className="text-xs text-gray-500 font-light">Specifiche e verifica della Taglia Unica US 6 (IT 12)</p>
+                  <p className="text-xs text-gray-500 font-light">Specifiche e verifica della Taglia Unica 12 (IT)</p>
                 </div>
               </div>
               <button 
@@ -113,12 +113,8 @@ export default function RingSizeSection() {
 
                 <div className="grid grid-cols-2 gap-3 text-center">
                   <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
-                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Misura USA</span>
-                    <strong className="text-xl text-gray-900 font-serif">US 6</strong>
-                  </div>
-                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
-                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Misura Italia (IT / EU)</span>
-                    <strong className="text-xl text-gray-900 font-serif">IT 12 <span className="text-xs font-sans text-gray-400 font-normal">(52)</span></strong>
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Misura Italia (IT)</span>
+                    <strong className="text-xl text-gray-900 font-serif">Taglia 12</strong>
                   </div>
                   <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
                     <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Diametro Interno</span>
@@ -127,6 +123,10 @@ export default function RingSizeSection() {
                   <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
                     <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Circonferenza Dito</span>
                     <strong className="text-sm text-gray-800 font-mono font-bold">51.8 - 52.0 mm</strong>
+                  </div>
+                  <div className="bg-white p-3.5 rounded-xl border border-gray-100 shadow-2xs">
+                    <span className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold block mb-1">Equivalente USA</span>
+                    <strong className="text-xl text-gray-700 font-serif">US 6</strong>
                   </div>
                 </div>
               </div>
@@ -145,7 +145,7 @@ export default function RingSizeSection() {
                     <span>Con un anello che indossi già (Metodo più preciso)</span>
                   </div>
                   <p className="text-xs text-gray-600 font-light leading-relaxed pl-7">
-                    Prendi un anello della misura giusta e misura con un righello il <strong>diametro interno</strong> (la distanza da bordo a bordo interno, senza considerare lo spessore del metallo). Se misura <strong>circa 16.5 mm</strong>, la taglia US 6 è perfetta!
+                    Prendi un anello della misura giusta e misura con un righello il <strong>diametro interno</strong> (la distanza da bordo a bordo interno, senza considerare lo spessore del metallo). Se misura <strong>circa 16.5 mm</strong>, la Taglia 12 è perfetta per te!
                   </p>
                 </div>
 
@@ -156,7 +156,7 @@ export default function RingSizeSection() {
                     <span>Con una striscia di carta o un filo</span>
                   </div>
                   <p className="text-xs text-gray-600 font-light leading-relaxed pl-7">
-                    Avvolgi una strisciolina di carta attorno al dito, segna con una penna il punto di incontro e stendila su un righello. Se misura <strong>circa 5.2 cm (52 mm)</strong>, corrisponde alla taglia US 6.
+                    Avvolgi una strisciolina di carta attorno al dito, segna con una penna il punto di incontro e stendila su un righello. Se misura <strong>circa 5.2 cm (52 mm)</strong>, corrisponde esattamente alla Taglia 12.
                   </p>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function RingSizeSection() {
                   <Info size={14} className="text-[#C0A09A]" /> Consiglio di Vestibilità:
                 </span>
                 <p className="font-light leading-relaxed">
-                  La taglia US 6 (IT 12) è la misura standard regina della gioielleria femminile: se per l'anulare della tua mano dovesse risultare leggermente comoda o aderente, calzerà con grazia su dito medio o indice.
+                  La Taglia 12 (Ø 16.5 mm) è la misura standard regina della gioielleria femminile: se per l'anulare della tua mano dovesse risultare leggermente comoda o aderente, calzerà con grazia su dito medio o indice.
                 </p>
               </div>
 
