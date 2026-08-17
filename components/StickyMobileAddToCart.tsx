@@ -77,14 +77,14 @@ export default function StickyMobileAddToCart({ product }: Props) {
         <button
           onClick={handleAddToCart}
           disabled={isOutOfStock}
-          className={`px-5 py-3 rounded-lg text-xs font-medium uppercase tracking-wider transition-all duration-300 flex items-center gap-2 whitespace-nowrap shadow-md ${
+          className={`px-5 sm:px-6 py-3 rounded-xl text-xs font-medium uppercase tracking-[0.18em] transition-all duration-300 flex items-center gap-2 whitespace-nowrap active:scale-95 ${
             isOutOfStock
-              ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-              : 'bg-[#1A1A1A] hover:bg-black text-white active:scale-95'
+              ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              : 'bg-gradient-to-r from-[#C0A09A] via-[#B8938C] to-[#A8827B] hover:from-[#B8938C] hover:via-[#A8827B] text-white shadow-[0_6px_20px_-2px_rgba(192,160,154,0.55)] border border-white/30'
           }`}
         >
-          <ShoppingBag size={14} />
-          <span>{isOutOfStock ? 'Esaurito' : 'Aggiungi'}</span>
+          <ShoppingBag size={14} className="drop-shadow-sm" />
+          <span className="drop-shadow-sm font-medium">{isOutOfStock ? 'Esaurito' : 'Aggiungi'}</span>
         </button>
 
       </div>
