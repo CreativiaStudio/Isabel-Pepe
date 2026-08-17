@@ -13,7 +13,7 @@ export default function Footer() {
           
           {/* COLONNA 1 & 2: BRAND & NEWSLETTER EXECUTIVE */}
           <div className="sm:col-span-2 lg:pr-12">
-            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-3 text-white uppercase">
+            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-3 uppercase text-champagne-shimmer inline-block">
               ISABEL PEPE
             </h2>
             <p className="font-sans text-gray-400 text-xs leading-relaxed mb-6 font-light tracking-wider max-w-md">
