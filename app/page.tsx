@@ -193,23 +193,37 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 5. Manifesto Brand Isabel Pepe */}
-      <section className="bg-black text-white py-32 px-6 text-center relative overflow-hidden">
+      {/* 5. Manifesto Brand Isabel Pepe con Sfondo Luxury & Bagliore Caldo */}
+      <section className="relative py-32 sm:py-40 px-6 text-center overflow-hidden bg-[#141414] text-white">
+        {/* Immagine di Sfondo Editoriale (Seta & Marmo Nero venato) */}
+        <img 
+          src="/Brand/manifesto_bg.jpg" 
+          alt="Isabel Pepe Luxury Atmosphere" 
+          className="absolute inset-0 w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.05]"
+        />
+
+        {/* Overlay Gradiente Scuro Caldo & Vignettatura */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#141414] via-[#161211]/85 to-[#141414]"></div>
+        
+        {/* Bagliore Radiale Rosa Isabel Pepe al Centro */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(192,160,154,0.18)_0%,_transparent_65%)] pointer-events-none"></div>
+
+        {/* Contenuto Manifesto */}
         <div className="max-w-[850px] mx-auto relative z-10">
           <img 
             src="/Brand/logotipo-isabel.png" 
             alt="Isabel Pepe Logotipo" 
-            className="h-14 mx-auto mb-10 opacity-90 invert brightness-200" 
+            className="h-12 sm:h-14 mx-auto mb-8 sm:mb-10 opacity-90 invert brightness-200 drop-shadow-md" 
           />
-          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-widest leading-tight mb-8">
+          <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-wide leading-tight mb-8 drop-shadow-md text-white font-light">
             L'eleganza senza tempo incontra l'essenza dell'anima.
           </h2>
-          <p className="font-sans text-gray-400 text-xs sm:text-sm tracking-[0.25em] uppercase leading-loose max-w-xl mx-auto font-light mb-10">
+          <p className="font-sans text-gray-300 text-xs sm:text-sm tracking-[0.25em] uppercase leading-loose max-w-xl mx-auto font-light mb-10 drop-shadow-sm">
             Gioielli demi-fine disegnati per vivere, viaggiare e risplendere ogni giorno. Perché il vero lusso è sentirsi uniche.
           </p>
           <Link 
-            href="/shop" 
-            className="inline-block bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 px-10 py-4 text-xs uppercase tracking-[0.3em] font-medium transition-all duration-500"
+            href="/chi-siamo" 
+            className="inline-block bg-gradient-to-r from-[#C0A09A] via-[#B8938C] to-[#A8827B] hover:from-[#B8938C] hover:via-[#A8827B] hover:to-[#9E7770] text-white px-10 py-4 text-xs uppercase tracking-[0.3em] font-medium transition-all duration-300 rounded-xl shadow-[0_8px_25px_-4px_rgba(192,160,154,0.5)] border border-white/20 active:scale-95"
           >
             Esplora il Mondo Isabel Pepe
           </Link>
