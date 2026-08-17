@@ -195,9 +195,9 @@ export default async function Home() {
 
       {/* 5. Manifesto Brand Isabel Pepe con Sfondo Luxury & Bagliore Caldo */}
       <section className="relative py-32 sm:py-40 px-6 text-center overflow-hidden bg-[#141414] text-white">
-        {/* Immagine di Sfondo Editoriale (Seta & Marmo Nero venato) */}
+        {/* Immagine di Sfondo Editoriale (Seta & Marmo Nero con Punto Luce & Tennis Isabel Pepe) */}
         <img 
-          src="/Brand/manifesto_bg.jpg" 
+          src="/Brand/manifesto_bg.jpg?v=p1" 
           alt="Isabel Pepe Luxury Atmosphere" 
           className="absolute inset-0 w-full h-full object-cover object-center scale-105 filter brightness-[0.8] contrast-[1.05]"
         />
