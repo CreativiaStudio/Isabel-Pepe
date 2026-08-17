@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Sparkles, HeartHandshake, ShieldCheck, Gem, Compass, Feather, Heart } from 'lucide-react';
+import { Sparkles, Gem, Compass, Feather, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: "Chi Siamo — L'Arte di Splendere",
@@ -16,18 +16,33 @@ export const metadata: Metadata = {
 
 export default function ChiSiamoPage() {
   return (
-    <div className="bg-white min-h-screen pt-32 pb-24 text-[#1A1A1A]">
+    <div className="bg-white min-h-screen pt-28 sm:pt-32 pb-24 text-[#1A1A1A]">
       
-      {/* HERO SECTION */}
-      <section className="px-6 mb-20 max-w-4xl mx-auto text-center">
-        <span className="font-sans text-xs text-[#C0A09A] uppercase tracking-[0.35em] font-semibold block mb-4">
-          La Nostra Filosofia & Storia
-        </span>
-        <h1 className="font-serif text-4xl sm:text-6xl tracking-widest uppercase mb-8 text-gray-900 leading-tight">
-          L'Arte di Splendere
-        </h1>
-        <div className="max-w-3xl mx-auto my-8">
-          <div className="relative border-y border-[#F0E6E1] py-10 px-6 sm:px-12 bg-[#FAF8F5]/70 rounded-2xl shadow-xs">
+      {/* HERO SECTION CON FOTOGRAFIA EDITORIALE */}
+      <section className="px-4 sm:px-6 mb-16 max-w-6xl mx-auto">
+        
+        {/* Banner Fotografico Luxury */}
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#F0E6E1] mb-12 aspect-[16/9] sm:aspect-[21/9] bg-[#FAF8F5]">
+          <img 
+            src="/Brand/chi_siamo_hero.jpg" 
+            alt="Isabel Pepe — L'Arte di Splendere e la Musa Ispiratrice" 
+            className="w-full h-full object-cover object-[center_35%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+          
+          <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-12 right-6 sm:right-12 text-white">
+            <span className="font-sans text-[10px] sm:text-xs text-[#E8D7D3] uppercase tracking-[0.35em] font-semibold block mb-2">
+              La Nostra Filosofia & Storia
+            </span>
+            <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-widest uppercase leading-tight drop-shadow-md">
+              L'Arte di Splendere
+            </h1>
+          </div>
+        </div>
+
+        {/* BOX EDITORIALE CITAZIONE "CHI È ISABEL" */}
+        <div className="max-w-3xl mx-auto text-center">
+          <div className="relative border-y border-[#F0E6E1] py-10 px-6 sm:px-12 bg-[#FAF8F5]/80 rounded-3xl shadow-xs">
             <span className="text-[#C0A09A] font-serif text-5xl leading-none absolute -top-5 left-1/2 -translate-x-1/2 bg-white px-4 font-normal select-none">
               “
             </span>
@@ -40,6 +55,7 @@ export default function ChiSiamoPage() {
             <div className="w-12 h-[1px] bg-[#C0A09A] mx-auto mt-6"></div>
           </div>
         </div>
+
       </section>
 
       {/* MANIFESTO / MUSA ISPIRATRICE */}
@@ -47,7 +63,10 @@ export default function ChiSiamoPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           
           <div className="space-y-6 text-sm text-gray-600 font-light leading-relaxed tracking-wide">
-            <h2 className="font-serif text-3xl text-gray-900 tracking-wider uppercase mb-2">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block">
+              La Nostra Visione
+            </span>
+            <h2 className="font-serif text-3xl text-gray-900 tracking-wider uppercase leading-tight">
               L'Ideale della Donna Isabel Pepe
             </h2>
             <p>
@@ -59,7 +78,7 @@ export default function ChiSiamoPage() {
           </div>
 
           {/* BOX ESEGETICO ISABEL vs PEPE */}
-          <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-10 rounded-2xl space-y-8 shadow-sm">
+          <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-10 rounded-3xl space-y-8 shadow-sm">
             <div className="border-b border-[#F0E6E1] pb-6">
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-1">
                 L'Anima del Brand
@@ -101,17 +120,22 @@ export default function ChiSiamoPage() {
           </h2>
 
           <p className="font-sans text-sm text-gray-600 font-light leading-relaxed max-w-2xl mx-auto mb-8 tracking-wide">
-            Crediamo fermamente che la vera eleganza risieda nella sensibilità e nella cura del mondo che ci circonda. Per questo motivo, <strong>Isabel Pepe sostiene attivamente chi ogni giorno dedica la propria vita a salvare, accogliere ed accudire gli animali in difficoltà</strong>.
+            Crediamo fermamente che la vera eleganza risieda nella sensibilità e nella cura del mondo che ci circonda. Per questo motivo, <strong>Isabel Pepe sostiene attivamente i volontari indipendenti che ogni giorno dedicano la propria vita a salvare e accudire animali in difficoltà</strong>.
           </p>
 
-          <div className="bg-white border border-[#F0E6E1] p-8 rounded-xl max-w-xl mx-auto text-left shadow-sm space-y-3">
+          <div className="bg-white border border-[#F0E6E1] p-8 rounded-2xl max-w-xl mx-auto text-left shadow-sm space-y-3">
             <div className="flex items-center gap-3 text-xs uppercase tracking-widest text-gray-900 font-semibold">
               <Sparkles size={16} className="text-[#C0A09A]" />
               <span>Il Nostro Impegno Concreto</span>
             </div>
             <p className="text-xs text-gray-500 font-light leading-relaxed">
-              Il 5% di ogni tua creazione Isabel Pepe viene devoluto direttamente a rifugi ed enti no-profit dedicati alla salvaguardia degli animali. Scegliere un nostro gioiello significa indossare un simbolo di luce che custodisce una promessa d'amore verso i più deboli.
+              Il 5% di ogni tua creazione Isabel Pepe viene devoluto direttamente a volontari selezionati con amore. Scegliere un nostro gioiello significa indossare un simbolo di luce che custodisce una promessa concreta verso chi non ha voce.
             </p>
+            <div className="pt-2">
+              <Link href="/impegno-animali" className="text-xs uppercase tracking-widest text-[#C0A09A] font-semibold hover:underline">
+                Scopri la Nostra Missione Etica →
+              </Link>
+            </div>
           </div>
 
         </div>
@@ -146,7 +170,7 @@ export default function ChiSiamoPage() {
             </div>
             <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-2">Doppio Scudo Protettivo</h3>
             <p className="text-xs text-gray-500 font-light leading-relaxed">
-              Base in Argento Sterling con placcatura Oro 18K (1.0µm) o Rodio (0.1µm) e sigillo Nano-Protective E-Coating anti-ossidazione.
+              Base in Argento 925 nichel-free con placcatura Oro 18K (1.0µm, 20x più spessa) o Rodio puro a specchio e sigillo E-Coating.
             </p>
           </div>
 
@@ -165,7 +189,7 @@ export default function ChiSiamoPage() {
 
       {/* CTA FINALE */}
       <section className="px-6 max-w-4xl mx-auto text-center">
-        <div className="bg-[#1A1A1A] text-white p-12 rounded-2xl shadow-xl">
+        <div className="bg-[#1A1A1A] text-white p-12 rounded-3xl shadow-xl">
           <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-3">
             Scopri la Collezione
           </span>
@@ -177,9 +201,9 @@ export default function ChiSiamoPage() {
           </p>
           <Link 
             href="/shop" 
-            className="inline-block bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-10 py-4 transition-all duration-300 shadow-md"
+            className="inline-block bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-10 py-4 rounded-xl transition-all duration-300 shadow-md"
           >
-            Vedi Tutti i Gioielli
+            Scegli il Tuo Gioiello
           </Link>
         </div>
       </section>
