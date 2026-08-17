@@ -246,7 +246,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] tracking-[0.2em] text-gray-500 uppercase font-light text-center md:text-left">
           <p>© {new Date().getFullYear()} ISABEL PEPE. TUTTI I DIRITTI RISERVATI.</p>
           <p className="normal-case tracking-normal text-gray-400 text-[11px] text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-light">
-            Made with <Heart size={13} className="text-emerald-500 fill-emerald-500 shrink-0 inline" /> <span className="font-medium text-white tracking-wider">Creativia Studio</span>
+            Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-medium text-white tracking-wider">Creativia Studio</span>
           </p>
         </div>
 
