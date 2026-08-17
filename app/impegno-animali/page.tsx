@@ -1,16 +1,16 @@
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Heart, ShieldCheck, Sparkles, Footprints, Home, Stethoscope, Gift, ArrowRight, HeartHandshake } from 'lucide-react';
+import { Heart, ShieldCheck, Sparkles, Footprints, Gift, CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "L'Arte del Dono — Il 5% per il Benessere Animale",
+  title: "L'Arte del Dono — Il Nostro Impegno per gli Animali",
   description:
-    "Il 5% di ogni gioiello Isabel Pepe acquistato viene donato direttamente a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+    "Il 5% di ogni acquisto Isabel Pepe sostiene direttamente i volontari che dedicano la vita a salvare e accudire animali in difficoltà. Bellezza etica che protegge la vita.",
   openGraph: {
-    title: "L'Arte del Dono — Il 5% per il Benessere Animale | Isabel Pepe",
+    title: "L'Arte del Dono — Il Nostro Impegno per gli Animali | Isabel Pepe",
     description:
-      "Il 5% di ogni gioiello Isabel Pepe acquistato viene donato direttamente a rifugi e cure veterinarie per animali in difficoltà. Bellezza che protegge la vita.",
+      "Il 5% di ogni acquisto Isabel Pepe sostiene direttamente i volontari che dedicano la vita a salvare e accudire animali in difficoltà. Bellezza etica che protegge la vita.",
   },
 };
 
@@ -21,7 +21,7 @@ export default function ImpegnoAnimaliPage() {
       {/* HERO SECTION */}
       <section className="px-6 mb-20 max-w-4xl mx-auto text-center">
         <div className="w-16 h-16 rounded-full bg-[#C0A09A]/15 text-[#C0A09A] flex items-center justify-center mx-auto mb-6 shadow-inner">
-          <Heart size={32} strokeWidth={1.5} />
+          <Heart size={30} strokeWidth={1.5} />
         </div>
         <span className="font-sans text-xs text-[#C0A09A] uppercase tracking-[0.35em] font-semibold block mb-3">
           La Nostra Missione Etica & Il Nostro Cuore
@@ -34,51 +34,48 @@ export default function ImpegnoAnimaliPage() {
         </p>
       </section>
 
-      {/* MANIFESTO E PERCHÉ QUESTA MISSIONE */}
+      {/* SEZIONE 1: LA PASSIONE DI ELENA CON FOTO EDITORIALE */}
       <section className="px-6 mb-24 max-w-5xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          <div className="space-y-6 text-sm text-gray-600 font-light leading-relaxed tracking-wide">
+          <div className="lg:col-span-7 space-y-6 text-sm text-gray-600 font-light leading-relaxed tracking-wide">
             <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block">
-              La Storia di Elena e Mario
+              Il Cuore di Isabel Pepe
             </span>
-            <h2 className="font-serif text-3xl text-gray-900 tracking-wider uppercase">
-              Una Passione Nata dal Cuore
+            <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 tracking-wider uppercase leading-tight">
+              Una Passione Nata dal Grande Cuore di Elena
             </h2>
             <p>
               Per noi di <strong>Isabel Pepe</strong>, l'amore per gli animali non è una semplice campagna o un dettaglio marginale: <strong>è la nostra missione di vita</strong> ed uno dei valori fondamentali attorno a cui abbiamo costruito l'intero brand.
             </p>
             <p>
-              Fin dal primo giorno, io (Elena) e Mario abbiamo desiderato che ogni creazione Isabel Pepe non fosse soltanto un simbolo di bellezza da indossare, ma un vero e proprio <strong>veicolo di speranza e salvezza</strong> per gli animali che ogni giorno soffrono la solitudine, l'abbandono ed il maltrattamento.
+              Ogni creazione Isabel Pepe non è soltanto un simbolo di bellezza da indossare, ma un vero e proprio <strong>veicolo di speranza e salvezza</strong> per gli animali che ogni giorno soffrono la solitudine, l'abbandono ed il maltrattamento.
             </p>
-            <p className="italic font-serif text-[#C0A09A] text-base">
-              "Dare una voce a chi non ce l'ha, trasformando la luce dei nostri gioielli in cibo, cure e calore."
-            </p>
+
+            {/* FRASE CHIAVE IN GRANDE RISALTO */}
+            <div className="p-6 bg-[#FAF8F5] border-l-2 border-[#C0A09A] rounded-r-2xl shadow-xs my-6">
+              <p className="font-serif italic text-lg sm:text-xl text-gray-900 font-light leading-relaxed">
+                “Dare una voce a chi non ce l'ha, trasformando la luce dei nostri gioielli in cibo, cure e calore.”
+              </p>
+            </div>
           </div>
 
-          {/* CARD IMPATTO CONCRETO */}
-          <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-10 rounded-2xl space-y-6 shadow-sm">
-            <div className="flex items-center gap-3 text-[#C0A09A]">
-              <Sparkles size={22} />
-              <span className="text-xs uppercase tracking-[0.25em] font-semibold">Il Nostro Impegno Concreto</span>
-            </div>
-
-            <h3 className="font-serif text-2xl text-gray-900 tracking-wider">
-              Il 5% di Ogni Acquisto va a Salvare Vite
-            </h3>
-
-            <p className="text-xs text-gray-600 font-light leading-relaxed">
-              Per <strong>ogni singolo ordine</strong> effettuato nella nostra boutique online, destiniamo direttamente <strong>il 5% del ricavato</strong> a rifugi indipendenti, canili, gattili e volontari sul campo che dedicano le proprie giornate al salvataggio degli animali.
-            </p>
-
-            <div className="space-y-3 pt-4 border-t border-[#F0E6E1]">
-              <div className="flex items-start gap-3 text-xs text-gray-700 font-light">
-                <Footprints size={18} className="text-[#C0A09A] flex-shrink-0 mt-0.5" />
-                <span><strong>100% Etico & Cruelty-Free:</strong> Nessun processo di lavorazione o packaging Isabel Pepe fa uso di derivati o materiali dannosi per gli animali.</span>
-              </div>
-              <div className="flex items-start gap-3 text-xs text-gray-700 font-light">
-                <ShieldCheck size={18} className="text-[#C0A09A] flex-shrink-0 mt-0.5" />
-                <span><strong>Trasparenza Totale:</strong> Condividiamo periodicamente con la nostra community i risultati dei fondi donati e le storie degli animali salvati.</span>
+          {/* FOTO HERO ELENA & PET */}
+          <div className="lg:col-span-5 relative group">
+            <div className="relative overflow-hidden rounded-3xl aspect-[4/5] shadow-xl border border-[#F0E6E1] bg-[#FAF8F5]">
+              <img 
+                src="/Brand/impegno_animali_elena.jpg" 
+                alt="Elena e il legame profondo con gli animali - Isabel Pepe" 
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+              <div className="absolute bottom-5 left-5 right-5 text-white">
+                <span className="text-[9px] uppercase tracking-[0.25em] text-[#E8D7D3] block font-semibold">
+                  Amore Incondizionato
+                </span>
+                <span className="font-serif text-sm italic tracking-wider">
+                  La luce che ispira ogni nostra scelta
+                </span>
               </div>
             </div>
           </div>
@@ -86,57 +83,61 @@ export default function ImpegnoAnimaliPage() {
         </div>
       </section>
 
-      {/* I 3 PILASTRI DELLA MISSIONE */}
+      {/* SEZIONE 2: IL SOSTEGNO DIRETTO AI VOLONTARI SUL CAMPO */}
       <section className="bg-[#FAF8F5] border-y border-[#F0E6E1] py-20 px-6 mb-24">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-16">
-            <span className="font-sans text-xs text-[#C0A09A] uppercase tracking-[0.35em] font-semibold block mb-2">
-              Dove Vanno le Tue Donazioni
-            </span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 tracking-widest uppercase">
-              I Pilastri del Nostro Sostegno
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
-            {/* PILASTRO 1 */}
-            <div className="bg-white border border-[#F0E6E1] p-8 rounded-2xl shadow-sm text-center">
-              <div className="w-14 h-14 rounded-full bg-[#FAF8F5] text-[#C0A09A] flex items-center justify-center mx-auto mb-6">
-                <Stethoscope size={26} strokeWidth={1.5} />
+            {/* FOTO SECONDA EDITORIALE */}
+            <div className="lg:col-span-5 order-2 lg:order-1 relative">
+              <div className="relative overflow-hidden rounded-3xl aspect-[4/3] shadow-lg border border-[#F0E6E1] bg-white">
+                <img 
+                  src="/Brand/impegno_animali_kitten.jpg" 
+                  alt="Cura e dedizione verso ogni creatura indifesa" 
+                  className="w-full h-full object-cover object-center"
+                />
               </div>
-              <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-3">
-                1. Cure Veterinarie d'Emergenza
-              </h3>
-              <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Finanziamo interventi chirurgici d'urgenza, vaccini, medicinali ed esami diagnostici per animali trovati feriti o in grave stato di malnutrizione.
-              </p>
             </div>
 
-            {/* PILASTRO 2 */}
-            <div className="bg-white border border-[#F0E6E1] p-8 rounded-2xl shadow-sm text-center">
-              <div className="w-14 h-14 rounded-full bg-[#FAF8F5] text-[#C0A09A] flex items-center justify-center mx-auto mb-6">
-                <Home size={26} strokeWidth={1.5} />
+            {/* TESTO IMPEGNO CONCRETO & SELEZIONE ENERGETICA */}
+            <div className="lg:col-span-7 order-1 lg:order-2 space-y-6 text-sm text-gray-600 font-light leading-relaxed tracking-wide">
+              <div className="flex items-center gap-3 text-[#C0A09A]">
+                <Sparkles size={20} />
+                <span className="text-xs uppercase tracking-[0.25em] font-semibold">Trasparenza & Dedizione</span>
               </div>
-              <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-3">
-                2. Cibo & Riparo nei Rifugi
-              </h3>
-              <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Forniamo cibo di qualità, coperte per l'inverno e fondi per migliorare le strutture di accoglienza temporanea ed i stalli di stallo in attesa di adozione.
-              </p>
-            </div>
 
-            {/* PILASTRO 3 */}
-            <div className="bg-white border border-[#F0E6E1] p-8 rounded-2xl shadow-sm text-center">
-              <div className="w-14 h-14 rounded-full bg-[#FAF8F5] text-[#C0A09A] flex items-center justify-center mx-auto mb-6">
-                <HeartHandshake size={26} strokeWidth={1.5} />
-              </div>
-              <h3 className="font-serif text-lg text-gray-900 uppercase tracking-wider mb-3">
-                3. Lotta all'Abbandono & Adozioni
-              </h3>
-              <p className="text-xs text-gray-500 font-light leading-relaxed">
-                Promuoviamo campagne di sensibilizzazione contro l'abbandono estivo ed aiutiamo i volontari locali a trovare famiglie pronte ad amare per sempre.
+              <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 tracking-wider uppercase leading-tight">
+                Il 5% di Ogni Acquisto va Direttamente ai Volontari
+              </h2>
+
+              <p>
+                Non destiniamo le nostre donazioni a strutture convenzionate già sostenute da fondi pubblici. Il nostro aiuto va <strong>direttamente ai volontari indipendenti</strong>: persone straordinarie che ogni singolo giorno si dedicano anima e corpo sul campo per salvare, accogliere e nutrire animali invisibili o in pericolo.
               </p>
+
+              <p>
+                <strong>Elena seleziona personalmente ogni volontario</strong>: individui puri, autentici, che mettono il benessere degli animali al di sopra di tutto. Persone con un’energia speciale che si battono instancabilmente affinché ogni creatura possa trovare dignità, serenità e una famiglia.
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-[#F0E6E1]">
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-2xs space-y-1">
+                  <span className="text-xs font-semibold text-gray-900 flex items-center gap-1.5">
+                    <Footprints size={15} className="text-[#C0A09A]" /> 100% Etico & Cruelty-Free
+                  </span>
+                  <p className="text-[11px] text-gray-500 font-light">
+                    Nessun materiale o packaging Isabel Pepe fa uso di derivati o elementi dannosi per gli animali.
+                  </p>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-2xs space-y-1">
+                  <span className="text-xs font-semibold text-gray-900 flex items-center gap-1.5">
+                    <ShieldCheck size={15} className="text-[#C0A09A]" /> Trasparenza & Cuore
+                  </span>
+                  <p className="text-[11px] text-gray-500 font-light">
+                    Condividiamo regolarmente con la community l'impatto reale e le storie degli animali aiutati.
+                  </p>
+                </div>
+              </div>
+
             </div>
 
           </div>
@@ -145,7 +146,7 @@ export default function ImpegnoAnimaliPage() {
 
       {/* CITAZIONE CHIC & BRAND SYMBOLISM */}
       <section className="px-6 mb-24 max-w-4xl mx-auto text-center">
-        <div className="border border-[#F0E6E1] p-10 sm:p-14 rounded-3xl bg-[#FAF8F5] relative overflow-hidden">
+        <div className="border border-[#F0E6E1] p-10 sm:p-14 rounded-3xl bg-[#FAF8F5] relative overflow-hidden shadow-sm">
           <span className="text-[10px] uppercase tracking-[0.35em] text-[#C0A09A] font-semibold block mb-4">
             Un Simbolo da Indossare con Orgoglio
           </span>
@@ -153,14 +154,14 @@ export default function ImpegnoAnimaliPage() {
             «Ogni volta che indossi un gioiello Isabel Pepe, la sua luce racconta la storia di chi ha scelto di splendere anche per chi non ha voce.»
           </h2>
           <p className="text-xs text-gray-500 font-light tracking-widest uppercase">
-            — Elena & Mario Pepe, Fondatori di Isabel Pepe
+            — Elena & Mario, Fondatori di Isabel Pepe
           </p>
         </div>
       </section>
 
-      {/* CTA SHOPPING ED ASSOCIAZIONI */}
+      {/* CTA SHOPPING FOCALIZZATA */}
       <section className="px-6 max-w-4xl mx-auto text-center">
-        <div className="bg-[#1A1A1A] text-white p-12 rounded-2xl shadow-xl">
+        <div className="bg-[#1A1A1A] text-white p-12 rounded-3xl shadow-xl">
           <h2 className="font-serif text-3xl sm:text-4xl tracking-widest uppercase mb-4">
             Sostieni la Nostra Missione
           </h2>
@@ -171,7 +172,7 @@ export default function ImpegnoAnimaliPage() {
           <div className="flex items-center justify-center">
             <Link 
               href="/shop" 
-              className="w-full sm:w-auto bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300 shadow-md flex items-center justify-center gap-2 rounded-xl"
+              className="w-full sm:w-auto bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.25em] px-9 py-4 transition-all duration-300 shadow-md flex items-center justify-center gap-2 rounded-xl"
             >
               <Gift size={16} />
               Scegli il Tuo Gioiello
