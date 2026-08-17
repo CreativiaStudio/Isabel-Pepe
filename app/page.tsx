@@ -210,11 +210,25 @@ export default async function Home() {
 
         {/* Contenuto Manifesto */}
         <div className="max-w-[850px] mx-auto relative z-10">
-          <img 
-            src="/Brand/logotipo-isabel.png" 
-            alt="Isabel Pepe Logotipo" 
-            className="h-12 sm:h-14 mx-auto mb-8 sm:mb-10 opacity-90 invert brightness-200 drop-shadow-md" 
-          />
+          
+          {/* Logo Monogramma IP con Bagliore & Scintillio Dinamico */}
+          <div className="relative inline-block mx-auto mb-8 sm:mb-10 group">
+            <img 
+              src="/Brand/logotipo-isabel.png" 
+              alt="Isabel Pepe Monogramma Ufficiale" 
+              className="h-20 sm:h-24 w-auto object-contain mx-auto animate-luxury-logo cursor-pointer transition-transform duration-700 group-hover:scale-105" 
+            />
+            
+            {/* Scintillio di Luce Dinamico 1 (Angolo Superiore Destro) */}
+            <span className="absolute -top-1 -right-1 text-[#F0E6E1] text-xs pointer-events-none animate-glint-1">
+              ✦
+            </span>
+            
+            {/* Scintillio di Luce Dinamico 2 (Angolo Inferiore Sinistro) */}
+            <span className="absolute -bottom-1 -left-1 text-[#C0A09A] text-[10px] pointer-events-none animate-glint-2">
+              ✦
+            </span>
+          </div>
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-wide leading-tight mb-8 drop-shadow-md text-white font-light">
             L'eleganza senza tempo incontra l'essenza dell'anima.
           </h2>

@@ -61,3 +61,40 @@ body {
     0 4px 10px -2px rgba(138, 90, 94, 0.3);
   /* Leggero bagliore esterno */
 }
+
+/* Animazione Bagliore & Scintillio Luxury per Monogramma Isabel Pepe */
+@keyframes luxuryLogoShine {
+  0%, 100% {
+    filter: brightness(0) invert(1) drop-shadow(0 0 14px rgba(192, 160, 154, 0.7)) drop-shadow(0 0 28px rgba(255, 230, 220, 0.45));
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(0) invert(1) drop-shadow(0 0 28px rgba(212, 178, 172, 1)) drop-shadow(0 0 50px rgba(255, 245, 240, 0.8));
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes glintSparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3) rotate(90deg);
+  }
+}
+
+.animate-luxury-logo {
+  animation: luxuryLogoShine 4.5s ease-in-out infinite;
+}
+
+.animate-glint-1 {
+  animation: glintSparkle 3s ease-in-out infinite;
+}
+
+.animate-glint-2 {
+  animation: glintSparkle 3s ease-in-out infinite 1.5s;
+}
