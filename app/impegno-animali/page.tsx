@@ -64,7 +64,7 @@ export default function ImpegnoAnimaliPage() {
           <div className="lg:col-span-5 relative group">
             <div className="relative overflow-hidden rounded-3xl aspect-[4/5] shadow-xl border border-[#F0E6E1] bg-[#FAF8F5]">
               <img 
-                src="/Brand/elena-isabel-pepe-impegno-animali.jpg" 
+                src="/Brand/elena-isabel-pepe-impegno-animali.jpg?v=2" 
                 alt="Elena Isabel Pepe — Amore e impegno etico per la salvaguardia degli animali" 
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
               />
