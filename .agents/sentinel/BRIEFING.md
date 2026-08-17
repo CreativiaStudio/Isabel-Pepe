@@ -1,14 +1,14 @@
-# BRIEFING — 2026-08-16T09:13:37Z
+# BRIEFING — 2026-08-17T17:26:40Z
 
 ## Mission
-Investigate and completely bulletproof Cloudflare R2 media connection, image browsing modal, direct uploads, and product persistence in Isabel Pepe Next.js e-commerce administration.
+Sviluppare ed eseguire una pipeline chirurgica per la sostituzione degli abiti delle modelle dell'e-commerce Isabel Pepe (partendo dall'Anello Imperial e replicabile sul resto del catalogo), garantendo la purezza assoluta del gioiello (0% alterazione o perdita di definizione allo zoom) e l'integrazione anatomica fotorealistica.
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel
 - Orchestrator: acf03264-1c02-4789-99c6-98897d574e17
 - Victory Auditor: fea8f294-b495-47d9-98ab-d15bc2f2abc1
-- Current Orchestrator: f4ab87c5-b97c-4ddd-8bf3-5ef14d70ea69
+- Current Orchestrator: c6cdb817-2e10-4826-aca1-bb734478a186
 - Current Victory Auditor: [to be spawned on victory claim]
 
 ## 🔒 Key Constraints
@@ -16,10 +16,10 @@ Investigate and completely bulletproof Cloudflare R2 media connection, image bro
 - Victory Audit is MANDATORY before reporting completion
 
 ## Routing Rationale
-- Routed to `teamwork_preview_orchestrator` (General path). Multi-component SWE project covering R2 S3Client resilience, admin media browser modal, direct upload endpoint, Supabase gallery persistence, and multi-path cache revalidation.
+- Routed to `teamwork_preview_orchestrator` (General path). Requires end-to-end multi-step orchestration: mask generation, pixel locking/preservation of jewelry & fingers, inpainting/clothing blending, automated WebP 1024x1536 processing pipeline, archive handling, and quality acceptance verification.
 
 ## User Context
-- **Last user request**: Investigate and completely bulletproof the Cloudflare R2 media connection, image browsing modal, direct uploads, and product persistence in Isabel Pepe Next.js e-commerce administration.
+- **Last user request**: Sviluppare ed eseguire una pipeline chirurgica per la sostituzione degli abiti delle modelle dell'e-commerce Isabel Pepe (partendo dall'Anello Imperial e replicabile sul resto del catalogo), garantendo la purezza assoluta del gioiello (0% alterazione o perdita di definizione allo zoom) e l'integrazione anatomica fotorealistica.
 - **Pending clarifications**: none
 - **Delivered results**: none yet
 
@@ -34,3 +34,4 @@ Investigate and completely bulletproof Cloudflare R2 media connection, image bro
 ## Artifact Index
 - ORIGINAL_REQUEST.md — Verbatim record of user requests
 - .agents/ORIGINAL_REQUEST.md — Agent record of user requests
+

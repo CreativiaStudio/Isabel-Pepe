@@ -72,7 +72,7 @@ export default async function Home() {
               categoryLink="/shop?category=Anelli"
               ctaText="Trova la misura"
               images={[
-                'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-imperial-slot1.webp',
+                '/Brand/isabel-pepe-anello-imperial-slot1.webp',
                 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-ch-telaine-silver-slot1.webp',
                 'https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-anello-lune-d-argent-slot1.webp',
               ]}
