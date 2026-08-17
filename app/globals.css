@@ -62,7 +62,7 @@ body {
   /* Leggero bagliore esterno */
 }
 
-/* Logo Monogramma IP in Puro Rosa Champagne Metallico con Shimmer Dinamico */
+/* Logo Monogramma IP in Puro Rosa Champagne Metallico con Shimmer Lento & Premium */
 .logo-champagne-shimmer {
   mask-image: url('/Brand/logotipo-isabel.png');
   -webkit-mask-image: url('/Brand/logotipo-isabel.png');
@@ -75,50 +75,25 @@ body {
   background: linear-gradient(
     115deg,
     #8A5E58 0%,
-    #C0A09A 22%,
-    #FFF2EE 48%,
+    #C0A09A 25%,
+    #FFF4F0 48%,
     #E8D7D3 55%,
     #C0A09A 78%,
     #8A5E58 100%
   );
-  background-size: 240% 100%;
-  animation: champagneFoilSweep 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  filter: drop-shadow(0 0 16px rgba(192, 160, 154, 0.75)) drop-shadow(0 0 35px rgba(192, 160, 154, 0.4));
+  background-size: 260% 100%;
+  animation: champagneFoilSweepSlow 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  filter: drop-shadow(0 0 18px rgba(192, 160, 154, 0.7)) drop-shadow(0 0 36px rgba(192, 160, 154, 0.35));
 }
 
-@keyframes champagneFoilSweep {
+@keyframes champagneFoilSweepSlow {
   0% {
     background-position: 100% 0%;
-    filter: drop-shadow(0 0 14px rgba(192, 160, 154, 0.6)) drop-shadow(0 0 25px rgba(247, 236, 232, 0.3));
-    transform: scale(1);
   }
   50% {
     background-position: 0% 0%;
-    filter: drop-shadow(0 0 28px rgba(212, 178, 172, 1)) drop-shadow(0 0 50px rgba(255, 240, 236, 0.7));
-    transform: scale(1.03);
   }
   100% {
     background-position: -100% 0%;
-    filter: drop-shadow(0 0 14px rgba(192, 160, 154, 0.6)) drop-shadow(0 0 25px rgba(247, 236, 232, 0.3));
-    transform: scale(1);
   }
-}
-
-@keyframes glintSparkle {
-  0%, 100% {
-    opacity: 0;
-    transform: scale(0.2) rotate(0deg);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.3) rotate(90deg);
-  }
-}
-
-.animate-glint-1 {
-  animation: glintSparkle 3s ease-in-out infinite;
-}
-
-.animate-glint-2 {
-  animation: glintSparkle 3s ease-in-out infinite 1.5s;
 }

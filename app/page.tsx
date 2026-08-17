@@ -211,23 +211,13 @@ export default async function Home() {
         {/* Contenuto Manifesto */}
         <div className="max-w-[850px] mx-auto relative z-10">
           
-          {/* Logo Monogramma IP in Puro Rosa Champagne con Shimmer Dinamico */}
-          <div className="relative inline-block mx-auto mb-8 sm:mb-10 group">
+          {/* Logo Monogramma IP in Puro Rosa Champagne con Shimmer Lento */}
+          <div className="relative inline-block mx-auto mb-8 sm:mb-10">
             <div 
               role="img"
               aria-label="Isabel Pepe Monogramma Ufficiale Rosa Champagne"
-              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto logo-champagne-shimmer cursor-pointer transition-transform duration-700 group-hover:scale-105" 
+              className="w-20 h-20 sm:w-24 sm:h-24 mx-auto logo-champagne-shimmer" 
             />
-            
-            {/* Scintillio di Luce Dinamico 1 (Angolo Superiore Destro) */}
-            <span className="absolute -top-1 -right-1 text-[#FFF2EE] text-xs pointer-events-none animate-glint-1">
-              ✦
-            </span>
-            
-            {/* Scintillio di Luce Dinamico 2 (Angolo Inferiore Sinistro) */}
-            <span className="absolute -bottom-1 -left-1 text-[#C0A09A] text-[10px] pointer-events-none animate-glint-2">
-              ✦
-            </span>
           </div>
           <h2 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-wide leading-tight mb-8 drop-shadow-md text-white font-light">
             L'eleganza senza tempo incontra l'essenza dell'anima.
