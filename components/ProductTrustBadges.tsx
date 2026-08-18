@@ -123,7 +123,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <span>
                   <strong className="text-gray-900 font-medium">Autenticità Garantita: </strong>
                   {isPearl 
-                    ? "Perle d'acqua dolce naturali selezionate a mano per lucentezza e purezza superficiale (Lustro AAA)." 
+                    ? "Perle d'acqua dolce naturali coltivate, selezionate a mano per lucentezza satinata e fascino organico." 
                     : "Pietre VVS1 D-Color certificate con massima rifrazione della luce."
                   }
                 </span>
