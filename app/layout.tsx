@@ -35,17 +35,19 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "it_IT",
-    url: "https://isabelpepe.com",
+    url: "https://www.isabelpepe.com",
     siteName: "Isabel Pepe",
     title: "Isabel Pepe — Gioielli Demi-Fine in Oro 18K & Argento 925",
     description:
       "Lusso accessibile senza compromessi. Creazioni esclusive in Argento 925, placcatura Oro 18K a spessore, pietre di pura luce e cofanetto regalo incluso.",
     images: [
       {
-        url: "https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/isabel-pepe-cover.jpg",
+        url: "/og-image.jpg",
+        secureUrl: "https://www.isabelpepe.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Isabel Pepe — Demi-Fine Jewelry",
+        type: "image/jpeg",
+        alt: "Isabel Pepe — Alta Gioielleria Demi-Fine",
       },
     ],
   },
@@ -54,6 +56,7 @@ export const metadata: Metadata = {
     title: "Isabel Pepe — Gioielli Demi-Fine in Oro 18K & Argento 925",
     description:
       "Creazioni in Argento 925 con doppio scudo protettivo in Oro 18K ed E-Coating. Cofanetto regalo luxury incluso.",
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
