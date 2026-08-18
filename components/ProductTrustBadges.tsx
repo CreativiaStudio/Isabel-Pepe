@@ -67,14 +67,15 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
     )
   );
 
-  // Select exact brand certificate image based on product material
+  // 3 Tipi di Certificato Ufficiali per Stampa e Web:
+  // 1. Oro Perla
+  // 2. Oro Moissanite
+  // 3. Rodio Moissanite
   const brandCertImage = isPearl
     ? '/Brand/certificato_perle_card_clean.webp'
-    : isMoissanite
-    ? isGold
-      ? '/Brand/certificato_moissanite_oro18k.webp'
-      : '/Brand/certificato_moissanite_rodio.webp'
-    : '/Brand/certificato_argento925.webp';
+    : isGold
+    ? '/Brand/certificato_moissanite_oro18k.webp'
+    : '/Brand/certificato_moissanite_rodio.webp';
 
   return (
     <>
