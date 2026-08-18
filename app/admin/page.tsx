@@ -24,6 +24,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   let orders: any[] = [];
   let customers: any[] = [];
   let carts: any[] = [];
+  let consents: any[] = [];
   let totalViews = 0;
 
   try {
@@ -50,6 +51,12 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .select('*')
       .order('created_at', { ascending: false });
     carts = ca || [];
+
+    const { data: cs } = await supabaseAdmin
+      .from('cookie_consents')
+      .select('*')
+      .order('created_at', { ascending: false });
+    consents = cs || [];
 
     const { count } = await supabaseAdmin
       .from('page_views')
@@ -78,6 +85,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         orders={orders || []} 
         customers={customers || []}
         carts={carts || []}
+        consents={consents || []}
         stats={stats}
         initialEditId={editId} 
       />

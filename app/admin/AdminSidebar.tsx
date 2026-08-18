@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, LayoutDashboard, ShoppingCart, Truck, Settings, LogOut, Users, ShoppingBag, Bot } from 'lucide-react';
+import { Package, LayoutDashboard, ShoppingCart, Truck, Settings, LogOut, Users, ShoppingBag, Bot, ShieldCheck } from 'lucide-react';
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -13,6 +13,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
     { id: 'orders', label: 'Ordini', icon: ShoppingCart },
     { id: 'crm', label: 'Clienti (CRM)', icon: Users },
     { id: 'carts', label: 'Carrelli Abbandonati', icon: ShoppingBag },
+    { id: 'consents', label: 'Privacy & Consensi', icon: ShieldCheck },
     { id: 'products', label: 'Prodotti', icon: Package },
     { id: 'shipping', label: 'Spedizioni', icon: Truck },
   ];

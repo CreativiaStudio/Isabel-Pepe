@@ -10,6 +10,7 @@ import OrdersTable from './OrdersTable';
 import ShippingTable from './ShippingTable';
 import CrmTable from './CrmTable';
 import CartsTable from './CartsTable';
+import ConsentTable from './ConsentTable';
 import JarvisDashboard from './JarvisDashboard';
 
 interface DashboardClientWrapperProps {
@@ -17,11 +18,12 @@ interface DashboardClientWrapperProps {
   orders: any[];
   customers: any[];
   carts: any[];
+  consents?: any[];
   stats?: any;
   initialEditId?: string;
 }
 
-export default function DashboardClientWrapper({ products, orders, customers, carts, stats, initialEditId }: DashboardClientWrapperProps) {
+export default function DashboardClientWrapper({ products, orders, customers, carts, consents = [], stats, initialEditId }: DashboardClientWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -84,6 +86,10 @@ export default function DashboardClientWrapper({ products, orders, customers, ca
 
           {activeTab === 'carts' && (
             <CartsTable carts={carts} />
+          )}
+
+          {activeTab === 'consents' && (
+            <ConsentTable consents={consents} />
           )}
 
           {activeTab === 'products' && (
