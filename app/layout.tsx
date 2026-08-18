@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://isabelpepe.com'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://www.isabelpepe.com'),
   title: {
     default: "Isabel Pepe | Gioielli Demi-Fine & Argento 925",
     template: "%s | Isabel Pepe",
@@ -32,6 +32,10 @@ export const metadata: Metadata = {
     "argento 925 sterling"
   ],
   authors: [{ name: "Isabel Pepe" }],
+  icons: {
+    icon: '/icon.png',
+    apple: '/icon.png',
+  },
   openGraph: {
     type: "website",
     locale: "it_IT",
@@ -42,7 +46,7 @@ export const metadata: Metadata = {
       "Lusso accessibile senza compromessi. Creazioni esclusive in Argento 925, placcatura Oro 18K a spessore, pietre di pura luce e cofanetto regalo incluso.",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "https://www.isabelpepe.com/og-image.jpg",
         secureUrl: "https://www.isabelpepe.com/og-image.jpg",
         width: 1200,
         height: 630,
@@ -56,7 +60,7 @@ export const metadata: Metadata = {
     title: "Isabel Pepe — Gioielli Demi-Fine in Oro 18K & Argento 925",
     description:
       "Creazioni in Argento 925 con doppio scudo protettivo in Oro 18K ed E-Coating. Cofanetto regalo luxury incluso.",
-    images: ["/og-image.jpg"],
+    images: ["https://www.isabelpepe.com/og-image.jpg"],
   },
   robots: {
     index: true,
