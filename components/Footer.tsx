@@ -140,6 +140,19 @@ export default function Footer() {
                   Diritto di Recesso (14 giorni)
                 </Link>
               </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== 'undefined') {
+                      window.dispatchEvent(new CustomEvent('open_cookie_preferences'));
+                    }
+                  }}
+                  className="text-xs text-[#C0A09A] hover:text-white transition-colors duration-300 tracking-wider font-light cursor-pointer text-left"
+                >
+                  ⚙️ Gestisci Consensi Cookie
+                </button>
+              </li>
             </ul>
 
             {/* Social Links con Icone Vettoriali Ufficiali */}

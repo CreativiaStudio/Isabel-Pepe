@@ -11,6 +11,7 @@ export default function Tracker() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [visitorId, setVisitorId] = useState<string | null>(null);
+  const [consentId, setConsentId] = useState<string | null>(null);
 
   useEffect(() => {
     // Generate or retrieve visitor ID from localStorage
@@ -20,6 +21,19 @@ export default function Tracker() {
       localStorage.setItem('isabel_visitor_id', currentVisitorId);
     }
     setVisitorId(currentVisitorId);
+
+    const currentConsentId = localStorage.getItem('isabel_consent_id');
+    if (currentConsentId) {
+      setConsentId(currentConsentId);
+    }
+
+    const handleConsent = (e: any) => {
+      if (e.detail?.consentId) {
+        setConsentId(e.detail.consentId);
+      }
+    };
+    window.addEventListener('isabel_cookie_consent', handleConsent);
+    return () => window.removeEventListener('isabel_cookie_consent', handleConsent);
   }, []);
 
   useEffect(() => {
@@ -28,7 +42,9 @@ export default function Tracker() {
     // Build the full path
     const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '');
 
-    // Fire the tracking event
+    const activeConsentId = consentId || localStorage.getItem('isabel_consent_id') || null;
+
+    // Fire the server-side tracking event
     fetch('/api/track', {
       method: 'POST',
       headers: {
@@ -37,13 +53,13 @@ export default function Tracker() {
       body: JSON.stringify({
         path: url,
         visitorId: visitorId,
+        consentId: activeConsentId,
       }),
     }).catch((err) => {
-      // Silently fail on tracking errors to not disrupt user experience
       console.warn('Tracking failed:', err);
     });
 
-  }, [pathname, searchParams, visitorId]);
+  }, [pathname, searchParams, visitorId, consentId]);
 
   return null; // Invisible component
 }

@@ -71,6 +71,23 @@ export default function CartDrawer() {
 
     setLoading(true);
     try {
+      const visitorId = localStorage.getItem('isabel_visitor_id');
+      const consentId = localStorage.getItem('isabel_consent_id');
+
+      // 1. Sincronizza lo stato del carrello e del consenso sul server
+      fetch('/api/cart/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items,
+          customerEmail,
+          customerPhone,
+          visitorId,
+          consentId,
+        }),
+      }).catch(() => {});
+
+      // 2. Avvia la sessione di checkout Stripe
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -78,6 +95,8 @@ export default function CartDrawer() {
           items, 
           customerEmail, 
           customerPhone,
+          visitorId,
+          consentId,
           couponCode: appliedDiscount?.code 
         }),
       });

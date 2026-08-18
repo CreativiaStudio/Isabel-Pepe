@@ -30,22 +30,40 @@ export async function POST(request: Request) {
     const customerEmail = body.customerEmail;
     const customerPhone = body.customerPhone || '';
     const couponCode = body.couponCode;
+    const visitorId = body.visitorId || null;
+    const consentId = body.consentId || null;
     
     // Calcoliamo il totale per il db
     const totalAmount = items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0);
 
-    // Salviamo il carrello abbandonato
+    // Controlliamo il consenso marketing
+    let marketingConsent = false;
+    if (consentId) {
+      const { data: consentRecord } = await supabaseAdmin
+        .from('cookie_consents')
+        .select('marketing')
+        .eq('consent_id', consentId)
+        .single();
+      marketingConsent = Boolean(consentRecord?.marketing);
+    }
+
+    // Salviamo o aggiorniamo il carrello abbandonato collegato a visitor_id e consent_id
     let abandonedCartId = null;
     if (customerEmail) {
       const { data: cartData, error: cartError } = await supabaseAdmin
         .from('abandoned_carts')
-        .insert([{
-          email: customerEmail,
+        .upsert([{
+          email: customerEmail.toLowerCase().trim(),
           phone: customerPhone,
           cart_items: items,
           total_amount: totalAmount,
-          status: 'abandoned'
-        }])
+          status: 'abandoned',
+          visitor_id: visitorId,
+          consent_id: consentId,
+          marketing_consent: marketingConsent,
+          last_active_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }], { onConflict: 'email' })
         .select()
         .single();
         
@@ -91,6 +109,8 @@ export async function POST(request: Request) {
       discounts: discounts,
       metadata: {
         abandoned_cart_id: abandonedCartId || '',
+        visitor_id: visitorId || '',
+        consent_id: consentId || '',
         applied_coupon: couponCode || '',
         cart_items: JSON.stringify(items.map((i: any) => ({
           id: i.id,
