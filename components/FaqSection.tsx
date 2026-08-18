@@ -23,7 +23,7 @@ const defaultFaqs: FaqItem[] = [
   },
   {
     question: "La confezione regalo e la garanzia sono incluse?",
-    answer: "Assolutamente sì. Ogni creazione Isabel Pepe include il Cofanetto Luxury: astuccio rigido di lusso, panno speciale in microfibra per la pulizia quotidiana e Certificato Ufficiale di Autenticità e Qualità."
+    answer: "Assolutamente sì. Ogni creazione Isabel Pepe include il Cofanetto Luxury: astuccio rigido di lusso, panno speciale in microfibra per la pulizia quotidiana e il Certificato Gemmologico Ufficiale GRA per tutte le creazioni con pietre Moissanite."
   },
   {
     question: "I gioielli sono resistenti all'acqua e anallergici?",

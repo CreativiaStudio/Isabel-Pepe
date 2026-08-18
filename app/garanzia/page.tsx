@@ -58,7 +58,7 @@ export default function GaranziaPage() {
                 <strong>Doppio Scudo Protettivo:</strong> Certifica la placcatura in Oro 18K da 1.0 Micron (20 volte più spessa dello standard) o la finitura a specchio in Rodio Puro, sigillate dall'invisibile nano-trattamento molecolare protettivo E-Coating anti-ossidazione.
               </p>
               <p>
-                <strong>Selezione Pietre & Perle:</strong> Attesta il taglio brillante di massima rifrazione o la provenienza naturale delle perle d'acqua dolce selezionate a mano.
+                <strong>Certificazione GRA Moissanite & Selezione Perle:</strong> Per tutte le creazioni in Moissanite è incluso il <strong>Certificato Gemmologico Ufficiale GRA</strong> con codice univoco e caratura. Per i gioielli in perle d'acqua dolce naturali, garantiamo la selezione manuale di prima qualità senza emissione di certificati gemmologici.
               </p>
             </div>
           </div>
