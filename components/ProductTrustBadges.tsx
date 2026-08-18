@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock, Sparkles, Gem } from 'lucide-react';
+import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock, Gem, BookOpen, CreditCard, Layers, Eye } from 'lucide-react';
 
 interface ProductTrustBadgesProps {
   product: {
@@ -14,6 +14,7 @@ interface ProductTrustBadgesProps {
 
 export default function ProductTrustBadges({ product }: ProductTrustBadgesProps) {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [activeGraTab, setActiveGraTab] = useState<'kit' | 'report' | 'card' | 'brand'>('kit');
 
   const isPearl = Boolean(
     (product.gemstone?.toLowerCase().includes('perl') || 
@@ -89,14 +90,14 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </div>
           <div className="min-w-0">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#C0A09A] font-semibold block truncate">
-              {isMoissanite ? "Certificazione Gemmologica Ufficiale" : "Garanzia Ufficiale di Qualità"}
+              {isMoissanite ? "Doppia Certificazione Inclusa" : "Garanzia Ufficiale di Qualità"}
             </span>
             <p className="text-xs text-gray-800 font-medium leading-tight truncate">
               {isPearl 
-                ? "Certificato Perle Naturali d'Acqua Dolce" 
+                ? "Certificato Perle Naturali d'Acqua Dolce & Argento 925" 
                 : isMoissanite 
-                ? "Certificato Ufficiale GRA Moissanite Incluso" 
-                : "Certificato di Autenticità & Metalli Nobili"
+                ? "Libretto Gemmologico GRA + Card di Garanzia & Certificato Isabel Pepe" 
+                : "Certificato di Autenticità & Metalli Nobili 925"
               }
             </p>
           </div>
@@ -107,18 +108,18 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           onClick={() => setIsCertModalOpen(true)}
           className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white hover:bg-gray-900 text-gray-900 hover:text-white border border-[#C0A09A]/50 hover:border-gray-900 rounded-full text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all duration-300 shadow-sm shrink-0 cursor-pointer"
         >
-          {isMoissanite ? "Vedi Certificato GRA 🔍" : "Vedi Certificato 🔍"}
+          {isMoissanite ? "Vedi Certificati GRA 🔍" : "Vedi Certificato 🔍"}
         </button>
       </div>
 
       {/* MODAL POPUP DINAMICO */}
       {isCertModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto"
           onClick={() => setIsCertModalOpen(false)}
         >
           <div 
-            className="relative bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-gray-100 overflow-hidden"
+            className="relative bg-white rounded-2xl max-w-2xl w-full p-5 sm:p-8 shadow-2xl border border-gray-100 my-8 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
@@ -132,23 +133,77 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             </button>
 
             {/* Header Modal */}
-            <div className="text-center mb-6">
+            <div className="text-center mb-5">
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-1">
-                {isMoissanite ? "Report Gemmologico Internazionale" : "Documento Ufficiale Isabel Pepe"}
+                {isMoissanite ? "Certificazione Gemmologica & Garanzia di Lusso" : "Documento Ufficiale Isabel Pepe"}
               </span>
               <h3 className="font-serif text-xl sm:text-2xl text-gray-900 tracking-wide">
                 {isPearl 
                   ? "Certificato Perle Naturali d'Acqua Dolce" 
                   : isMoissanite 
-                  ? "Certificato Gemmologico Ufficiale GRA" 
+                  ? "Cosa Riceverai: Certificato GRA & Garanzia Isabel Pepe" 
                   : "Certificato di Autenticità & Garanzia 24 Mesi"
                 }
               </h3>
             </div>
 
-            {/* Immagine Card Certificato con Protezione Totale Anti-Download */}
+            {/* Tabs di navigazione per Moissanite (Kit Completo / Libretto Report / Card GRA / Certificato Brand) */}
+            {isMoissanite && (
+              <div className="flex items-center justify-center gap-1.5 sm:gap-2 mb-5 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] overflow-x-auto">
+                <button
+                  type="button"
+                  onClick={() => setActiveGraTab('kit')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    activeGraTab === 'kit' 
+                      ? 'bg-gray-900 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+                  }`}
+                >
+                  <Layers size={13} />
+                  <span>1. Kit Completo</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveGraTab('report')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    activeGraTab === 'report' 
+                      ? 'bg-gray-900 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+                  }`}
+                >
+                  <BookOpen size={13} />
+                  <span>2. Libretto GRA</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveGraTab('card')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    activeGraTab === 'card' 
+                      ? 'bg-gray-900 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+                  }`}
+                >
+                  <CreditCard size={13} />
+                  <span>3. Card GRA</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveGraTab('brand')}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                    activeGraTab === 'brand' 
+                      ? 'bg-gray-900 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+                  }`}
+                >
+                  <Award size={13} />
+                  <span>4. Certificato Isabel Pepe</span>
+                </button>
+              </div>
+            )}
+
+            {/* Immagine Documento con Protezione Totale Anti-Download */}
             <div 
-              className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-6 bg-[#FAF8F5] select-none"
+              className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-5 bg-[#FAF8F5] select-none"
               onContextMenu={(e) => e.preventDefault()}
             >
               {/* Invisible protection shield */}
@@ -159,14 +214,38 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               />
 
               <img
-                src={isMoissanite ? "/Brand/certificato_gra_moissanite_clean.webp" : "/Brand/certificato_perle_card_clean.webp"}
-                alt={isMoissanite ? "Certificato GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
-                className="w-full h-auto object-contain pointer-events-none select-none user-select-none"
+                src={
+                  isMoissanite
+                    ? activeGraTab === 'kit'
+                      ? '/Brand/kit_certificazione_gra_completo.webp'
+                      : activeGraTab === 'report'
+                      ? '/Brand/gra_report_interno_privacy.webp'
+                      : activeGraTab === 'card'
+                      ? '/Brand/gra_card_privacy.webp'
+                      : '/Brand/certificato_perle_card_clean.webp'
+                    : '/Brand/certificato_perle_card_clean.webp'
+                }
+                alt={isMoissanite ? "Certificazione GRA Moissanite Isabel Pepe" : "Certificato di Autenticità Isabel Pepe"}
+                className="w-full h-auto max-h-[380px] object-contain pointer-events-none select-none user-select-none mx-auto"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
                 onDragStart={(e) => e.preventDefault()}
               />
             </div>
+
+            {/* Box Informativo Seriale Univoco & Privacy (Solo Moissanite) */}
+            {isMoissanite && (
+              <div className="bg-[#FAF8F5] border border-[#F0E6E1] rounded-xl p-3.5 mb-5 flex items-start gap-3">
+                <Lock size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                <div className="text-[11px] text-gray-700 leading-relaxed">
+                  <strong className="text-gray-900 font-semibold block mb-0.5">
+                    Numero di Serie & QR Code Univoci per Ogni Singola Pietra
+                  </strong>
+                  In questa anteprima il codice seriale e il QR Code sono oscurati a tutela della privacy. 
+                  Ogni gioiello in Moissanite acquistato include la propria <strong>micro-incisione laser sulla cintura della pietra</strong> con matricola dedicata, verificabile online sul database ufficiale GRA.
+                </div>
+              </div>
+            )}
 
             {/* Specifiche Garanzia in punti chiave Dinamiche */}
             <div className="bg-[#FAF8F5] rounded-xl p-4 border border-[#F0E6E1]/80 space-y-2.5 text-xs text-gray-600 font-light select-none">
@@ -175,22 +254,22 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-gray-900 font-medium">Moissanite VVS1 D-Color: </strong>
-                      Certificata dall'Istituto Gemmologico GRA per massima purezza, brillantezza e rifrazione della luce superiore al diamante.
+                      <strong className="text-gray-900 font-medium">1. Libretto Ufficiale GRA (Moissanite Grading Report): </strong>
+                      Attesta il Grado Colore D (incolore assoluto), Purezza VVS1 e Taglio Brillante Eccellente.
                     </span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-gray-900 font-medium">Codice Seriale Univoco: </strong>
-                      Ogni pietra presenta una micro-incisione laser sulla cintura con numero di serie verificabile tramite QR Code.
+                      <strong className="text-gray-900 font-medium">2. Card Rigida di Garanzia GRA: </strong>
+                      Tessera con QR Code univoco per la registrazione e verifica online della gemma.
                     </span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                     <span>
-                      <strong className="text-gray-900 font-medium">Doppio Scudo Protettivo: </strong>
-                      100% Argento 925 con placcatura Oro 18K / Rodio Puro sigillata da Nano-Sigillo E-Coating.
+                      <strong className="text-gray-900 font-medium">3. Certificato Ufficiale Isabel Pepe: </strong>
+                      Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura Oro 18K/Rodio e Nano-Sigillo E-Coating.
                     </span>
                   </div>
                 </>
@@ -239,10 +318,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             </div>
 
             {/* Footer Modal con Protezione Copyright */}
-            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+            <div className="mt-5 flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
               <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-light select-none">
                 <Lock size={13} className="text-[#C0A09A]" />
-                <span>Documento Protetto da Copyright Isabel Pepe</span>
+                <span>Documenti Ufficiali Protetti da Copyright Isabel Pepe & GRA</span>
               </div>
 
               <button
