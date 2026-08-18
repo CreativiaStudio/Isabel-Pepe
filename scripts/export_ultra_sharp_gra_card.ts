@@ -24,17 +24,18 @@ async function exportUltraCleanGraCard() {
   const w = 1600;
   const h = 1000;
 
-  // Precise SVG overlay covering EXACTLY the QR code (and text under it) and the exact serial number (2304192083)
+  // 1. QR Code is at x: 1130..1550, y: 560..945
+  // 2. The number 2304192083 is at x: 650..1015, y: 820..915
   const cardOverlaySvg = `
   <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
     <!-- Frosted Privacy Mask over ENTIRE QR Code + Subtext (Right column) -->
-    <rect x="1135" y="575" width="410" height="375" fill="#181818" opacity="0.97" rx="10" stroke="#383838" stroke-width="2" />
-    <text x="1340" y="745" font-family="'Helvetica Neue', Arial, sans-serif" font-size="34" fill="#C0A09A" font-weight="bold" text-anchor="middle">QR CODE</text>
-    <text x="1340" y="795" font-family="'Helvetica Neue', Arial, sans-serif" font-size="23" letter-spacing="2" fill="#E5E5E5" opacity="0.85" text-anchor="middle">UNIVOCO</text>
+    <rect x="1130" y="565" width="415" height="385" fill="#141414" opacity="0.98" rx="10" stroke="#333333" stroke-width="2" />
+    <text x="1337" y="740" font-family="'Helvetica Neue', Arial, sans-serif" font-size="34" fill="#C0A09A" font-weight="bold" text-anchor="middle">QR CODE</text>
+    <text x="1337" y="790" font-family="'Helvetica Neue', Arial, sans-serif" font-size="23" letter-spacing="2" fill="#E5E5E5" opacity="0.85" text-anchor="middle">UNIVOCO</text>
 
-    <!-- Frosted Privacy Mask over EXACT Serial Number: 2304192083 (Bottom-Center) -->
-    <rect x="635" y="750" width="370" height="115" fill="#181818" opacity="0.97" rx="8" stroke="#383838" stroke-width="2" />
-    <text x="820" y="825" font-family="Arial, sans-serif" font-size="36" letter-spacing="4" fill="#D4AF37" font-weight="bold" text-anchor="middle">••••••••••</text>
+    <!-- Frosted Privacy Mask DIRECTLY OVER the Serial Number: 2304192083 -->
+    <rect x="645" y="818" width="375" height="100" fill="#141414" opacity="0.98" rx="8" stroke="#333333" stroke-width="2" />
+    <text x="832" y="885" font-family="Arial, sans-serif" font-size="38" letter-spacing="5" fill="#D4AF37" font-weight="bold" text-anchor="middle">••••••••••</text>
   </svg>
   `;
 
@@ -48,7 +49,7 @@ async function exportUltraCleanGraCard() {
     .jpeg({ quality: 95 })
     .toFile(path.resolve(process.cwd(), 'public/Brand/gra_card_privacy.jpg'));
 
-  console.log('✅ Perfectly aligned frosted privacy masks exported successfully!');
+  console.log('✅ Serial number mask placed DIRECTLY over the number 2304192083!');
 }
 
 exportUltraCleanGraCard().catch(console.error);
