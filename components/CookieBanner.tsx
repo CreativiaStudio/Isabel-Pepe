@@ -50,7 +50,7 @@ export default function CookieBanner() {
             <span>🍪 Rispetto della tua Privacy & Cookie</span>
           </h4>
           <p className="font-sans text-gray-300 text-xs leading-relaxed font-light tracking-wide max-w-4xl">
-            Utilizziamo cookie tecnici essenziali ed analitici per garantirti la migliore esperienza di navigazione sulla nostra boutique, personalizzare i contenuti e processare gli ordini in totale sicurezza (GDPR UE 2016/679). Per maggiori dettagli consulta la nostra{' '}
+            Utilizziamo cookie tecnici essenziali ed analitici per garantirti la migliore esperienza di navigazione sul nostro atelier, personalizzare i contenuti e processare gli ordini in totale sicurezza (GDPR UE 2016/679). Per maggiori dettagli consulta la nostra{' '}
             <a href="/privacy" className="text-[#C0A09A] underline hover:text-white transition">Privacy Policy</a> ed il{' '}
             <a href="/cookie-policy" className="text-[#C0A09A] underline hover:text-white transition">Regolamento Cookie</a>.
           </p>

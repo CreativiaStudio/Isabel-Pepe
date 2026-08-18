@@ -136,7 +136,7 @@ export default function CuraGioielliPage() {
             Il nostro team di assistenza è sempre disponibile per consigli di cura straordinaria o supporto sulla garanzia ufficiale di 24 mesi.
           </p>
           <Link href="/assistenza-clienti" className="inline-block bg-[#C0A09A] hover:bg-white text-white hover:text-[#1A1A1A] text-xs font-semibold uppercase tracking-[0.25em] px-8 py-4 transition-all duration-300">
-            Contatta Concierge Boutique
+            Contatta Concierge Atelier
           </Link>
         </div>
 

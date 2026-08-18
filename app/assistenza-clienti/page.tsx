@@ -21,18 +21,18 @@ export default function AssistenzaClientiPage() {
     <div className="bg-white min-h-screen pt-28 sm:pt-32 pb-24 px-4 sm:px-6 text-[#1A1A1A]">
       <div className="max-w-5xl mx-auto">
         
-        {/* HERO SECTION CON FOTOGRAFIA BOUTIQUE CONCIERGE */}
+        {/* HERO SECTION CON FOTOGRAFIA ATELIER CONCIERGE */}
         <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#F0E6E1] mb-12 aspect-[16/9] sm:aspect-[21/9] bg-[#FAF8F5]">
           <img 
             src="/Brand/assistenza_hero.jpg" 
-            alt="Isabel Pepe — Boutique Concierge & Customer Care" 
+            alt="Isabel Pepe — Atelier Concierge & Customer Care" 
             className="w-full h-full object-cover object-[center_40%]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
           
           <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-12 right-6 sm:right-12 text-white">
             <span className="font-sans text-[10px] sm:text-xs text-[#E8D7D3] uppercase tracking-[0.35em] font-semibold block mb-2">
-              Boutique Concierge & Customer Care
+              Atelier Concierge & Customer Care
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-widest uppercase leading-tight drop-shadow-md">
               Assistenza Clienti
@@ -54,7 +54,7 @@ export default function AssistenzaClientiPage() {
                 Risposta Istantanea
               </span>
               <h2 className="font-serif text-2xl text-gray-900 tracking-wider">
-                Chatta Diretto con la Boutique
+                Chatta Diretto con l'Atelier
               </h2>
               <p className="font-sans text-xs text-gray-600 font-light mt-1">
                 Contatta il nostro personal shopper su WhatsApp per assistenza immediata.
@@ -105,7 +105,7 @@ export default function AssistenzaClientiPage() {
               <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
                 <Clock size={22} strokeWidth={1.5} />
               </div>
-              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Boutique Digitale</h3>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Atelier Digitale</h3>
               <p className="text-xs text-gray-500 font-light mb-4">Siamo un brand 100% online, sempre a tua disposizione.</p>
             </div>
             <div className="bg-[#FAF8F5] p-3.5 rounded-xl border border-[#F0E6E1]/60 text-xs text-gray-600 font-light space-y-1">
