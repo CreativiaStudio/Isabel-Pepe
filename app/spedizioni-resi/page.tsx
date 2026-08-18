@@ -6,11 +6,11 @@ import { Truck, RotateCcw, ShieldCheck, Clock, PackageCheck, MapPin, ChevronRigh
 export const metadata: Metadata = {
   title: "Spedizioni e Resi",
   description:
-    "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
+    "Spedizioni express 48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
   openGraph: {
     title: "Spedizioni e Resi | Isabel Pepe",
     description:
-      "Spedizioni express 24/48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
+      "Spedizioni express 48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
   },
 };
 
@@ -28,7 +28,7 @@ export default function SpedizioniResiPage() {
             Spedizioni & Resi
           </h1>
           <p className="font-sans text-gray-600 text-sm max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
-            Consegne rapide 24/48h sempre gratuite in tutta Italia ed un servizio di reso garantito entro 14 giorni per offrirti un'esperienza di acquisto in totale serenità.
+            Consegne rapide in 48 ore lavorative sempre gratuite in tutta Italia ed un servizio di reso garantito entro 14 giorni per offrirti un'esperienza di acquisto in totale serenità.
           </p>
         </div>
 
@@ -40,7 +40,7 @@ export default function SpedizioniResiPage() {
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
-            Spedizioni Express In 24/48 Ore Lavorative
+            Spedizioni Express In 48 Ore Lavorative
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light mb-8">
@@ -68,7 +68,7 @@ export default function SpedizioniResiPage() {
             <div className="bg-white p-5 rounded-xl border border-gray-100 text-center">
               <Clock className="text-[#C0A09A] mx-auto mb-2" size={20} />
               <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold block">Tempi Consegna</span>
-              <span className="font-serif text-lg text-gray-900 font-medium">24 - 48 Ore</span>
+              <span className="font-serif text-lg text-gray-900 font-medium">48 Ore Lavorative</span>
             </div>
             <div className="bg-white p-5 rounded-xl border border-gray-100 text-center">
               <PackageCheck className="text-[#C0A09A] mx-auto mb-2" size={20} />

@@ -18,7 +18,7 @@ export default function Header() {
     <>
       {/* Service Bar */}
       <div className="bg-[#FAFAFA] text-[#1A1A1A]/70 text-[9px] uppercase tracking-widest py-2 px-4 text-center flex items-center justify-center gap-3 flex-wrap">
-        <span className="font-medium text-gray-900">Spedizione Sempre Gratuita 24/48h</span>
+        <span className="font-medium text-gray-900">Spedizione Express Gratuita in 48H</span>
         <span className="hidden sm:inline text-gray-300">•</span>
         <Link href="/impegno-animali" className="text-[#C0A09A] hover:underline font-semibold flex items-center gap-1">
           <span>🐾 L'Arte del Dono: Sosteniamo gli Animali</span>

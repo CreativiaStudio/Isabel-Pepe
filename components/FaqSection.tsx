@@ -15,7 +15,7 @@ const defaultFaqs: FaqItem[] = [
   },
   {
     question: "Quali sono i tempi e i costi di spedizione?",
-    answer: "Spediamo in 24/48 ore lavorative in tutta Italia con corriere espresso (Packlink PRO / Poste Italiane). La spedizione express è SEMPRE GRATUITA su tutti gli ordini, senza alcun minimo di spesa."
+    answer: "Spediamo in 48 ore lavorative in tutta Italia con corriere espresso (Poste Italiane / Packlink PRO). La spedizione express è SEMPRE GRATUITA su tutti gli ordini, senza alcun minimo di spesa."
   },
   {
     question: "Come posso effettuare un reso?",

@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | Isabel Pepe",
   },
   description:
-    "Gioielli Demi-Fine in Argento 925 con placcatura Oro 18K (1.0µm) o Rodio ed E-Coating. Cofanetto regalo luxury e garanzia inclusi. Spedizione 24/48h.",
+    "Gioielli Demi-Fine in Argento 925 con placcatura Oro 18K (1.0µm) o Rodio ed E-Coating. Cofanetto regalo luxury e garanzia inclusi. Spedizione Express 48h.",
   keywords: [
     "gioielli demi-fine",
     "gioielli lusso accessibile",
