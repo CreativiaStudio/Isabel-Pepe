@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock } from 'lucide-react';
+import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock, Sparkles, Gem } from 'lucide-react';
 
 interface ProductTrustBadgesProps {
   product: {
     name: string;
     gemstone?: string;
     materials?: string;
+    description?: string;
   };
 }
 
@@ -15,7 +16,18 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const isPearl = Boolean(
-    (product.gemstone?.toLowerCase().includes('perl') || product.name.toLowerCase().includes('perl') || product.materials?.toLowerCase().includes('perl'))
+    (product.gemstone?.toLowerCase().includes('perl') || 
+     product.name.toLowerCase().includes('perl') || 
+     product.materials?.toLowerCase().includes('perl'))
+  );
+
+  const isMoissanite = Boolean(
+    (product.gemstone?.toLowerCase().includes('moissanite') || 
+     product.gemstone?.toLowerCase().includes('vvs1') || 
+     product.gemstone?.toLowerCase().includes('d-color') ||
+     product.name.toLowerCase().includes('moissanite') ||
+     product.description?.toLowerCase()?.includes('moissanite') ||
+     (!isPearl && product.gemstone && product.gemstone !== '-'))
   );
 
   return (
@@ -69,18 +81,23 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
 
       </div>
 
-      {/* Banner Certificato Ufficiale di Autenticità (Dedicato, elegante e non legato al cofanetto) */}
+      {/* Banner Certificato Dinamico (Perle vs Moissanite vs Argento) */}
       <div className="mb-8 p-3.5 sm:p-4 bg-[#FAF8F5] border border-[#F0E6E1] rounded-2xl flex items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-full bg-[#C0A09A]/15 flex items-center justify-center text-[#8A5E58] shrink-0">
-            <Award size={18} />
+            {isMoissanite ? <Gem size={18} /> : <Award size={18} />}
           </div>
           <div className="min-w-0">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#C0A09A] font-semibold block truncate">
-              Garanzia Ufficiale di Qualità
+              {isMoissanite ? "Certificazione Gemmologica Ufficiale" : "Garanzia Ufficiale di Qualità"}
             </span>
             <p className="text-xs text-gray-800 font-medium leading-tight truncate">
-              {isPearl ? "Certificato Perle Naturali d'Acqua Dolce" : "Certificato Ufficiale di Autenticità"}
+              {isPearl 
+                ? "Certificato Perle Naturali d'Acqua Dolce" 
+                : isMoissanite 
+                ? "Certificato Ufficiale GRA Moissanite Incluso" 
+                : "Certificato di Autenticità & Metalli Nobili"
+              }
             </p>
           </div>
         </div>
@@ -90,11 +107,11 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           onClick={() => setIsCertModalOpen(true)}
           className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white hover:bg-gray-900 text-gray-900 hover:text-white border border-[#C0A09A]/50 hover:border-gray-900 rounded-full text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all duration-300 shadow-sm shrink-0 cursor-pointer"
         >
-          Vedi Certificato 🔍
+          {isMoissanite ? "Vedi Certificato GRA 🔍" : "Vedi Certificato 🔍"}
         </button>
       </div>
 
-      {/* MODAL POPUP CERTIFICATO DI AUTENTICITÀ */}
+      {/* MODAL POPUP DINAMICO */}
       {isCertModalOpen && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn"
@@ -117,19 +134,24 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             {/* Header Modal */}
             <div className="text-center mb-6">
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-1">
-                Documento Ufficiale Isabel Pepe
+                {isMoissanite ? "Report Gemmologico Internazionale" : "Documento Ufficiale Isabel Pepe"}
               </span>
               <h3 className="font-serif text-xl sm:text-2xl text-gray-900 tracking-wide">
-                {isPearl ? "Certificato Perle Naturali d'Acqua Dolce" : "Certificato Ufficiale di Autenticità"}
+                {isPearl 
+                  ? "Certificato Perle Naturali d'Acqua Dolce" 
+                  : isMoissanite 
+                  ? "Certificato Gemmologico Ufficiale GRA" 
+                  : "Certificato di Autenticità & Garanzia 24 Mesi"
+                }
               </h3>
             </div>
 
-            {/* Immagine Card Certificato Fotorealistica con Protezione Totale Anti-Download */}
+            {/* Immagine Card Certificato con Protezione Totale Anti-Download */}
             <div 
               className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-6 bg-[#FAF8F5] select-none"
               onContextMenu={(e) => e.preventDefault()}
             >
-              {/* Invisible protection shield over the image */}
+              {/* Invisible protection shield */}
               <div 
                 className="absolute inset-0 z-20 bg-transparent select-none cursor-default"
                 onContextMenu={(e) => e.preventDefault()}
@@ -137,8 +159,8 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               />
 
               <img
-                src="/Brand/certificato_perle_card_clean.webp"
-                alt={`Certificato di Autenticità per ${product.name}`}
+                src={isMoissanite ? "/Brand/certificato_gra_moissanite_clean.webp" : "/Brand/certificato_perle_card_clean.webp"}
+                alt={isMoissanite ? "Certificato GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
                 className="w-full h-auto object-contain pointer-events-none select-none user-select-none"
                 draggable={false}
                 onContextMenu={(e) => e.preventDefault()}
@@ -146,29 +168,74 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               />
             </div>
 
-            {/* Specifiche Garanzia in punti chiave */}
+            {/* Specifiche Garanzia in punti chiave Dinamiche */}
             <div className="bg-[#FAF8F5] rounded-xl p-4 border border-[#F0E6E1]/80 space-y-2.5 text-xs text-gray-600 font-light select-none">
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-gray-900 font-medium">Perle d'Acqua Dolce Coltivate: </strong>
-                  Selezionate a mano per lucentezza organica e purezza (100% naturali).
-                </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-gray-900 font-medium">Metallo Nobile Certificato: </strong>
-                  100% Argento Sterling 925 Nichel-Free con punzone legale S925 e sigillo laser "IP".
-                </span>
-              </div>
-              <div className="flex items-start gap-2.5">
-                <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                <span>
-                  <strong className="text-gray-900 font-medium">Placcatura Oro 18K & E-Coating: </strong>
-                  Spessore luxury da 1.0 Micron con scudo molecolare protettivo anti-ossidazione.
-                </span>
-              </div>
+              {isMoissanite ? (
+                <>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Moissanite VVS1 D-Color: </strong>
+                      Certificata dall'Istituto Gemmologico GRA per massima purezza, brillantezza e rifrazione della luce superiore al diamante.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Codice Seriale Univoco: </strong>
+                      Ogni pietra presenta una micro-incisione laser sulla cintura con numero di serie verificabile tramite QR Code.
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Doppio Scudo Protettivo: </strong>
+                      100% Argento 925 con placcatura Oro 18K / Rodio Puro sigillata da Nano-Sigillo E-Coating.
+                    </span>
+                  </div>
+                </>
+              ) : isPearl ? (
+                <>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Perle d'Acqua Dolce Coltivate: </strong>
+                      Selezionate a mano per lucentezza organica e purezza (100% naturali).
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Metallo Nobile Certificato: </strong>
+                      Argento Sterling 925 Nichel-Free con punzone legale S925 e sigillo laser "IP".
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Placcatura Oro 18K & E-Coating: </strong>
+                      Spessore luxury da 1.0 Micron con scudo molecolare protettivo anti-ossidazione.
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Argento Sterling 925: </strong>
+                      100% anallergico e nichel-free, punzonato con marchio legale S925 e "IP".
+                    </span>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">Doppio Scudo Protettivo: </strong>
+                      Placcatura Oro 18K / Rodio Puro + Nano-Sigillo Molecolare E-Coating.
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             {/* Footer Modal con Protezione Copyright */}
