@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ShieldCheck, Gift, Truck, Heart, X, Sparkles, CheckCircle2, Award } from 'lucide-react';
+import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock } from 'lucide-react';
 
 interface ProductTrustBadgesProps {
   product: {
@@ -18,14 +18,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
     (product.gemstone?.toLowerCase().includes('perl') || product.name.toLowerCase().includes('perl') || product.materials?.toLowerCase().includes('perl'))
   );
 
-  const isMoissanite = Boolean(
-    (product.gemstone?.toLowerCase().includes('moissanite') || product.gemstone?.toLowerCase().includes('vvs1') || product.gemstone?.toLowerCase().includes('d-color'))
-  );
-
   return (
     <>
       {/* 4 Pilastri di Fiducia — 100% Simmetrici */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 border-y border-gray-100 py-4 sm:py-5 mb-8 items-stretch">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 border-y border-gray-100 py-4 sm:py-5 mb-6 items-stretch">
         
         {/* 1. Doppio Scudo */}
         <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
@@ -38,21 +34,16 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </span>
         </div>
 
-        {/* 2. Cofanetto & Certificato (Interattivo con Popup Modal) */}
-        <button
-          type="button"
-          onClick={() => setIsCertModalOpen(true)}
-          className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] hover:bg-[#F5ECE8] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60 hover:border-[#C0A09A]/40 transition-all duration-300 group cursor-pointer"
-          title="Clicca per visualizzare il Certificato Ufficiale"
-        >
-          <Gift size={20} className="text-[#C0A09A] group-hover:scale-110 mb-1.5 shrink-0 transition-transform" />
-          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center group-hover:text-[#8A5E58] transition-colors">
+        {/* 2. Cofanetto Luxury (Panno & Box) */}
+        <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
+          <Gift size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+          <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
             Cofanetto<br />Luxury
           </span>
-          <span className="text-[9px] text-[#C0A09A] font-medium leading-snug underline decoration-[#C0A09A]/40 group-hover:decoration-[#C0A09A]">
-            Vedi Certificato 🔍
+          <span className="text-[9px] text-gray-500 font-light leading-snug">
+            Panno & Astuccio
           </span>
-        </button>
+        </div>
 
         {/* 3. Consegna Express 48H */}
         <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
@@ -78,20 +69,46 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
 
       </div>
 
+      {/* Banner Certificato Ufficiale di Autenticità (Dedicato, elegante e non legato al cofanetto) */}
+      <div className="mb-8 p-3.5 sm:p-4 bg-[#FAF8F5] border border-[#F0E6E1] rounded-2xl flex items-center justify-between gap-3 shadow-sm">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-full bg-[#C0A09A]/15 flex items-center justify-center text-[#8A5E58] shrink-0">
+            <Award size={18} />
+          </div>
+          <div className="min-w-0">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#C0A09A] font-semibold block truncate">
+              Garanzia Ufficiale di Qualità
+            </span>
+            <p className="text-xs text-gray-800 font-medium leading-tight truncate">
+              {isPearl ? "Certificato Perle Naturali d'Acqua Dolce" : "Certificato Ufficiale di Autenticità"}
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsCertModalOpen(true)}
+          className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white hover:bg-gray-900 text-gray-900 hover:text-white border border-[#C0A09A]/50 hover:border-gray-900 rounded-full text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all duration-300 shadow-sm shrink-0 cursor-pointer"
+        >
+          Vedi Certificato 🔍
+        </button>
+      </div>
+
       {/* MODAL POPUP CERTIFICATO DI AUTENTICITÀ */}
       {isCertModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fadeIn"
           onClick={() => setIsCertModalOpen(false)}
         >
           <div 
             className="relative bg-white rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-gray-100 overflow-hidden"
             onClick={(e) => e.stopPropagation()}
+            onContextMenu={(e) => e.preventDefault()}
           >
             {/* Close Button */}
             <button
               onClick={() => setIsCertModalOpen(false)}
-              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
+              className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer"
               aria-label="Chiudi finestra certificato"
             >
               <X size={18} />
@@ -100,14 +117,14 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             {/* Header Modal */}
             <div className="text-center mb-6">
               <span className="text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-1">
-                Isabel Pepe • Garanzia Ufficiale
+                Documento Ufficiale Isabel Pepe
               </span>
               <h3 className="font-serif text-xl sm:text-2xl text-gray-900 tracking-wide">
                 {isPearl ? "Certificato Perle Naturali d'Acqua Dolce" : "Certificato Ufficiale di Autenticità"}
               </h3>
             </div>
 
-            {/* Immagine Card Certificato con Protezione Totale Anti-Download */}
+            {/* Immagine Card Certificato Fotorealistica con Protezione Totale Anti-Download */}
             <div 
               className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-6 bg-[#FAF8F5] select-none"
               onContextMenu={(e) => e.preventDefault()}
@@ -130,35 +147,37 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             </div>
 
             {/* Specifiche Garanzia in punti chiave */}
-            <div className="bg-[#FAF8F5] rounded-xl p-4 border border-[#F0E6E1]/80 space-y-2.5 text-xs text-gray-600 font-light">
+            <div className="bg-[#FAF8F5] rounded-xl p-4 border border-[#F0E6E1]/80 space-y-2.5 text-xs text-gray-600 font-light select-none">
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                 <span>
-                  <strong className="text-gray-900 font-medium">Autenticità Garantita: </strong>
-                  {isPearl 
-                    ? "Perle d'acqua dolce naturali coltivate, selezionate a mano per lucentezza satinata e fascino organico." 
-                    : "Pietre VVS1 D-Color certificate con massima rifrazione della luce."
-                  }
+                  <strong className="text-gray-900 font-medium">Perle d'Acqua Dolce Coltivate: </strong>
+                  Selezionate a mano per lucentezza organica e purezza (100% naturali).
                 </span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                 <span>
                   <strong className="text-gray-900 font-medium">Metallo Nobile Certificato: </strong>
-                  100% Argento Sterling 925 con punzonatura legale S925 e incisione laser del marchio "IP".
+                  100% Argento Sterling 925 Nichel-Free con punzone legale S925 e sigillo laser "IP".
                 </span>
               </div>
               <div className="flex items-start gap-2.5">
                 <CheckCircle2 size={16} className="text-[#C0A09A] shrink-0 mt-0.5" />
                 <span>
-                  <strong className="text-gray-900 font-medium">Incluso nel tuo ordine: </strong>
-                  Cofanetto rigido di lusso Isabel Pepe e panno speciale in microfibra per la cura quotidiana.
+                  <strong className="text-gray-900 font-medium">Placcatura Oro 18K & E-Coating: </strong>
+                  Spessore luxury da 1.0 Micron con scudo molecolare protettivo anti-ossidazione.
                 </span>
               </div>
             </div>
 
-            {/* CTA Chiudi */}
-            <div className="mt-6 text-center">
+            {/* Footer Modal con Protezione Copyright */}
+            <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-light select-none">
+                <Lock size={13} className="text-[#C0A09A]" />
+                <span>Documento Protetto da Copyright Isabel Pepe</span>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setIsCertModalOpen(false)}
