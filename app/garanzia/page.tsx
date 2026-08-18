@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { ShieldCheck, Award, Sparkles, AlertCircle, HelpCircle, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
+import CertificateViewerModal from '@/components/CertificateViewerModal';
 
 export const metadata: Metadata = {
   title: "Garanzia & Certificato di Autenticità",
@@ -64,7 +65,7 @@ export default function GaranziaPage() {
           </div>
 
           {/* 3 PILASTRI CERTIFICATO */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#F0E6E1]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6 border-t border-[#F0E6E1] mb-8">
             <div className="bg-white p-5 rounded-xl border border-gray-100 text-center">
               <ShieldCheck className="text-[#C0A09A] mx-auto mb-2" size={20} />
               <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold block">Metallo Nobile</span>
@@ -80,6 +81,14 @@ export default function GaranziaPage() {
               <span className="text-[10px] uppercase tracking-widest text-gray-400 font-semibold block">Copertura Legale</span>
               <span className="font-serif text-base text-gray-900 font-medium">Garanzia di Conformità</span>
             </div>
+          </div>
+
+          {/* Bottone Popup Fac-Simile Certificato Ufficiale */}
+          <div className="text-center pt-2">
+            <CertificateViewerModal 
+              buttonText="Visualizza Fac-Simile Ufficiale del Certificato 🔍" 
+              className="inline-flex items-center gap-2.5 px-6 py-3 bg-gray-900 hover:bg-[#C0A09A] text-white rounded-full text-xs uppercase tracking-widest font-medium transition-all duration-300 shadow-md hover:shadow-lg cursor-pointer"
+            />
           </div>
         </div>
 

@@ -107,12 +107,25 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </h3>
             </div>
 
-            {/* Immagine Card Certificato */}
-            <div className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-6 bg-[#FAF8F5]">
+            {/* Immagine Card Certificato con Protezione Totale Anti-Download */}
+            <div 
+              className="relative rounded-xl overflow-hidden shadow-lg border border-[#F0E6E1] mb-6 bg-[#FAF8F5] select-none"
+              onContextMenu={(e) => e.preventDefault()}
+            >
+              {/* Invisible protection shield over the image */}
+              <div 
+                className="absolute inset-0 z-20 bg-transparent select-none cursor-default"
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
+              />
+
               <img
-                src={isPearl ? "/Brand/certificato_perle_card_clean.webp" : "/Brand/certificato_perle_card_clean.webp"}
+                src="/Brand/certificato_perle_card_clean.webp"
                 alt={`Certificato di Autenticità per ${product.name}`}
-                className="w-full h-auto object-contain"
+                className="w-full h-auto object-contain pointer-events-none select-none user-select-none"
+                draggable={false}
+                onContextMenu={(e) => e.preventDefault()}
+                onDragStart={(e) => e.preventDefault()}
               />
             </div>
 
