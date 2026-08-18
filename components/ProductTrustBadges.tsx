@@ -34,7 +34,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             Doppio<br />Scudo
           </span>
           <span className="text-[9px] text-gray-500 font-light leading-snug">
-            18K & Rodio
+            {isPearl ? "Oro 18K • 1.0µm" : "18K & Rodio"}
           </span>
         </div>
 
