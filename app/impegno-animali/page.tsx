@@ -90,10 +90,10 @@ export default function ImpegnoAnimaliPage() {
             
             {/* FOTO SECONDA EDITORIALE */}
             <div className="lg:col-span-5 order-2 lg:order-1 relative">
-              <div className="relative overflow-hidden rounded-3xl aspect-[4/3] shadow-lg border border-[#F0E6E1] bg-white">
+              <div className="relative overflow-hidden rounded-3xl aspect-[4/5] shadow-lg border border-[#F0E6E1] bg-white">
                 <img 
-                  src="/Brand/impegno_animali_kitten.jpg" 
-                  alt="Cura e dedizione verso ogni creatura indifesa" 
+                  src="/Brand/isabel-pepe-donazione-volontari-cura-animali.webp" 
+                  alt="Isabel Pepe donazione volontari indipendenti soccorso e cura animali" 
                   className="w-full h-full object-cover object-center"
                 />
               </div>
