@@ -8,6 +8,7 @@ import AddToCartButton from '@/components/AddToCartButton';
 import ProductGallery from '@/components/ProductGallery';
 import StickyMobileAddToCart from '@/components/StickyMobileAddToCart';
 import RingSizeSection from '@/components/RingSizeSection';
+import ProductTrustBadges from '@/components/ProductTrustBadges';
 
 // Questa funzione genera in automatico i Meta Tag SEO per Google e Facebook
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -250,45 +251,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             {/* Bottone Aggiungi al Carrello Reattivo */}
             <AddToCartButton product={product} />
 
-            {/* Mini-Banner Fiducia & 4 Pilastri — 100% Simmetrico & Responsive Mobile/Desktop */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 border-y border-gray-100 py-4 sm:py-5 mb-8 items-stretch">
-              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
-                <ShieldCheck size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
-                  Doppio<br />Scudo
-                </span>
-                <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  18K & Rodio
-                </span>
-              </div>
-              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
-                <Gift size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
-                  Cofanetto<br />Luxury
-                </span>
-                <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  Panno & Certificato
-                </span>
-              </div>
-              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
-                <Truck size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
-                  Consegna<br />Express
-                </span>
-                <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  48H • Reso 14gg
-                </span>
-              </div>
-              <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
-                <Heart size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
-                  L'Arte del<br />Dono
-                </span>
-                <span className="text-[9px] text-gray-500 font-light leading-snug">
-                  5% agli Animali
-                </span>
-              </div>
-            </div>
+            {/* Mini-Banner Fiducia & 4 Pilastri con Popup Certificato */}
+            <ProductTrustBadges product={product} />
 
             {/* Descrizione Formattata ad Alta Leggibilità */}
             <div className="mb-8">
