@@ -13,7 +13,8 @@ import {
   ShieldCheck, 
   Calendar, 
   Search,
-  ExternalLink
+  ChevronRight,
+  Database
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -25,18 +26,30 @@ interface PageView {
   created_at: string;
 }
 
+interface DailyRecord {
+  date: string;
+  total_views: number;
+  unique_visitors: number;
+  product_views: number;
+  cart_additions: number;
+  orders_count: number;
+  total_revenue: number;
+}
+
 interface AnalyticsDashboardProps {
   pageViews: PageView[];
+  dailyAnalytics?: DailyRecord[];
   products: any[];
   orders: any[];
   carts: any[];
 }
 
-export default function AnalyticsDashboard({ pageViews = [], products = [], orders = [], carts = [] }: AnalyticsDashboardProps) {
+export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = [], products = [], orders = [], carts = [] }: AnalyticsDashboardProps) {
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | 'today'>('all');
+  const [chartMode, setChartMode] = useState<'views' | 'visitors' | 'products'>('views');
   const [searchPath, setSearchPath] = useState('');
 
-  // 1. Filtraggio temporale
+  // 1. Filtraggio temporale delle page_views correnti
   const filteredViews = useMemo(() => {
     const now = new Date();
     return pageViews.filter(pv => {
@@ -73,7 +86,56 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
     return ((orders.length / uniqueVisitors) * 100).toFixed(1);
   }, [uniqueVisitors, orders.length]);
 
-  // 3. Top Gioielli Più Visualizzati
+  // 3. Generazione Timeline Giornaliera per il Grafico Storico
+  const historicalTimeline = useMemo(() => {
+    // Raggruppa le visite per giorno (YYYY-MM-DD)
+    const map: Record<string, { date: string; views: number; visitors: Set<string>; products: number }> = {};
+    
+    // Inizializza gli ultimi 14 giorni per avere sempre un grafico completo
+    const numDays = timeRange === 'today' ? 1 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 14;
+    for (let i = numDays - 1; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const key = d.toISOString().split('T')[0];
+      map[key] = { date: key, views: 0, visitors: new Set(), products: 0 };
+    }
+
+    // Incorpora record da dailyAnalytics permanenti
+    dailyAnalytics.forEach(da => {
+      if (map[da.date]) {
+        map[da.date].views += da.total_views || 0;
+        map[da.date].products += da.product_views || 0;
+      }
+    });
+
+    // Popola con i log recenti di page_views
+    filteredViews.forEach(v => {
+      const day = v.created_at?.split('T')[0];
+      if (day) {
+        if (!map[day]) {
+          map[day] = { date: day, views: 0, visitors: new Set(), products: 0 };
+        }
+        map[day].views += 1;
+        if (v.visitor_id) map[day].visitors.add(v.visitor_id);
+        if (v.path?.startsWith('/prodotto/')) map[day].products += 1;
+      }
+    });
+
+    return Object.values(map).map(item => ({
+      date: item.date,
+      displayDate: new Date(item.date).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }),
+      views: item.views,
+      visitors: item.visitors.size,
+      products: item.products,
+    })).sort((a, b) => a.date.localeCompare(b.date));
+  }, [filteredViews, dailyAnalytics, timeRange]);
+
+  const maxValInTimeline = useMemo(() => {
+    const vals = historicalTimeline.map(t => chartMode === 'views' ? t.views : chartMode === 'visitors' ? t.visitors : t.products);
+    return Math.max(...vals, 10);
+  }, [historicalTimeline, chartMode]);
+
+  // 4. Top Gioielli Più Visualizzati
   const topProducts = useMemo(() => {
     const counts: Record<string, number> = {};
     filteredViews.forEach(v => {
@@ -100,7 +162,7 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
       .slice(0, 8);
   }, [filteredViews, products, totalViews]);
 
-  // 4. Pagine Più Visitate (Top Pages)
+  // 5. Pagine Più Visitate (Top Pages)
   const topPages = useMemo(() => {
     const counts: Record<string, number> = {};
     filteredViews.forEach(v => {
@@ -118,7 +180,7 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
       .slice(0, 8);
   }, [filteredViews, totalViews]);
 
-  // 5. Ultime Visite Live in Tempo Reale
+  // 6. Ultime Visite Live in Tempo Reale
   const liveStream = useMemo(() => {
     return filteredViews
       .filter(v => searchPath ? v.path?.toLowerCase().includes(searchPath.toLowerCase()) || v.visitor_id?.toLowerCase().includes(searchPath.toLowerCase()) : true)
@@ -137,7 +199,7 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
             </h1>
           </div>
           <p className="text-xs text-gray-500 font-light">
-            Monitoraggio First-Party Server-Side al 100% proprietario e conforme al GDPR
+            Monitoraggio First-Party Server-Side 100% proprietario con storico permanente aggregato a norma GDPR
           </p>
         </div>
 
@@ -157,7 +219,7 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
               timeRange === '7d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
-            Ultimi 7 Giorni
+            7 Giorni
           </button>
           <button
             onClick={() => setTimeRange('30d')}
@@ -232,6 +294,91 @@ export default function AnalyticsDashboard({ pageViews = [], products = [], orde
           </div>
           <div className="text-3xl font-serif text-gray-900 font-semibold">{conversionRate}%</div>
           <p className="text-[11px] text-gray-400 mt-1">Acquisti su Visitatori Unici</p>
+        </div>
+      </div>
+
+      {/* GRAFICO STORICO PERMANENTE (DAILY TRAFFIC TIMELINE) */}
+      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <div className="flex items-center gap-2">
+              <Database size={16} className="text-[#C0A09A]" />
+              <h3 className="font-serif text-xl text-gray-900 tracking-wide">
+                Andamento Storico Giornaliero
+              </h3>
+            </div>
+            <p className="text-xs text-gray-400 font-light mt-0.5">
+              I dati numerici giornalieri rimangono memorizzati per sempre a memoria storica delle visite del brand
+            </p>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setChartMode('views')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
+                chartMode === 'views' ? 'bg-[#C0A09A] text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Visite Totali
+            </button>
+            <button
+              onClick={() => setChartMode('visitors')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
+                chartMode === 'visitors' ? 'bg-gray-900 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Visitatori Unici
+            </button>
+            <button
+              onClick={() => setChartMode('products')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
+                chartMode === 'products' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              }`}
+            >
+              Views Prodotti
+            </button>
+          </div>
+        </div>
+
+        {/* Visualizzazione Grafico a Barre */}
+        <div className="pt-6 pb-2">
+          <div className="flex items-end justify-between gap-2 sm:gap-3 h-48 sm:h-56 px-2 border-b border-gray-100">
+            {historicalTimeline.map((item) => {
+              const val = chartMode === 'views' ? item.views : chartMode === 'visitors' ? item.visitors : item.products;
+              const heightPercent = maxValInTimeline > 0 ? Math.max((val / maxValInTimeline) * 100, 4) : 4;
+
+              return (
+                <div key={item.date} className="flex-1 flex flex-col items-center h-full justify-end group relative">
+                  {/* Tooltip Hover */}
+                  <div className="absolute -top-12 bg-gray-900 text-white text-[10px] py-1 px-2.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-lg font-mono">
+                    <span className="font-semibold">{item.date}</span>: {val} {chartMode === 'views' ? 'visite' : chartMode === 'visitors' ? 'utenti' : 'views'}
+                  </div>
+
+                  {/* Valore sopra la barra */}
+                  <span className="text-[9px] font-mono text-gray-400 mb-1.5 group-hover:text-gray-900 font-medium">
+                    {val > 0 ? val : ''}
+                  </span>
+
+                  {/* Barra */}
+                  <div
+                    className={`w-full max-w-[32px] rounded-t-md transition-all duration-500 group-hover:opacity-80 ${
+                      chartMode === 'views'
+                        ? 'bg-[#C0A09A]'
+                        : chartMode === 'visitors'
+                        ? 'bg-gray-900'
+                        : 'bg-emerald-600'
+                    }`}
+                    style={{ height: `${heightPercent}%` }}
+                  ></div>
+
+                  {/* Etichetta Data */}
+                  <span className="text-[9px] font-mono text-gray-400 mt-2 truncate max-w-full">
+                    {item.displayDate}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 

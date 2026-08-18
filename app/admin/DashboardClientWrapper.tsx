@@ -21,11 +21,12 @@ interface DashboardClientWrapperProps {
   carts: any[];
   consents?: any[];
   pageViews?: any[];
+  dailyAnalytics?: any[];
   stats?: any;
   initialEditId?: string;
 }
 
-export default function DashboardClientWrapper({ products, orders, customers, carts, consents = [], pageViews = [], stats, initialEditId }: DashboardClientWrapperProps) {
+export default function DashboardClientWrapper({ products, orders, customers, carts, consents = [], pageViews = [], dailyAnalytics = [], stats, initialEditId }: DashboardClientWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   
@@ -75,7 +76,7 @@ export default function DashboardClientWrapper({ products, orders, customers, ca
           )}
 
           {activeTab === 'analytics' && (
-            <AnalyticsDashboard pageViews={pageViews} products={products} orders={orders} carts={carts} />
+            <AnalyticsDashboard pageViews={pageViews} dailyAnalytics={dailyAnalytics} products={products} orders={orders} carts={carts} />
           )}
 
           {activeTab === 'jarvis' && (

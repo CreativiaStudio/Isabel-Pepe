@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { incrementDailyMetric } from '@/lib/analytics';
 
 export async function POST(req: Request) {
   try {
@@ -28,6 +29,10 @@ export async function POST(req: Request) {
       console.error('Error saving page view:', error);
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
+
+    // Aggiornamento aggregati permanenti storici
+    const isProduct = path.startsWith('/prodotto/');
+    incrementDailyMetric({ isProduct }).catch(() => {});
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
