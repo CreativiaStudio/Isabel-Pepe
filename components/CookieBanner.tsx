@@ -14,12 +14,12 @@ export default function CookieBanner() {
   const [visitorId, setVisitorId] = useState<string>('');
   const [consentId, setConsentId] = useState<string>('');
 
-  // Categorie di consenso GDPR
+  // Categorie di consenso GDPR (Le categorie opzionali DEVONO essere disattivate di default per legge!)
   const [categories, setCategories] = useState({
-    essential: true,   // Sempre attivo
-    functional: true,  // Wishlist, lingua, valuta
-    analytics: true,   // Statistiche anonime di navigazione
-    marketing: true,   // Offerte personalizzate, recupero carrelli, remarketing
+    essential: true,   // Sempre attivo per funzionamento carrello & sicurezza
+    functional: false, // Disattivato di default (Opt-in esplicito)
+    analytics: false,  // Disattivato di default (Opt-in esplicito)
+    marketing: false,  // Disattivato di default (Opt-in esplicito)
   });
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function CookieBanner() {
       setShowBanner(true);
     }
 
-    // 3. Listener globale per consentire la riapertura del banner da link nel footer ("Gestisci Cookie")
+    // 3. Listener globale per consentire la riapertura del banner da link nel footer ("Gestisci Consensi")
     const handleReopen = () => {
       setShowModal(true);
     };
@@ -109,6 +109,14 @@ export default function CookieBanner() {
 
   return (
     <>
+      {/* 0. OVERLAY MORBIDO DI SFONDO (INVITA L'UTENTE ALLA SCELTA IN MODO ELEGANTE) */}
+      {(showBanner || showModal) && (
+        <div 
+          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-500 animate-fadeIn"
+          aria-hidden="true"
+        />
+      )}
+
       {/* 1. BANNER PRINCIPALE DI PRIMO LIVELLO (COMPATTO & DI LUSSO) */}
       {showBanner && !showModal && (
         <div className="fixed bottom-0 inset-x-0 z-50 p-4 sm:p-5 bg-[#0D0D0D]/95 backdrop-blur-md border-t border-[#C0A09A]/40 text-white shadow-2xl transition-all duration-500 animate-slide-up">
@@ -162,7 +170,7 @@ export default function CookieBanner() {
       {/* 2. MODAL PREFERENZE DETTAGLIATE (GRANULARE GDPR CON CATEGORIE ED ID) */}
       {showModal && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-fadeIn overflow-y-auto"
           onClick={() => setShowModal(false)}
         >
           <div 
@@ -195,7 +203,7 @@ export default function CookieBanner() {
               )}
             </div>
 
-            {/* Lista Categorie con Switch */}
+            {/* Lista Categorie con Switch (Predefinite a OFF a norma di legge) */}
             <div className="space-y-3.5 mb-8 max-h-[50vh] overflow-y-auto pr-1">
               
               {/* 1. Cookie Tecnici Necessari */}
