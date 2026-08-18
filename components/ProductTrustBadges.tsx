@@ -9,6 +9,7 @@ interface ProductTrustBadgesProps {
     gemstone?: string;
     materials?: string;
     description?: string;
+    color?: string;
   };
 }
 
@@ -16,20 +17,64 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const [activeGraTab, setActiveGraTab] = useState<'report' | 'card' | 'cover' | 'brand'>('report');
 
+  const nameLower = product.name?.toLowerCase() || '';
+  const gemstoneLower = product.gemstone?.toLowerCase() || '';
+  const materialsLower = product.materials?.toLowerCase() || '';
+  const descLower = product.description?.toLowerCase() || '';
+  const colorLower = product.color?.toLowerCase() || '';
+
+  // 1. Gemstone classifications
   const isPearl = Boolean(
-    (product.gemstone?.toLowerCase().includes('perl') || 
-     product.name.toLowerCase().includes('perl') || 
-     product.materials?.toLowerCase().includes('perl'))
+    gemstoneLower.includes('perl') || 
+    nameLower.includes('perl') || 
+    materialsLower.includes('perl')
   );
 
   const isMoissanite = Boolean(
-    (product.gemstone?.toLowerCase().includes('moissanite') || 
-     product.gemstone?.toLowerCase().includes('vvs1') || 
-     product.gemstone?.toLowerCase().includes('d-color') ||
-     product.name.toLowerCase().includes('moissanite') ||
-     product.description?.toLowerCase()?.includes('moissanite') ||
-     (!isPearl && product.gemstone && product.gemstone !== '-'))
+    !isPearl && (
+      gemstoneLower.includes('moissanite') || 
+      gemstoneLower.includes('vvs1') || 
+      gemstoneLower.includes('d-color') ||
+      nameLower.includes('moissanite') ||
+      descLower.includes('moissanite') ||
+      (product.gemstone && product.gemstone !== '-' && !gemstoneLower.includes('zircon'))
+    )
   );
+
+  // 2. Finish / Plating classifications
+  const isGold = Boolean(
+    materialsLower.includes('oro') || 
+    materialsLower.includes('18k') || 
+    materialsLower.includes('gold') || 
+    materialsLower.includes('giallo') ||
+    nameLower.includes('oro') || 
+    nameLower.includes('gold') ||
+    colorLower.includes('oro') ||
+    colorLower.includes('giallo') ||
+    isPearl // All pearls are 18K Gold plated
+  );
+
+  const isRhodium = Boolean(
+    !isGold && (
+      materialsLower.includes('rodio') || 
+      materialsLower.includes('rhodium') || 
+      materialsLower.includes('argento') || 
+      materialsLower.includes('silver') || 
+      materialsLower.includes('bianco') ||
+      colorLower.includes('argento') ||
+      colorLower.includes('silver') ||
+      colorLower.includes('bianco')
+    )
+  );
+
+  // Select exact brand certificate image based on product material
+  const brandCertImage = isPearl
+    ? '/Brand/certificato_perle_card_clean.webp'
+    : isMoissanite
+    ? isGold
+      ? '/Brand/certificato_moissanite_oro18k.webp'
+      : '/Brand/certificato_moissanite_rodio.webp'
+    : '/Brand/certificato_argento925.webp';
 
   return (
     <>
@@ -43,7 +88,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             Doppio<br />Scudo
           </span>
           <span className="text-[9px] text-gray-500 font-light leading-snug">
-            {isPearl ? "Oro 18K • 1.0µm" : "18K & Rodio"}
+            {isPearl || isGold ? "Oro 18K • 1.0µm" : "Rodio • E-Coating"}
           </span>
         </div>
 
@@ -96,7 +141,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               {isPearl 
                 ? "Certificato Perle Naturali d'Acqua Dolce & Argento 925" 
                 : isMoissanite 
-                ? "Libretto Gemmologico GRA + Card di Garanzia & Certificato Isabel Pepe" 
+                ? `Libretto Gemmologico GRA + Card di Garanzia & Certificato ${isGold ? 'Oro 18K' : 'Rodio'}` 
                 : "Certificato di Autenticità & Metalli Nobili 925"
               }
             </p>
@@ -126,7 +171,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
-            {/* Close Button Fisso e Spaziato */}
+            {/* Close Button */}
             <button
               onClick={() => setIsCertModalOpen(false)}
               className="absolute top-3.5 right-3.5 z-40 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
@@ -135,22 +180,22 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               <X size={16} />
             </button>
 
-            {/* Header Modal - Spaziatura Generosa e Testo Compatto Anti-Taglio */}
+            {/* Header Modal */}
             <div className="text-center mb-3 pr-8 pl-8 pt-1 shrink-0">
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-0.5">
                 {isMoissanite ? "Certificazione Gemmologica & Garanzia di Lusso" : "Documento Ufficiale Isabel Pepe"}
               </span>
-              <h3 className="font-serif text-base sm:text-lg text-gray-900 tracking-wide font-medium leading-snug">
+              <h3 className="font-serif text-base sm:text-lg text-gray-900 tracking-wide font-medium leading-tight">
                 {isPearl 
                   ? "Certificato Perle Naturali d'Acqua Dolce" 
                   : isMoissanite 
-                  ? "Certificato Ufficiale GRA & Garanzia Isabel Pepe" 
+                  ? `Certificato Ufficiale GRA & Garanzia ${isGold ? 'Oro 18K' : 'Rodio'}` 
                   : "Certificato di Autenticità & Garanzia 24 Mesi"
                 }
               </h3>
             </div>
 
-            {/* Tabs di Navigazione Permanente (Sempre Visibili) */}
+            {/* Tabs di Navigazione Permanente (Solo Moissanite) */}
             {isMoissanite && (
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 mb-3 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
                 <button
@@ -204,10 +249,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </div>
             )}
 
-            {/* Contenuto Scorrevole con Altezza Ottimizzata */}
+            {/* Contenuto Scorrevole */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               
-              {/* Immagine Documento Raddrizzata e Rettilinea con Protezione Anti-Download */}
+              {/* Immagine Documento Raddrizzata con Protezione Anti-Download */}
               <div 
                 className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center p-2 min-h-[180px]"
                 onContextMenu={(e) => e.preventDefault()}
@@ -228,8 +273,8 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                         ? '/Brand/gra_card_privacy.webp'
                         : activeGraTab === 'cover'
                         ? '/Brand/gra_libretto_esterno.webp'
-                        : '/Brand/certificato_metalli_isabel_clean.webp'
-                      : '/Brand/certificato_perle_card_clean.webp'
+                        : brandCertImage
+                      : brandCertImage
                   }
                   alt={isMoissanite ? "Documentazione Ufficiale GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
                   className="w-full h-auto max-h-[230px] sm:max-h-[270px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg shadow-sm"
@@ -245,10 +290,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                   <Lock size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                   <div className="text-[11px] text-gray-700 leading-relaxed">
                     <strong className="text-gray-900 font-semibold block mb-0.5">
-                      Numero di Serie & QR Code Univoci per Ogni Singola Pietra
+                      Caratura, Numero di Serie &amp; QR Code Univoci per Ogni Singola Pietra
                     </strong>
-                    In questa anteprima il codice seriale e il QR Code sono oscurati a tutela della privacy. 
-                    Ogni gioiello in Moissanite acquistato include la propria <strong>micro-incisione laser sulla cintura della pietra</strong> con matricola dedicata, verificabile online sul database ufficiale GRA.
+                    In questa anteprima caratura, misure, codice seriale e QR Code sono oscurati a tutela della privacy. 
+                    Ogni gioiello in Moissanite acquistato include il proprio certificato nominale e la <strong>micro-incisione laser sulla cintura della pietra</strong> con matricola dedicata, verificabile online sul database ufficiale GRA.
                   </div>
                 </div>
               )}
@@ -275,7 +320,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-gray-900 font-medium">3. Certificato Ufficiale Isabel Pepe: </strong>
-                        Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura Oro 18K/Rodio e Nano-Sigillo E-Coating.
+                        Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a specchio'} e Nano-Sigillo E-Coating.
                       </span>
                     </div>
                   </>
@@ -298,7 +343,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                     <div className="flex items-start gap-2">
                       <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                       <span>
-                        <strong className="text-gray-900 font-medium">Placcatura Oro 18K & E-Coating: </strong>
+                        <strong className="text-gray-900 font-medium">Placcatura Oro 18K &amp; E-Coating: </strong>
                         Spessore luxury da 1.0 Micron con scudo molecolare protettivo anti-ossidazione.
                       </span>
                     </div>
