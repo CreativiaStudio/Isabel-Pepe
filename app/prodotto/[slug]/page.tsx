@@ -210,38 +210,58 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               </span>
             </div>
 
-            {/* Selettore Finitura (solo per gli unici modelli con reale variante in fattura es. Brera Gold/Silver) */}
-            {variants.length > 1 && (
-              <div className="mb-6 bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1]">
-                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2.5 font-medium">
-                  Finitura: <span className="text-gray-900 font-semibold">{product.name}</span>
-                </label>
-                <div className="flex flex-wrap gap-2.5">
-                  {variants.map((v) => {
-                    const isCurrent = v.id === product.id;
-                    const isGold = v.sku?.includes('GOLD') || v.plating?.toLowerCase().includes('oro');
-                    const isPink = v.sku?.includes('PINK') || v.gemstone?.toLowerCase().includes('rosa');
-                    const label = isGold ? 'Placcatura Oro 18K' : isPink ? 'Cristalli Rosa' : 'Rodio Puro Silver';
-                    const dotColor = isGold ? 'bg-amber-400 border-amber-500' : isPink ? 'bg-rose-300 border-rose-400' : 'bg-gray-300 border-gray-400';
+            {/* Selettore Varianti Reali (Finitura Metallo per Brera o Colore Pietra per Harmonie / Eden Rose) */}
+            {variants.length > 1 && (() => {
+              const isStoneColorVariant = variants.some(v => v.sku?.includes('PINK') || v.sku?.includes('WHITE'));
+              const sectionTitle = isStoneColorVariant ? 'Colore Pietra Moissanite' : 'Finitura Metallo';
 
-                    return (
-                      <Link
-                        key={v.id}
-                        href={`/prodotto/${v.slug}`}
-                        className={`px-3.5 py-2 rounded-lg border text-xs font-medium transition flex items-center gap-2 ${
-                          isCurrent
-                            ? 'border-gray-900 bg-gray-900 text-white shadow-sm ring-2 ring-gray-900/10'
-                            : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50'
-                        }`}
-                      >
-                        <span className={`w-3 h-3 rounded-full border shrink-0 ${dotColor}`}></span>
-                        <span>{label}</span>
-                      </Link>
-                    );
-                  })}
+              return (
+                <div className="mb-6 bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1]">
+                  <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2.5 font-medium">
+                    {sectionTitle}: <span className="text-gray-900 font-semibold">{product.name}</span>
+                  </label>
+                  <div className="flex flex-wrap gap-2.5">
+                    {variants.map((v) => {
+                      const isCurrent = v.id === product.id;
+                      const isGold = v.sku?.includes('GOLD') || v.plating?.toLowerCase().includes('oro');
+                      const isPink = v.sku?.includes('PINK') || v.gemstone?.toLowerCase().includes('rosa');
+                      const isWhite = v.sku?.includes('WHITE');
+                      
+                      const label = isStoneColorVariant
+                        ? isPink 
+                          ? 'Moissanite Rosa Pink' 
+                          : 'Moissanite Bianca D-Color'
+                        : isGold 
+                          ? 'Placcatura Oro 18K' 
+                          : 'Rodio Puro Silver';
+
+                      const dotColor = isPink 
+                        ? 'bg-rose-300 border-rose-400' 
+                        : isGold 
+                          ? 'bg-amber-400 border-amber-500' 
+                          : isWhite 
+                            ? 'bg-gray-100 border-gray-300 shadow-inner' 
+                            : 'bg-gray-300 border-gray-400';
+
+                      return (
+                        <Link
+                          key={v.id}
+                          href={`/prodotto/${v.slug}`}
+                          className={`px-3.5 py-2 rounded-lg border text-xs font-medium transition flex items-center gap-2 ${
+                            isCurrent
+                              ? 'border-gray-900 bg-gray-900 text-white shadow-sm ring-2 ring-gray-900/10'
+                              : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:bg-gray-50'
+                          }`}
+                        >
+                          <span className={`w-3 h-3 rounded-full border shrink-0 ${dotColor}`}></span>
+                          <span>{label}</span>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Misure (Se è un anello) */}
             {(product.category === 'Anelli' || product.name.toLowerCase().includes('anello')) && (
