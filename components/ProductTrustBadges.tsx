@@ -115,32 +115,32 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
         </button>
       </div>
 
-      {/* MODAL POPUP OTTIMIZZATO PER LAPTOP & DESKTOP (VIEWPORT RESPONSIVE) */}
+      {/* MODAL POPUP PROFESSIONALE (VIEWPORT SAFE & STRUTTURA PERFETTA) */}
       {isCertModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn"
           onClick={() => setIsCertModalOpen(false)}
         >
           <div 
-            className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col p-4 sm:p-6 shadow-2xl border border-gray-100 overflow-hidden"
+            className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[88vh] flex flex-col p-5 sm:p-7 shadow-2xl border border-gray-100 overflow-hidden my-auto"
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
-            {/* Close Button Fisso in alto a destra */}
+            {/* Close Button Fisso e Spaziato */}
             <button
               onClick={() => setIsCertModalOpen(false)}
-              className="absolute top-3 right-3 z-30 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
+              className="absolute top-4 right-4 z-40 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
               aria-label="Chiudi finestra certificato"
             >
               <X size={16} />
             </button>
 
-            {/* Header Modal Fisso */}
-            <div className="text-center mb-3 pr-6 pl-2 shrink-0">
-              <span className="text-[9px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block">
+            {/* Header Modal - 100% Visibile con Spaziatura Adeguata */}
+            <div className="text-center mb-4 pr-8 pl-8 shrink-0">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-1">
                 {isMoissanite ? "Certificazione Gemmologica & Garanzia di Lusso" : "Documento Ufficiale Isabel Pepe"}
               </span>
-              <h3 className="font-serif text-lg sm:text-xl text-gray-900 tracking-wide">
+              <h3 className="font-serif text-lg sm:text-xl text-gray-900 tracking-wide font-medium leading-snug">
                 {isPearl 
                   ? "Certificato Perle Naturali d'Acqua Dolce" 
                   : isMoissanite 
@@ -150,13 +150,13 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </h3>
             </div>
 
-            {/* Tabs di Navigazione Permanente (Sempre Visibili su Desktop/Laptop/Mobile) */}
+            {/* Tabs di Navigazione Fisse in Alto */}
             {isMoissanite && (
-              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-3 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
+              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-4 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('report')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'report' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -168,7 +168,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('card')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'card' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -180,7 +180,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('cover')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'cover' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -192,7 +192,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('brand')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'brand' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -204,12 +204,12 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </div>
             )}
 
-            {/* Contenuto Scorrevole con Altezza Ottimizzata per Laptop */}
+            {/* Contenuto Scorrevole con Altezza Ottimizzata */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               
-              {/* Immagine Documento con Protezione Totale Anti-Download */}
+              {/* Immagine Documento Raddrizzata e Rettilinea con Protezione Anti-Download */}
               <div 
-                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center min-h-[190px]"
+                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center p-2 min-h-[190px]"
                 onContextMenu={(e) => e.preventDefault()}
               >
                 {/* Invisible protection shield */}
@@ -232,7 +232,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       : '/Brand/certificato_perle_card_clean.webp'
                   }
                   alt={isMoissanite ? "Documentazione Ufficiale GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
-                  className="w-full h-auto max-h-[250px] sm:max-h-[300px] object-contain pointer-events-none select-none user-select-none mx-auto"
+                  className="w-full h-auto max-h-[250px] sm:max-h-[290px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg"
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onDragStart={(e) => e.preventDefault()}
@@ -247,7 +247,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                     <strong className="text-gray-900 font-semibold block mb-0.5">
                       Numero di Serie & QR Code Univoci per Ogni Singola Pietra
                     </strong>
-                    In questa anteprima il codice seriale e il QR Code sono oscurati per privacy. 
+                    In questa anteprima il codice seriale e il QR Code sono oscurati a tutela della privacy. 
                     Ogni gioiello in Moissanite acquistato include la propria <strong>micro-incisione laser sulla cintura della pietra</strong> con matricola dedicata, verificabile online sul database ufficiale GRA.
                   </div>
                 </div>
@@ -268,7 +268,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-gray-900 font-medium">2. Card Rigida di Garanzia GRA: </strong>
-                        Tessera magnetica PVC per la verifica online della gemma.
+                        Tessera magnetica PVC per la registrazione e verifica online della gemma.
                       </span>
                     </div>
                     <div className="flex items-start gap-2">
