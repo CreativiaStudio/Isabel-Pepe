@@ -2,10 +2,15 @@
 
 import React, { useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+const ADMIN_EMAILS = ['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'mario@isabelpepe.com'];
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTarget = searchParams?.get('redirect');
+
   const supabase = createClient();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -25,16 +30,18 @@ export default function LoginPage() {
       if (isLogin) {
         // Login
         const { error } = await supabase.auth.signInWithPassword({
-          email,
+          email: email.trim(),
           password,
         });
         if (error) throw error;
-        router.push('/account');
+        
+        const destination = redirectTarget || (ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? '/admin' : '/account');
+        router.push(destination);
         router.refresh(); // Refresh per aggiornare l'header
       } else {
         // Registrazione
         const { error } = await supabase.auth.signUp({
-          email,
+          email: email.trim(),
           password,
           options: {
             data: {
@@ -43,8 +50,8 @@ export default function LoginPage() {
           },
         });
         if (error) throw error;
-        // In modalita dev senza email conf, il login e' automatico
-        router.push('/account');
+        const destination = redirectTarget || (ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? '/admin' : '/account');
+        router.push(destination);
         router.refresh();
       }
     } catch (err: any) {

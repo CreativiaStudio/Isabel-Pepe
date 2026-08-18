@@ -9,12 +9,12 @@ const ADMIN_EMAILS = ['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'ma
 export const revalidate = 0; // Evita la cache, mostra sempre i dati in tempo reale
 
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
-  // PROTEZIONE SERVER-SIDE: Temporaneamente disabilitata per dev/demo locale
-  // const supabaseAuth = await createClient();
-  // const { data: { user } } = await supabaseAuth.auth.getUser();
-  // if (!user || !ADMIN_EMAILS.includes(user.email || '')) {
-  //   redirect('/login');
-  // }
+  // PROTEZIONE SERVER-SIDE ATTIVA: Accesso consentito solo agli amministratori autorizzati
+  const supabaseAuth = await createClient();
+  const { data: { user } } = await supabaseAuth.auth.getUser();
+  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+    redirect('/login?redirect=/admin');
+  }
 
   const resolvedParams = await searchParams;
   const editId = resolvedParams.edit;
