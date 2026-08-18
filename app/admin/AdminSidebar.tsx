@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, LayoutDashboard, ShoppingCart, Truck, Settings, LogOut, Users, ShoppingBag, Bot, ShieldCheck } from 'lucide-react';
+import { Package, LayoutDashboard, ShoppingCart, Truck, Settings, LogOut, Users, ShoppingBag, Bot, ShieldCheck, BarChart3 } from 'lucide-react';
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -9,6 +9,7 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'analytics', label: 'Analytics & Traffico', icon: BarChart3 },
     { id: 'jarvis', label: 'Jarvis AI', icon: Bot },
     { id: 'orders', label: 'Ordini', icon: ShoppingCart },
     { id: 'crm', label: 'Clienti (CRM)', icon: Users },

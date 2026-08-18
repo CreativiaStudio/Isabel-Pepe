@@ -25,6 +25,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   let customers: any[] = [];
   let carts: any[] = [];
   let consents: any[] = [];
+  let pageViews: any[] = [];
   let totalViews = 0;
 
   try {
@@ -58,10 +59,14 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .order('created_at', { ascending: false });
     consents = cs || [];
 
-    const { count } = await supabaseAdmin
+    const { data: pv, count } = await supabaseAdmin
       .from('page_views')
-      .select('*', { count: 'exact', head: true });
-    totalViews = count || 0;
+      .select('*', { count: 'exact' })
+      .order('created_at', { ascending: false })
+      .limit(1000);
+    
+    pageViews = pv || [];
+    totalViews = count || pageViews.length || 0;
   } catch (err) {
     console.error('Supabase query error (project might be paused):', err);
   }
@@ -86,6 +91,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         customers={customers || []}
         carts={carts || []}
         consents={consents || []}
+        pageViews={pageViews || []}
         stats={stats}
         initialEditId={editId} 
       />
