@@ -51,8 +51,8 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link href={`/prodotto/${product.slug}`} className="flex flex-col gap-3 group">
-      {/* Image Container */}
-      <div className="relative overflow-hidden w-full aspect-[4/5] bg-[#F9F8F6] group/image cursor-pointer">
+      {/* Image Container con proporzione verticale moderata (10:11) per evitare zoom eccessivo */}
+      <div className="relative overflow-hidden w-full aspect-[10/11] bg-[#F9F8F6] group/image cursor-pointer">
         
         {/* Sconto Badge */}
         {hasDiscount && (
