@@ -8,8 +8,10 @@ interface ProductTrustBadgesProps {
     name: string;
     gemstone?: string;
     materials?: string;
+    plating?: string;
     description?: string;
     color?: string;
+    sku?: string;
   };
 }
 
@@ -20,14 +22,17 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
   const nameLower = product.name?.toLowerCase() || '';
   const gemstoneLower = product.gemstone?.toLowerCase() || '';
   const materialsLower = product.materials?.toLowerCase() || '';
+  const platingLower = product.plating?.toLowerCase() || '';
   const descLower = product.description?.toLowerCase() || '';
   const colorLower = product.color?.toLowerCase() || '';
+  const skuLower = product.sku?.toLowerCase() || '';
 
   // 1. Gemstone classifications
   const isPearl = Boolean(
     gemstoneLower.includes('perl') || 
     nameLower.includes('perl') || 
-    materialsLower.includes('perl')
+    materialsLower.includes('perl') ||
+    platingLower.includes('perl')
   );
 
   const isMoissanite = Boolean(
@@ -37,35 +42,28 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
       gemstoneLower.includes('d-color') ||
       nameLower.includes('moissanite') ||
       descLower.includes('moissanite') ||
-      (product.gemstone && product.gemstone !== '-' && !gemstoneLower.includes('zircon'))
+      (product.gemstone && product.gemstone !== '-' && !gemstoneLower.includes('zircon') && !gemstoneLower.includes('cristall'))
     )
   );
 
-  // 2. Finish / Plating classifications
+  // 2. Finish / Plating classifications (Analisi chirurgica dei campi del database)
   const isGold = Boolean(
+    isPearl || // Tutte le creazioni in perla sono 100% in Oro 18K
+    platingLower.includes('oro') || 
+    platingLower.includes('18k') || 
+    platingLower.includes('gold') || 
+    platingLower.includes('giallo') ||
     materialsLower.includes('oro') || 
     materialsLower.includes('18k') || 
     materialsLower.includes('gold') || 
-    materialsLower.includes('giallo') ||
     nameLower.includes('oro') || 
     nameLower.includes('gold') ||
+    skuLower.includes('gold') ||
     colorLower.includes('oro') ||
-    colorLower.includes('giallo') ||
-    isPearl // All pearls are 18K Gold plated
+    colorLower.includes('giallo')
   );
 
-  const isRhodium = Boolean(
-    !isGold && (
-      materialsLower.includes('rodio') || 
-      materialsLower.includes('rhodium') || 
-      materialsLower.includes('argento') || 
-      materialsLower.includes('silver') || 
-      materialsLower.includes('bianco') ||
-      colorLower.includes('argento') ||
-      colorLower.includes('silver') ||
-      colorLower.includes('bianco')
-    )
-  );
+  const isRhodium = !isGold;
 
   // 3 Tipi di Certificato Ufficiali per Stampa e Web:
   // 1. Oro Perla
@@ -89,7 +87,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             Doppio<br />Scudo
           </span>
           <span className="text-[9px] text-gray-500 font-light leading-snug">
-            {isPearl || isGold ? "Oro 18K • 1.0µm" : "Rodio • E-Coating"}
+            {isGold ? "Oro 18K • 1.0µm" : "Rodio • E-Coating"}
           </span>
         </div>
 
@@ -128,7 +126,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
 
       </div>
 
-      {/* Banner Certificato Dinamico (Perle vs Moissanite vs Argento) */}
+      {/* Banner Certificato Dinamico */}
       <div className="mb-8 p-3.5 sm:p-4 bg-[#FAF8F5] border border-[#F0E6E1] rounded-2xl flex items-center justify-between gap-3 shadow-sm">
         <div className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-full bg-[#C0A09A]/15 flex items-center justify-center text-[#8A5E58] shrink-0">
@@ -140,10 +138,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             </span>
             <p className="text-xs text-gray-800 font-medium leading-tight truncate">
               {isPearl 
-                ? "Certificato Perle Naturali d'Acqua Dolce & Argento 925" 
+                ? "Certificato Perle Naturali d'Acqua Dolce & Oro 18K" 
                 : isMoissanite 
                 ? `Libretto Gemmologico GRA + Card di Garanzia & Certificato ${isGold ? 'Oro 18K' : 'Rodio'}` 
-                : "Certificato di Autenticità & Metalli Nobili 925"
+                : `Certificato di Autenticità & Metalli Nobili ${isGold ? 'Oro 18K' : 'Rodio'}`
               }
             </p>
           </div>
@@ -188,10 +186,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </span>
               <h3 className="font-serif text-base sm:text-lg text-gray-900 tracking-wide font-medium leading-tight">
                 {isPearl 
-                  ? "Certificato Perle Naturali d'Acqua Dolce" 
+                  ? "Certificato Ufficiale Perle & Oro 18K" 
                   : isMoissanite 
-                  ? `Certificato Ufficiale GRA & Garanzia ${isGold ? 'Oro 18K' : 'Rodio'}` 
-                  : "Certificato di Autenticità & Garanzia 24 Mesi"
+                  ? `Certificato Ufficiale GRA & Garanzia ${isGold ? 'Oro 18K' : 'Rodio Puro'}` 
+                  : `Certificato di Autenticità & Garanzia ${isGold ? 'Oro 18K' : 'Rodio Puro'}`
                 }
               </h3>
             </div>
@@ -321,7 +319,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-gray-900 font-medium">3. Certificato Ufficiale Isabel Pepe: </strong>
-                        Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a specchio'} e Nano-Sigillo E-Coating.
+                        Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a Specchio'} e Nano-Sigillo E-Coating.
                       </span>
                     </div>
                   </>
@@ -362,7 +360,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
                       <span>
                         <strong className="text-gray-900 font-medium">Doppio Scudo Protettivo: </strong>
-                        Placcatura Oro 18K / Rodio Puro + Nano-Sigillo Molecolare E-Coating.
+                        Placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a Specchio'} + Nano-Sigillo Molecolare E-Coating.
                       </span>
                     </div>
                   </>
