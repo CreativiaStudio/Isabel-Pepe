@@ -115,32 +115,32 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
         </button>
       </div>
 
-      {/* MODAL POPUP PROFESSIONALE (VIEWPORT SAFE & STRUTTURA PERFETTA) */}
+      {/* MODAL POPUP PROFESSIONALE (VIEWPORT SAFE & TITOLO 100% VISIBILE) */}
       {isCertModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto pt-8 sm:pt-6 pb-6"
           onClick={() => setIsCertModalOpen(false)}
         >
           <div 
-            className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[88vh] flex flex-col p-5 sm:p-7 shadow-2xl border border-gray-100 overflow-hidden my-auto"
+            className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[84vh] flex flex-col p-4 sm:p-6 shadow-2xl border border-gray-100 overflow-hidden my-auto"
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
             {/* Close Button Fisso e Spaziato */}
             <button
               onClick={() => setIsCertModalOpen(false)}
-              className="absolute top-4 right-4 z-40 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
+              className="absolute top-3.5 right-3.5 z-40 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 flex items-center justify-center transition-colors cursor-pointer shadow-sm"
               aria-label="Chiudi finestra certificato"
             >
               <X size={16} />
             </button>
 
-            {/* Header Modal - 100% Visibile con Spaziatura Adeguata */}
-            <div className="text-center mb-4 pr-8 pl-8 shrink-0">
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-1">
+            {/* Header Modal - Spaziatura Generosa e Testo Compatto Anti-Taglio */}
+            <div className="text-center mb-3 pr-8 pl-8 pt-1 shrink-0">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-0.5">
                 {isMoissanite ? "Certificazione Gemmologica & Garanzia di Lusso" : "Documento Ufficiale Isabel Pepe"}
               </span>
-              <h3 className="font-serif text-lg sm:text-xl text-gray-900 tracking-wide font-medium leading-snug">
+              <h3 className="font-serif text-base sm:text-lg text-gray-900 tracking-wide font-medium leading-snug">
                 {isPearl 
                   ? "Certificato Perle Naturali d'Acqua Dolce" 
                   : isMoissanite 
@@ -150,13 +150,13 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               </h3>
             </div>
 
-            {/* Tabs di Navigazione Fisse in Alto */}
+            {/* Tabs di Navigazione Permanente (Sempre Visibili) */}
             {isMoissanite && (
-              <div className="flex items-center justify-center gap-1 sm:gap-2 mb-4 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
+              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mb-3 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('report')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'report' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -168,7 +168,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('card')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'card' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -180,7 +180,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('cover')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'cover' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -192,7 +192,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                 <button
                   type="button"
                   onClick={() => setActiveGraTab('brand')}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
                     activeGraTab === 'brand' 
                       ? 'bg-gray-900 text-white shadow-sm' 
                       : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
@@ -209,7 +209,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
               
               {/* Immagine Documento Raddrizzata e Rettilinea con Protezione Anti-Download */}
               <div 
-                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center p-2 min-h-[190px]"
+                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center p-2 min-h-[180px]"
                 onContextMenu={(e) => e.preventDefault()}
               >
                 {/* Invisible protection shield */}
@@ -232,7 +232,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                       : '/Brand/certificato_perle_card_clean.webp'
                   }
                   alt={isMoissanite ? "Documentazione Ufficiale GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
-                  className="w-full h-auto max-h-[250px] sm:max-h-[290px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg"
+                  className="w-full h-auto max-h-[230px] sm:max-h-[270px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg shadow-sm"
                   draggable={false}
                   onContextMenu={(e) => e.preventDefault()}
                   onDragStart={(e) => e.preventDefault()}
@@ -326,7 +326,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             </div>
 
             {/* Footer Modal Fisso */}
-            <div className="mt-3 flex items-center justify-between gap-3 pt-2 border-t border-gray-100 shrink-0">
+            <div className="mt-2.5 flex items-center justify-between gap-3 pt-2 border-t border-gray-100 shrink-0">
               <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-light select-none">
                 <Lock size={12} className="text-[#C0A09A]" />
                 <span>Documenti Ufficiali Protetti da Copyright</span>
