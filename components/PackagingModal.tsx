@@ -95,11 +95,11 @@ export default function PackagingModal({ isOpen, onClose }: PackagingModalProps)
               <div className="flex items-center gap-2 text-[#8A5E58]">
                 <Package size={16} />
                 <h4 className="font-serif text-sm font-bold uppercase tracking-wider text-[#1A1A1A]">
-                  Box Esterno di Protezione
+                  Scatola Magnetica di Protezione
                 </h4>
               </div>
               <p className="font-sans text-xs text-gray-500 leading-relaxed">
-                Scatola protettiva esterna coordinata per garantire una consegna discreta, sicura e impeccabile tramite corriere espresso.
+                Elegante scatola rigida con chiusura magnetica coordinata, pensata per una consegna impeccabile, sicura e un'apertura di prestigio.
               </p>
             </div>
 
