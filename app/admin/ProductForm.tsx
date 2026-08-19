@@ -164,16 +164,44 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
 
     const formData = new FormData(e.currentTarget);
     
-    let result;
+    const galleryArray = [
+      clearedSlots['slot1'] ? '' : (slotUrls['slot1'] || (initialData?.gallery?.[0] || initialData?.image_secondary || '')),
+      clearedSlots['slot2'] ? '' : (slotUrls['slot2'] || (initialData?.gallery?.[1] || initialData?.image_primary || '')),
+      clearedSlots['slot3'] ? '' : (slotUrls['slot3'] || (initialData?.gallery?.[2] || '')),
+      clearedSlots['slot4'] ? '' : (slotUrls['slot4'] || (initialData?.gallery?.[3] || '')),
+      clearedSlots['slot5'] ? '' : (slotUrls['slot5'] || (initialData?.gallery?.[4] || '')),
+    ];
+
+    const payload = {
+      id: initialData?.id,
+      name: productName || (formData.get('name') as string),
+      sku: productSku || (formData.get('sku') as string),
+      price: formData.get('price'),
+      discount_price: formData.get('discount_price') || null,
+      stock: formData.get('stock'),
+      category: formData.get('category'),
+      materials: formData.get('materials'),
+      plating: formData.get('plating'),
+      gemstone: formData.get('gemstone'),
+      carats: formData.get('carats'),
+      description: formData.get('description'),
+      sizes: formData.getAll('sizes'),
+      gallery: galleryArray,
+      image_secondary: galleryArray[0] || null,
+      image_primary: galleryArray[1] || null,
+    };
+
     try {
-      if (isEditing) {
-        result = await updateFullProduct(initialData.id, formData);
-      } else {
-        result = await addProduct(formData);
-      }
+      const res = await fetch('/api/admin/products', {
+        method: isEditing ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await res.json();
       
-      if (result?.error) {
-        setMessage(`❌ Errore: ${result.error}`);
+      if (!res.ok || result.error) {
+        setMessage(`❌ Errore: ${result.error || 'Salvataggio non riuscito'}`);
       } else {
         setMessage(isEditing ? '✅ Prodotto aggiornato con successo!' : '✅ Prodotto aggiunto con successo!');
         router.refresh();
@@ -188,7 +216,7 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       }
     } catch (err: any) {
       console.error(err);
-      setMessage(`❌ Errore di rete: il salvataggio è fallito.`);
+      setMessage(`❌ Errore di connessione: ${err.message}`);
     } finally {
       setLoading(false);
     }
