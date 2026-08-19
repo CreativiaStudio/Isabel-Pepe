@@ -149,17 +149,18 @@ export default function LoginPage() {
       <div className="bg-white max-w-4xl w-full grid md:grid-cols-2 shadow-2xl overflow-hidden">
         
         {/* Immagine Decorativa */}
-        <div className="hidden md:block relative h-full bg-gray-100">
+        <div className="hidden md:block relative h-full bg-[#1A1A1A] min-h-[480px]">
           <img 
-            src="/Products/Modella Premium.jpg" 
+            src="/Products/A180-EARRING - Orecchini Vivienne/Modella Premium.jpg" 
             alt="Isabel Pepe Luxury" 
-            className="absolute inset-0 w-full h-full object-cover opacity-90"
+            className="absolute inset-0 w-full h-full object-cover opacity-85"
           />
-          <div className="absolute inset-0 bg-black/20"></div>
-          <div className="absolute bottom-12 left-12 text-white">
-            <h2 className="font-serif text-3xl tracking-widest uppercase mb-4">Isabel Pepe</h2>
-            <p className="font-sans text-[10px] uppercase tracking-[0.2em] opacity-80 max-w-xs">
-              Accedi alla tua area riservata per gestire i tuoi ordini ed esplorare le nuove collezioni.
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+          <div className="absolute bottom-10 left-10 right-10 text-white">
+            <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block mb-2">Atelier Privato</span>
+            <h2 className="font-serif text-2xl tracking-widest uppercase mb-3 text-white">Isabel Pepe</h2>
+            <p className="font-sans text-[11px] leading-relaxed opacity-90 max-w-xs text-gray-200">
+              Accedi alla tua area riservata per gestire ordini, tracciamento spedizioni e collezioni esclusive.
             </p>
           </div>
         </div>
