@@ -15,11 +15,54 @@ export default function CartDrawer() {
   const [showEmailPrompt, setShowEmailPrompt] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
+  const [customerName, setCustomerName] = useState('');
+  const [isEditingDetails, setIsEditingDetails] = useState(false);
+  const [isIdentified, setIsIdentified] = useState(false);
   
   const [promoCode, setPromoCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState<{ code: string, amount: number, percent: number } | null>(null);
   const [promoError, setPromoError] = useState('');
   const [applyingPromo, setApplyingPromo] = useState(false);
+
+  // Auto-riconoscimento istantaneo dell'utente da localStorage e Database Identity
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const savedEmail = localStorage.getItem('isabel_customer_email');
+    const savedPhone = localStorage.getItem('isabel_customer_phone');
+    const savedName = localStorage.getItem('isabel_customer_name');
+
+    if (savedEmail) {
+      setCustomerEmail(savedEmail);
+      if (savedPhone) setCustomerPhone(savedPhone);
+      if (savedName) setCustomerName(savedName);
+      setIsIdentified(true);
+    }
+
+    const visitorId = localStorage.getItem('isabel_visitor_id');
+    if (visitorId) {
+      fetch(`/api/cart/identity?visitorId=${encodeURIComponent(visitorId)}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.identified && data.email) {
+            setCustomerEmail(data.email);
+            localStorage.setItem('isabel_customer_email', data.email);
+            if (data.phone) {
+              setCustomerPhone(data.phone);
+              localStorage.setItem('isabel_customer_phone', data.phone);
+            }
+            if (data.name) {
+              setCustomerName(data.name);
+              localStorage.setItem('isabel_customer_name', data.name);
+            }
+            setIsIdentified(true);
+          } else if (data && data.name) {
+            setCustomerName(data.name);
+          }
+        })
+        .catch(() => {});
+    }
+  }, []);
 
   const subtotal = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
   
@@ -59,14 +102,23 @@ export default function CartDrawer() {
   };
 
   const handleCheckout = async () => {
-    if (!showEmailPrompt) {
+    // Se l'utente non è identificato e non ha ancora aperto i campi di contatto
+    if (!isIdentified && !showEmailPrompt) {
       setShowEmailPrompt(true);
       return;
     }
 
     if (!customerEmail) {
       alert("L'email è obbligatoria per inviare la ricevuta.");
+      setShowEmailPrompt(true);
+      setIsEditingDetails(true);
       return;
+    }
+
+    // Salva in localStorage per non chiederlo mai più
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('isabel_customer_email', customerEmail);
+      if (customerPhone) localStorage.setItem('isabel_customer_phone', customerPhone);
     }
 
     setLoading(true);
@@ -108,7 +160,7 @@ export default function CartDrawer() {
         const stripe = await stripePromise;
         await (stripe as any)?.redirectToCheckout({ sessionId: data.sessionId });
       } else {
-        alert('Errore durante la creazione della sessione: ' + data.error);
+        alert('Errore durante la creazione della sessione: ' + (data.error || 'Riprova'));
       }
     } catch (error) {
       console.error(error);
@@ -206,11 +258,90 @@ export default function CartDrawer() {
         {/* Footer Checkout */}
         {items.length > 0 && (
           <div className="border-t border-gray-100 p-6 bg-[#FAFAFA]">
-            {showEmailPrompt ? (
-              <div className="mb-6 space-y-4 animate-in slide-in-from-bottom-2 duration-300">
+            {/* Se l'utente è già riconosciuto (Elena, Mario o cliente che ha già inserito dati) */}
+            {isIdentified && !isEditingDetails ? (
+              <div className="mb-4 space-y-3">
+                <div className="bg-[#FAF7F5] border border-[#EADFD9] p-3.5 rounded-sm flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                      <span className="font-serif text-xs text-gray-900 font-semibold tracking-wide">
+                        {customerName ? `Bentornato/a, ${customerName}!` : 'Cliente Riconosciuto/a'}
+                      </span>
+                    </div>
+                    <p className="font-sans text-[11px] text-gray-600 truncate max-w-[230px]">
+                      Ricevuta a: <span className="font-medium text-gray-900">{customerEmail}</span>
+                    </p>
+                  </div>
+                  <button 
+                    type="button"
+                    onClick={() => setIsEditingDetails(true)}
+                    className="text-[10px] text-[#C0A09A] hover:text-gray-900 underline uppercase tracking-widest font-semibold transition-colors"
+                  >
+                    Modifica
+                  </button>
+                </div>
+
+                {/* Promo Code Quick Dropdown */}
                 <div>
-                  <h3 className="font-serif text-lg text-gray-900 mb-1">A chi intestiamo l'ordine?</h3>
-                  <p className="font-sans text-[10px] text-gray-500 uppercase tracking-widest mb-4">Riceverai qui la conferma e il tracciamento</p>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      placeholder="INSERISCI COUPON" 
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      className="flex-1 border border-gray-200 px-3 py-1.5 text-xs focus:border-[#C0A09A] outline-none rounded-sm transition-colors uppercase bg-white text-gray-900 placeholder:text-gray-500 font-normal"
+                    />
+                    <button 
+                      onClick={handleApplyPromo}
+                      disabled={applyingPromo || !promoCode}
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1.5 text-[10px] uppercase tracking-widest rounded-sm transition-colors disabled:opacity-50"
+                    >
+                      Applica
+                    </button>
+                  </div>
+                  {promoError && <p className="text-red-500 text-[10px] mt-1 uppercase tracking-widest">{promoError}</p>}
+                  {appliedDiscount && (
+                    <p className="text-green-600 text-[10px] mt-1 uppercase tracking-widest flex items-center gap-1">
+                      ✓ Coupon applicato: -{appliedDiscount.percent > 0 ? `${appliedDiscount.percent}%` : `€${appliedDiscount.amount}`}
+                    </p>
+                  )}
+                </div>
+
+                {/* Riepilogo Totali */}
+                <div className="border-t border-gray-200 pt-3 mt-1 space-y-1.5">
+                  <div className="flex justify-between items-center text-gray-500">
+                    <span className="font-sans text-[11px] uppercase tracking-widest">Spedizione Express 48h</span>
+                    <span className="font-sans text-xs uppercase tracking-wider text-green-600 font-semibold">Gratis</span>
+                  </div>
+                  {appliedDiscount && (
+                    <div className="flex justify-between items-center text-green-600">
+                      <span className="font-sans text-[11px] uppercase tracking-widest">Sconto ({appliedDiscount.code})</span>
+                      <span className="font-serif text-base">-€{discountValue.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="font-sans text-[11px] uppercase tracking-widest text-gray-900 font-bold">Totale</span>
+                    <span className="font-serif text-2xl text-gray-900">€{total.toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            ) : showEmailPrompt || isEditingDetails ? (
+              <div className="mb-6 space-y-4 animate-in slide-in-from-bottom-2 duration-300">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="font-serif text-lg text-gray-900 mb-1">A chi intestiamo l'ordine?</h3>
+                    <p className="font-sans text-[10px] text-gray-500 uppercase tracking-widest">Riceverai qui la conferma e il tracciamento</p>
+                  </div>
+                  {isIdentified && (
+                    <button 
+                      type="button" 
+                      onClick={() => setIsEditingDetails(false)}
+                      className="text-[10px] text-gray-400 hover:text-gray-900 uppercase tracking-widest underline"
+                    >
+                      Annulla
+                    </button>
+                  )}
                 </div>
                 
                 <input 
@@ -294,9 +425,9 @@ export default function CartDrawer() {
             <button 
               onClick={handleCheckout}
               disabled={loading}
-              className="w-full bg-[#1A1A1A] hover:bg-black text-white uppercase tracking-widest text-sm py-4 rounded transition duration-300 font-medium disabled:opacity-50"
+              className="w-full bg-[#1A1A1A] hover:bg-black text-white uppercase tracking-widest text-sm py-4 rounded transition duration-300 font-medium disabled:opacity-50 shadow-md hover:shadow-lg"
             >
-              {loading ? 'Elaborazione...' : (showEmailPrompt ? 'Procedi al Pagamento Sicuro' : 'Vai alla Cassa (Checkout Sicuro)')}
+              {loading ? 'Elaborazione...' : isIdentified && !isEditingDetails ? '⚡ Procedi al Pagamento (1-Clic)' : showEmailPrompt ? 'Procedi al Pagamento Sicuro' : 'Vai alla Cassa (Checkout Sicuro)'}
             </button>
             <div className="flex flex-col items-center justify-center gap-3 mt-5">
               <span className="text-[9px] uppercase tracking-widest text-gray-500">Paga in 3 comode rate con</span>
