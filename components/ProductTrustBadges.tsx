@@ -307,8 +307,8 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
                         ? '/Brand/gra_card_privacy.webp'
                         : activeGraTab === 'cover'
                         ? '/Brand/gra_libretto_esterno.webp'
-                        : brandCertImage
-                      : brandCertImage
+                        : certImageSrc
+                      : certImageSrc
                   }
                   alt={isMoissanite ? "Documentazione Ufficiale GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
                   className="w-full h-auto max-h-[230px] sm:max-h-[270px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg shadow-sm"
