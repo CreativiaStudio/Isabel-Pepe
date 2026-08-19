@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock, Gem, BookOpen, CreditCard, Layers } from 'lucide-react';
 
+import PackagingModal from './PackagingModal';
+
 interface ProductTrustBadgesProps {
   product: {
     name: string;
@@ -17,6 +19,7 @@ interface ProductTrustBadgesProps {
 
 export default function ProductTrustBadges({ product }: ProductTrustBadgesProps) {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+  const [isPackagingModalOpen, setIsPackagingModalOpen] = useState(false);
   const [activeGraTab, setActiveGraTab] = useState<'report' | 'card' | 'cover' | 'brand'>('report');
 
   const nameLower = product.name?.toLowerCase() || '';
@@ -60,17 +63,13 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
     nameLower.includes('gold') ||
     skuLower.includes('gold') ||
     colorLower.includes('oro') ||
-    colorLower.includes('giallo')
+    colorLower.includes('giallo') ||
+    descLower.includes('oro 18k') ||
+    descLower.includes('oro giallo')
   );
 
-  const isRhodium = !isGold;
-
-  // 3 Tipi di Certificato Ufficiali per Stampa e Web:
-  // 1. Oro Perla
-  // 2. Oro Moissanite
-  // 3. Rodio Moissanite
-  const brandCertImage = isPearl
-    ? '/Brand/certificato_perle_card_clean.webp'
+  const certImageSrc = isPearl
+    ? '/Brand/certificato_perle_oro18k.webp'
     : isGold
     ? '/Brand/certificato_moissanite_oro18k.webp'
     : '/Brand/certificato_moissanite_rodio.webp';
@@ -91,14 +90,19 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </span>
         </div>
 
-        {/* 2. Cofanetto Luxury (Panno & Box) */}
-        <div className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60">
-          <Gift size={20} className="text-[#C0A09A] mb-1.5 shrink-0" />
+        {/* 2. Cofanetto Luxury (Panno & Box) - Cliccabile */}
+        <div 
+          onClick={() => setIsPackagingModalOpen(true)}
+          className="flex flex-col items-center justify-center text-center p-3 bg-[#FAF8F5] hover:bg-[#FAF3F0] rounded-xl h-full min-h-[105px] border border-[#F0E6E1]/60 hover:border-[#C0A09A] transition-all cursor-pointer group shadow-2xs"
+          title="Clicca per visualizzare il cofanetto e gli accessori inclusi"
+        >
+          <Gift size={20} className="text-[#8A5E58] mb-1.5 shrink-0 group-hover:scale-110 transition-transform" />
           <span className="text-[10px] sm:text-[11px] uppercase tracking-wider text-gray-900 font-semibold leading-tight mb-1.5 min-h-[26px] flex flex-col justify-center">
             Cofanetto<br />Luxury
           </span>
-          <span className="text-[9px] text-gray-500 font-light leading-snug">
-            Panno & Astuccio
+          <span className="text-[9px] text-[#8A5E58] font-medium leading-snug flex items-center gap-0.5">
+            <span>Vedi Foto</span>
+            <span>➔</span>
           </span>
         </div>
 
@@ -124,6 +128,31 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </span>
         </div>
 
+      </div>
+
+      {/* Banner Cofanetto & Packaging Luxury */}
+      <div className="mb-4 p-3.5 sm:p-4 bg-[#FAF7F5] border border-[#EADFD9] rounded-2xl flex items-center justify-between gap-3 shadow-2xs">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-full bg-[#8A5E58]/10 flex items-center justify-center text-[#8A5E58] shrink-0">
+            <Gift size={18} />
+          </div>
+          <div className="min-w-0">
+            <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#8A5E58] font-bold block truncate">
+              Packaging d'Alta Gioielleria Incluso
+            </span>
+            <p className="text-xs text-gray-800 font-medium leading-tight truncate">
+              Box rigido luxury, panno lucidante, box esterno & garanzia
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsPackagingModalOpen(true)}
+          className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white hover:bg-gray-900 text-gray-900 hover:text-white border border-[#C0A09A]/50 hover:border-gray-900 rounded-full text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all duration-300 shadow-2xs shrink-0 cursor-pointer"
+        >
+          Vedi Cofanetto 🎁
+        </button>
       </div>
 
       {/* Banner Certificato Dinamico */}
@@ -158,6 +187,12 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           {isMoissanite ? "Vedi Certificati GRA 🔍" : "Vedi Certificato 🔍"}
         </button>
       </div>
+
+      {/* MODAL COFANETTO & PACKAGING */}
+      <PackagingModal 
+        isOpen={isPackagingModalOpen} 
+        onClose={() => setIsPackagingModalOpen(false)} 
+      />
 
       {/* MODAL POPUP PROFESSIONALE (VIEWPORT SAFE & TITOLO 100% VISIBILE) */}
       {isCertModalOpen && (

@@ -2,10 +2,11 @@
 
 import React, { useState } from 'react';
 import { useCartStore } from '@/store/cart';
-import { X, Trash2, ShoppingBag } from 'lucide-react';
+import { X, Trash2, ShoppingBag, Gift } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
 import { trackAnalyticsEvent, trackBeginCheckout } from '@/lib/analytics-events';
 import { getOrCreateSessionId } from '@/lib/session';
+import PackagingModal from './PackagingModal';
 
 // Assicurati che in .env.local ci sia NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
@@ -13,6 +14,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY 
 export default function CartDrawer() {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity } = useCartStore();
   const [loading, setLoading] = useState(false);
+  const [isPackagingModalOpen, setIsPackagingModalOpen] = useState(false);
 
   const [showEmailPrompt, setShowEmailPrompt] = useState(false);
   const [customerEmail, setCustomerEmail] = useState('');
@@ -451,6 +453,21 @@ export default function CartDrawer() {
               </div>
             )}
             
+            {/* Banner Cofanetto Luxury Incluso */}
+            <div className="bg-[#FAF7F5] border border-[#EADFD9] p-3 rounded-sm flex items-center justify-between text-xs text-gray-700 mb-4 shadow-2xs">
+              <div className="flex items-center gap-2">
+                <Gift size={16} className="text-[#8A5E58] shrink-0" />
+                <span className="font-sans text-[11px] text-gray-800 font-medium">Cofanetto Regalo Luxury & Panno inclusi</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsPackagingModalOpen(true)}
+                className="text-[10px] uppercase tracking-wider text-[#8A5E58] hover:text-[#1A1A1A] font-bold underline transition-colors cursor-pointer shrink-0 ml-2"
+              >
+                Vedi Foto ➔
+              </button>
+            </div>
+
             <button 
               onClick={handleCheckout}
               disabled={loading}
@@ -481,6 +498,12 @@ export default function CartDrawer() {
           </div>
         )}
       </div>
+
+      {/* Modal Popup Cofanetto & Packaging */}
+      <PackagingModal 
+        isOpen={isPackagingModalOpen} 
+        onClose={() => setIsPackagingModalOpen(false)} 
+      />
     </div>
   );
 }
