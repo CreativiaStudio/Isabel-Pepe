@@ -61,41 +61,54 @@ export async function POST(req: Request) {
           .eq('id', metadata.abandoned_cart_id);
       }
 
-      // Aggiorna/Crea cliente nel CRM
+      // 3. Auto-creazione Silenziosa Account Utente & Profilo nel DB
       if (customerEmail) {
-        const { data: existingCustomer } = await supabaseAdmin
-          .from('customers')
-          .select('*')
-          .eq('email', customerEmail)
-          .maybeSingle();
+        try {
+          const nameParts = customerName.split(' ');
+          const firstName = nameParts[0] || 'Cliente';
+          const lastName = nameParts.slice(1).join(' ') || 'Isabel Pepe';
+          const phone = session.customer_details?.phone || '';
 
-        const nameParts = customerName.split(' ');
-        const firstName = nameParts[0];
-        const lastName = nameParts.slice(1).join(' ');
-        const phone = session.customer_details?.phone || '';
+          // Controlla se l'utente esiste già in Auth
+          const { data: usersData } = await supabaseAdmin.auth.admin.listUsers();
+          const existingAuthUser = usersData?.users?.find(u => u.email?.toLowerCase() === customerEmail.toLowerCase());
 
-        if (existingCustomer) {
-          await supabaseAdmin
-            .from('customers')
-            .update({
-              total_spent: Number(existingCustomer.total_spent || 0) + amountTotal,
-              orders_count: (existingCustomer.orders_count || 0) + 1,
-              last_purchase_date: new Date().toISOString(),
-              phone: existingCustomer.phone || phone,
-            })
-            .eq('id', existingCustomer.id);
-        } else {
-          await supabaseAdmin
-            .from('customers')
-            .insert([{
+          let userId = existingAuthUser?.id;
+
+          if (!existingAuthUser) {
+            // Crea automaticamente l'utente in background con email già confermata
+            const randomPassword = 'Ip_' + Math.random().toString(36).slice(-8) + '!2026';
+            const { data: newAuthUser } = await supabaseAdmin.auth.admin.createUser({
               email: customerEmail,
+              password: randomPassword,
+              email_confirm: true,
+              user_metadata: {
+                first_name: firstName,
+                last_name: lastName,
+                phone: phone,
+              }
+            });
+            userId = newAuthUser?.user?.id;
+          }
+
+          if (userId) {
+            const formattedAddress = typeof shippingAddress === 'string' ? shippingAddress : [
+              shippingAddress.line1,
+              shippingAddress.postal_code,
+              shippingAddress.city,
+              shippingAddress.state,
+            ].filter(Boolean).join(', ');
+
+            await supabaseAdmin.from('profiles').upsert({
+              id: userId,
               first_name: firstName,
               last_name: lastName,
               phone: phone,
-              total_spent: amountTotal,
-              orders_count: 1,
-              last_purchase_date: new Date().toISOString(),
-            }]);
+              address: formattedAddress || null,
+            });
+          }
+        } catch (authErr) {
+          console.error('Error auto-creating user on checkout:', authErr);
         }
       }
 
