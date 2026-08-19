@@ -5,10 +5,11 @@ import { useWishlistStore } from '@/store/wishlist';
 import { useCartStore } from '@/store/cart';
 import { X, Trash2, Heart, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
+import { trackAnalyticsEvent } from '@/lib/analytics-events';
 
 export default function WishlistDrawer() {
   const { items, isOpen, setIsOpen, removeItem } = useWishlistStore();
-  const { addItem, setIsOpen: setCartOpen } = useCartStore();
+  const { addItem } = useCartStore();
 
   if (!isOpen) return null;
 
@@ -21,6 +22,15 @@ export default function WishlistDrawer() {
       quantity: 1,
       stock: item.stock ?? 10,
     });
+
+    trackAnalyticsEvent('add_to_cart', {
+      product_id: item.id,
+      product_name: item.name,
+      product_slug: item.slug || null,
+      price: item.price,
+      quantity: 1,
+    });
+
     setIsOpen(false);
   };
 

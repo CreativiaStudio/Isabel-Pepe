@@ -1,5 +1,12 @@
 import { supabaseAdmin } from '@/lib/supabase';
 
+// Re-export core analytics submodules
+export * from '@/types/analytics';
+export * from '@/lib/bot-filter';
+export * from '@/lib/attribution';
+export * from '@/lib/session';
+export * from '@/lib/analytics-events';
+
 export async function incrementDailyMetric({
   isProduct = false,
   isCart = false,

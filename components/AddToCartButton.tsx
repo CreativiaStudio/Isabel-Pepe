@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useCartStore } from '@/store/cart';
+import { trackAnalyticsEvent } from '@/lib/analytics-events';
 
 type Props = {
   product: {
@@ -11,6 +12,8 @@ type Props = {
     discount_price: number | null;
     image_primary: string;
     stock: number;
+    slug?: string;
+    category?: string;
   };
 };
 
@@ -24,13 +27,25 @@ export default function AddToCartButton({ product }: Props) {
 
   const handleAddToCart = () => {
     if (isOutOfStock) return;
+    const finalPrice = product.discount_price || product.price;
+
     addItem({
       id: product.id,
       name: product.name,
-      price: product.discount_price || product.price,
+      price: finalPrice,
       image: product.image_primary,
       quantity: 1,
       stock: product.stock,
+    });
+
+    // Funnel Milestone Event Hook: add_to_cart
+    trackAnalyticsEvent('add_to_cart', {
+      product_id: product.id,
+      product_name: product.name,
+      product_slug: product.slug || null,
+      product_category: product.category || null,
+      price: finalPrice,
+      quantity: 1,
     });
   };
 

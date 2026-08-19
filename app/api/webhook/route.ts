@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
 import { sendOrderConfirmationEmail } from '@/lib/email';
+import { incrementDailyMetric } from '@/lib/analytics';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -37,46 +38,115 @@ export async function POST(req: Request) {
       const shippingAddress = (session as any).shipping_details?.address || (session as any).collected_information?.shipping_details?.address || {};
       const metadata = session.metadata || {};
       const items = metadata.cart_items ? JSON.parse(metadata.cart_items) : [];
+      const visitorId = metadata.visitor_id || null;
+      const analyticsSessionId = metadata.session_id || null;
+      const nowIso = new Date().toISOString();
 
-      // Salva l'ordine in Supabase
-      const { data: orderData, error: orderError } = await supabaseAdmin
+      // Salva l'ordine in Supabase (se non già creato da /api/checkout/confirm)
+      const { data: existingOrder } = await supabaseAdmin
         .from('orders')
-        .insert([{
-          stripe_session_id: sessionId,
-          customer_email: customerEmail,
-          customer_name: customerName,
-          amount_total: amountTotal,
-          status: 'paid',
-          shipping_address: shippingAddress,
-          items: items
-        }])
-        .select()
-        .single();
+        .select('id')
+        .eq('stripe_session_id', sessionId)
+        .maybeSingle();
 
-      if (orderError) {
-        console.error('Errore durante il salvataggio dell\'ordine su Supabase:', orderError);
-        throw orderError;
-      }
+      let orderId = existingOrder?.id;
 
-      console.log('Ordine salvato con successo:', orderData.id);
+      if (!existingOrder) {
+        const { data: orderData, error: orderError } = await supabaseAdmin
+          .from('orders')
+          .insert([{
+            stripe_session_id: sessionId,
+            customer_email: customerEmail,
+            customer_name: customerName,
+            amount_total: amountTotal,
+            status: 'paid',
+            shipping_address: shippingAddress,
+            items: items
+          }])
+          .select()
+          .single();
 
-      // Invia email di conferma ordine ufficiale
-      if (customerEmail && orderData?.id) {
-        sendOrderConfirmationEmail({
-          customerEmail,
-          customerName,
-          orderId: orderData.id,
-          amountTotal,
-          items,
-          shippingAddress,
-        }).catch((err) => console.error('Error sending order confirmation email on webhook:', err));
+        if (orderError) {
+          console.error('Errore durante il salvataggio dell\'ordine su Supabase:', orderError);
+          throw orderError;
+        }
+
+        orderId = orderData.id;
+        console.log('Ordine salvato con successo:', orderData.id);
+
+        // Invia email di conferma ordine ufficiale
+        if (customerEmail && orderData?.id) {
+          sendOrderConfirmationEmail({
+            customerEmail,
+            customerName,
+            orderId: orderData.id,
+            amountTotal,
+            items,
+            shippingAddress,
+          }).catch((err) => console.error('Error sending order confirmation email on webhook:', err));
+        }
+
+        // Funnel Milestone: Update analytics_sessions with completed purchase
+        if (analyticsSessionId) {
+          await supabaseAdmin
+            .from('analytics_sessions')
+            .update({
+              completed_purchase: true,
+              started_checkout: true,
+              added_to_cart: true,
+              is_bounce: false,
+              order_id: orderId,
+              revenue: amountTotal,
+              last_active_at: nowIso,
+              updated_at: nowIso,
+            })
+            .eq('session_id', analyticsSessionId);
+        } else if (visitorId) {
+          await supabaseAdmin
+            .from('analytics_sessions')
+            .update({
+              completed_purchase: true,
+              started_checkout: true,
+              added_to_cart: true,
+              is_bounce: false,
+              order_id: orderId,
+              revenue: amountTotal,
+              last_active_at: nowIso,
+              updated_at: nowIso,
+            })
+            .eq('visitor_id', visitorId);
+        }
+
+        // Funnel Milestone: Record purchase event in analytics_events
+        await supabaseAdmin.from('analytics_events').insert([
+          {
+            session_id: analyticsSessionId || `sid_${visitorId || sessionId}`,
+            visitor_id: visitorId || `vid_${sessionId}`,
+            event_name: 'purchase',
+            path: '/success',
+            order_id: orderId,
+            cart_total: amountTotal,
+            coupon_code: metadata.applied_coupon || null,
+            event_data: {
+              stripe_session_id: sessionId,
+              amount: amountTotal,
+              items_count: items.length,
+              customer_email: customerEmail,
+              items: items,
+            },
+            created_at: nowIso,
+          },
+        ]);
+
+        // Funnel Milestone: Increment daily metric
+        incrementDailyMetric({ isOrder: true, amount: amountTotal }).catch(() => {});
       }
 
       // 1. Recupero Carrello (se presente)
       if (metadata.abandoned_cart_id) {
         await supabaseAdmin
           .from('abandoned_carts')
-          .update({ status: 'recovered', updated_at: new Date().toISOString() })
+          .update({ status: 'recovered', updated_at: nowIso })
           .eq('id', metadata.abandoned_cart_id);
       }
 
@@ -130,9 +200,7 @@ export async function POST(req: Request) {
       }
 
       // 3. (Opzionale) Aggiorna lo stock dei prodotti
-      // Mettiamo un loop per iterare sui prodotti acquistati e scalare le giacenze
       for (const item of items) {
-        // Leggiamo lo stock attuale
         const { data: prod } = await supabaseAdmin
           .from('products')
           .select('stock')

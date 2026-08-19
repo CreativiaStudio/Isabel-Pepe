@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { useCartStore } from '@/store/cart';
 import { X, Trash2, ShoppingBag } from 'lucide-react';
 import { loadStripe } from '@stripe/stripe-js';
+import { trackAnalyticsEvent, trackBeginCheckout } from '@/lib/analytics-events';
+import { getOrCreateSessionId } from '@/lib/session';
 
 // Assicurati che in .env.local ci sia NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
@@ -90,6 +92,13 @@ export default function CartDrawer() {
           amount: data.discount_amount,
           percent: data.discount_percent,
         });
+
+        // Track apply_coupon event
+        trackAnalyticsEvent('apply_coupon', {
+          coupon_code: data.code,
+          discount_amount: data.discount_amount,
+          discount_percent: data.discount_percent,
+        });
       } else {
         setPromoError(data.error || 'Codice non valido');
         setAppliedDiscount(null);
@@ -99,6 +108,16 @@ export default function CartDrawer() {
     } finally {
       setApplyingPromo(false);
     }
+  };
+
+  const handleRemoveItem = (item: any) => {
+    removeItem(item.id);
+    trackAnalyticsEvent('remove_from_cart', {
+      product_id: item.id,
+      product_name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    });
   };
 
   const handleCheckout = async () => {
@@ -121,10 +140,18 @@ export default function CartDrawer() {
       if (customerPhone) localStorage.setItem('isabel_customer_phone', customerPhone);
     }
 
+    // Funnel Milestone Event Hook: begin_checkout
+    trackBeginCheckout({
+      cart_total: total,
+      items_count: items.length,
+      coupon_code: appliedDiscount?.code,
+    });
+
     setLoading(true);
     try {
       const visitorId = localStorage.getItem('isabel_visitor_id');
       const consentId = localStorage.getItem('isabel_consent_id');
+      const { sessionId } = getOrCreateSessionId();
 
       // 1. Sincronizza lo stato del carrello e del consenso sul server
       fetch('/api/cart/sync', {
@@ -135,6 +162,7 @@ export default function CartDrawer() {
           customerEmail,
           customerPhone,
           visitorId,
+          sessionId,
           consentId,
         }),
       }).catch(() => {});
@@ -148,6 +176,7 @@ export default function CartDrawer() {
           customerEmail, 
           customerPhone,
           visitorId,
+          sessionId,
           consentId,
           couponCode: appliedDiscount?.code 
         }),
@@ -221,7 +250,7 @@ export default function CartDrawer() {
                     <div className="flex justify-between items-start">
                       <h3 className="font-serif text-lg text-gray-900">{item.name}</h3>
                       <button 
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => handleRemoveItem(item)}
                         className="text-gray-300 hover:text-red-500 transition"
                       >
                         <Trash2 size={16} />

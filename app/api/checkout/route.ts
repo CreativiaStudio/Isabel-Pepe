@@ -31,6 +31,7 @@ export async function POST(request: Request) {
     const customerPhone = body.customerPhone || '';
     const couponCode = body.couponCode;
     const visitorId = body.visitorId || null;
+    const sessionId = body.sessionId || null;
     const consentId = body.consentId || null;
     
     // Calcoliamo il totale per il db
@@ -109,6 +110,7 @@ export async function POST(request: Request) {
       metadata: {
         abandoned_cart_id: abandonedCartId || '',
         visitor_id: visitorId || '',
+        session_id: sessionId || '',
         consent_id: consentId || '',
         applied_coupon: couponCode || '',
         cart_items: JSON.stringify(items.map((i: any) => ({

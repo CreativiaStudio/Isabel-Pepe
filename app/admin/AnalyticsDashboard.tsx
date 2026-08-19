@@ -1,904 +1,408 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
-import { 
-  BarChart3, 
-  Eye, 
-  Users, 
-  ShoppingBag, 
-  TrendingUp, 
-  Clock, 
-  ArrowUpRight, 
-  Sparkles, 
-  ShieldCheck, 
-  Calendar, 
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  Database,
-  UserCheck,
-  Tag,
-  Edit2,
-  X,
-  Check,
-  Filter
-} from 'lucide-react';
-import Link from 'next/link';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { DateRangeKey, KpiSummary, TimeSeriesPoint, FunnelData, TopPageMetric, TopProductMetric, GeoMetric, SearchConsoleData, VisitorIdentityRecord } from '@/types/analytics';
 
-interface PageView {
-  id: string;
-  visitor_id: string;
-  consent_id?: string | null;
-  path: string;
-  created_at: string;
-}
+// Modular Analytics Components
+import AnalyticsHeader from './components/analytics/AnalyticsHeader';
+import KpiSummaryGrid from './components/analytics/KpiSummaryGrid';
+import TrafficTrendChart from './components/analytics/TrafficTrendChart';
+import AttributionBreakdownCard from './components/analytics/AttributionBreakdownCard';
+import ConversionFunnelCard from './components/analytics/ConversionFunnelCard';
+import TopJewelsCard from './components/analytics/TopJewelsCard';
+import TopPagesCard from './components/analytics/TopPagesCard';
+import GeoDistributionCard from './components/analytics/GeoDistributionCard';
+import GscSeoHealthCard from './components/analytics/GscSeoHealthCard';
+import LiveVisitorStream from './components/analytics/LiveVisitorStream';
 
-interface DailyRecord {
-  date: string;
-  total_views: number;
-  unique_visitors: number;
-  product_views: number;
-  cart_additions: number;
-  orders_count: number;
-  total_revenue: number;
-}
-
-interface VisitorIdentity {
-  visitor_id: string;
-  name: string;
-  email?: string | null;
-  role?: string | null;
-  notes?: string | null;
-}
+// Dedicated Drill-Down Modals
+import PagesDrillDownModal from './components/analytics/modals/PagesDrillDownModal';
+import CampaignsDrillDownModal from './components/analytics/modals/CampaignsDrillDownModal';
+import GeoDrillDownModal from './components/analytics/modals/GeoDrillDownModal';
+import CustomDateRangeModal from './components/analytics/modals/CustomDateRangeModal';
 
 interface AnalyticsDashboardProps {
-  pageViews: PageView[];
-  dailyAnalytics?: DailyRecord[];
-  identities?: VisitorIdentity[];
-  products: any[];
-  orders: any[];
-  carts: any[];
+  pageViews?: any[];
+  dailyAnalytics?: any[];
+  identities?: any[];
+  products?: any[];
+  orders?: any[];
+  carts?: any[];
 }
 
-export default function AnalyticsDashboard({ 
-  pageViews = [], 
-  dailyAnalytics = [], 
-  identities = [], 
-  products = [], 
-  orders = [], 
-  carts = [] 
+export default function AnalyticsDashboard({
+  pageViews = [],
+  dailyAnalytics = [],
+  identities = [],
+  products = [],
+  orders = [],
+  carts = [],
 }: AnalyticsDashboardProps) {
-  const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | 'today'>('all');
-  const [chartMode, setChartMode] = useState<'views' | 'visitors' | 'products'>('views');
-  const [searchPath, setSearchPath] = useState('');
-  const [selectedVisitorFilter, setSelectedVisitorFilter] = useState<string>('all');
-  
-  // Paginazione & Dimensione Tabella
-  const [rowsPerPage, setRowsPerPage] = useState<number>(50);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  // 1. Time Filter State
+  const [timeRange, setTimeRange] = useState<DateRangeKey>('7d');
+  const [customFrom, setCustomFrom] = useState<string>('');
+  const [customTo, setCustomTo] = useState<string>('');
 
-  // Identità locali (aggiornabili in real-time)
-  const [identityMap, setIdentityMap] = useState<Record<string, VisitorIdentity>>(() => {
-    const map: Record<string, VisitorIdentity> = {};
-    identities.forEach(id => {
-      map[id.visitor_id] = id;
-    });
-    return map;
-  });
+  // 2. Data State
+  const [summary, setSummary] = useState<KpiSummary | null>(null);
+  const [timeseries, setTimeseries] = useState<TimeSeriesPoint[]>([]);
+  const [timeseriesInterval, setTimeseriesInterval] = useState<'hour' | 'day'>('day');
+  const [channels, setChannels] = useState<any[]>([]);
+  const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [referrers, setReferrers] = useState<any[]>([]);
+  const [funnel, setFunnel] = useState<FunnelData | null>(null);
+  const [funnelChannel, setFunnelChannel] = useState<string>('all');
+  const [topPages, setTopPages] = useState<TopPageMetric[]>([]);
+  const [topProducts, setTopProducts] = useState<TopProductMetric[]>([]);
+  const [geoCities, setGeoCities] = useState<GeoMetric[]>([]);
+  const [geoCountries, setGeoCountries] = useState<any[]>([]);
+  const [gscData, setGscData] = useState<SearchConsoleData | null>(null);
 
-  // Modal assegnazione identità
-  const [selectedVisitorForIdentity, setSelectedVisitorForIdentity] = useState<string | null>(null);
-  const [identityName, setIdentityName] = useState('');
-  const [identityEmail, setIdentityEmail] = useState('');
-  const [identityRole, setIdentityRole] = useState('guest');
-  const [savingIdentity, setSavingIdentity] = useState(false);
+  // 3. Stream State
+  const [stream, setStream] = useState<any[]>([]);
+  const [streamTotal, setStreamTotal] = useState<number>(0);
+  const [streamPage, setStreamPage] = useState<number>(1);
+  const [streamTotalPages, setStreamTotalPages] = useState<number>(1);
+  const [streamRowsPerPage, setStreamRowsPerPage] = useState<number>(25);
+  const [streamSearch, setStreamSearch] = useState<string>('');
+  const [streamChannel, setStreamChannel] = useState<string>('all');
 
-  // 1. Filtraggio temporale delle page_views correnti
-  const filteredViews = useMemo(() => {
-    const now = new Date();
-    return pageViews.filter(pv => {
-      const viewDate = new Date(pv.created_at);
-      if (timeRange === 'today') {
-        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        return viewDate >= todayStart;
-      }
-      if (timeRange === '7d') {
-        const past7 = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        return viewDate >= past7;
-      }
-      if (timeRange === '30d') {
-        const past30 = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        return viewDate >= past30;
-      }
-      return true;
-    });
-  }, [pageViews, timeRange]);
+  // 4. Loading States
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isStreamLoading, setIsStreamLoading] = useState<boolean>(false);
 
-  // 2. Calcolo Metriche Chiave
-  const totalViews = filteredViews.length;
-  const uniqueVisitors = useMemo(() => {
-    const set = new Set(filteredViews.map(v => v.visitor_id).filter(Boolean));
-    return set.size;
-  }, [filteredViews]);
+  // 5. Modal States
+  const [isPagesModalOpen, setIsPagesModalOpen] = useState<boolean>(false);
+  const [isCampaignsModalOpen, setIsCampaignsModalOpen] = useState<boolean>(false);
+  const [isGeoModalOpen, setIsGeoModalOpen] = useState<boolean>(false);
+  const [isCustomDateModalOpen, setIsCustomDateModalOpen] = useState<boolean>(false);
 
-  const productViews = useMemo(() => {
-    return filteredViews.filter(v => v.path?.startsWith('/prodotto/')).length;
-  }, [filteredViews]);
-
-  const conversionRate = useMemo(() => {
-    if (uniqueVisitors === 0) return 0;
-    return ((orders.length / uniqueVisitors) * 100).toFixed(1);
-  }, [uniqueVisitors, orders.length]);
-
-  // 3. Generazione Timeline Giornaliera per il Grafico Storico
-  const historicalTimeline = useMemo(() => {
-    const map: Record<string, { date: string; views: number; visitors: Set<string>; products: number }> = {};
-    
-    const numDays = timeRange === 'today' ? 1 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 14;
-    for (let i = numDays - 1; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      const key = d.toISOString().split('T')[0];
-      map[key] = { date: key, views: 0, visitors: new Set(), products: 0 };
+  // Helpers for query params
+  const getRangeQueryParams = useCallback(() => {
+    let q = `range=${timeRange}`;
+    if (timeRange === 'custom' && customFrom && customTo) {
+      q += `&from=${customFrom}&to=${customTo}`;
     }
+    return q;
+  }, [timeRange, customFrom, customTo]);
 
-    dailyAnalytics.forEach(da => {
-      if (map[da.date]) {
-        map[da.date].views += da.total_views || 0;
-        map[da.date].products += da.product_views || 0;
-      }
-    });
+  // Main Data Fetcher
+  const fetchDashboardData = useCallback(async () => {
+    setIsLoading(true);
+    const rangeParams = getRangeQueryParams();
 
-    filteredViews.forEach(v => {
-      const day = v.created_at?.split('T')[0];
-      if (day) {
-        if (!map[day]) {
-          map[day] = { date: day, views: 0, visitors: new Set(), products: 0 };
-        }
-        map[day].views += 1;
-        if (v.visitor_id) map[day].visitors.add(v.visitor_id);
-        if (v.path?.startsWith('/prodotto/')) map[day].products += 1;
-      }
-    });
-
-    return Object.values(map).map(item => ({
-      date: item.date,
-      displayDate: new Date(item.date).toLocaleDateString('it-IT', { day: '2-digit', month: 'short' }),
-      views: item.views,
-      visitors: item.visitors.size,
-      products: item.products,
-    })).sort((a, b) => a.date.localeCompare(b.date));
-  }, [filteredViews, dailyAnalytics, timeRange]);
-
-  const maxValInTimeline = useMemo(() => {
-    const vals = historicalTimeline.map(t => chartMode === 'views' ? t.views : chartMode === 'visitors' ? t.visitors : t.products);
-    return Math.max(...vals, 10);
-  }, [historicalTimeline, chartMode]);
-
-  // 4. Top Gioielli Più Visualizzati
-  const topProducts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    filteredViews.forEach(v => {
-      if (v.path?.startsWith('/prodotto/')) {
-        const slug = v.path.replace('/prodotto/', '').split('?')[0];
-        counts[slug] = (counts[slug] || 0) + 1;
-      }
-    });
-
-    return Object.entries(counts)
-      .map(([slug, count]) => {
-        const prod = products.find(p => p.slug === slug || p.id === slug);
-        return {
-          slug,
-          name: prod?.name || slug.replace(/-/g, ' ').toUpperCase(),
-          image: prod?.images?.[0] || prod?.image_url || null,
-          price: prod?.price || 0,
-          category: prod?.category || 'Gioielli',
-          count,
-          percentage: totalViews > 0 ? Math.round((count / totalViews) * 100) : 0,
-        };
-      })
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 8);
-  }, [filteredViews, products, totalViews]);
-
-  // 5. Pagine Più Visitate
-  const topPages = useMemo(() => {
-    const counts: Record<string, number> = {};
-    filteredViews.forEach(v => {
-      const cleanPath = v.path?.split('?')[0] || '/';
-      counts[cleanPath] = (counts[cleanPath] || 0) + 1;
-    });
-
-    return Object.entries(counts)
-      .map(([path, count]) => ({
-        path,
-        count,
-        percentage: totalViews > 0 ? Math.round((count / totalViews) * 100) : 0,
-      }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 8);
-  }, [filteredViews, totalViews]);
-
-  // 6. Lista di tutti i Visitatori Unici per il menu filtro
-  const allUniqueVisitorsList = useMemo(() => {
-    const map: Record<string, { vid: string; name: string; role: string; count: number }> = {};
-    filteredViews.forEach(v => {
-      if (!map[v.visitor_id]) {
-        const identity = identityMap[v.visitor_id];
-        map[v.visitor_id] = {
-          vid: v.visitor_id,
-          name: identity ? identity.name : v.visitor_id,
-          role: identity?.role || 'guest',
-          count: 0,
-        };
-      }
-      map[v.visitor_id].count++;
-    });
-    return Object.values(map).sort((a, b) => b.count - a.count);
-  }, [filteredViews, identityMap]);
-
-  // 7. Filtraggio Live Stream Completo (Senza Limiti Fissi)
-  const fullFilteredStream = useMemo(() => {
-    return filteredViews.filter(v => {
-      const identity = identityMap[v.visitor_id];
-      const search = searchPath.toLowerCase();
-
-      // Filtro per persona/visitatore selezionato
-      if (selectedVisitorFilter !== 'all' && v.visitor_id !== selectedVisitorFilter) {
-        return false;
-      }
-
-      // Filtro per testo cercato
-      if (!search) return true;
-      return (
-        v.path?.toLowerCase().includes(search) ||
-        v.visitor_id?.toLowerCase().includes(search) ||
-        identity?.name?.toLowerCase().includes(search) ||
-        identity?.email?.toLowerCase().includes(search)
-      );
-    });
-  }, [filteredViews, searchPath, selectedVisitorFilter, identityMap]);
-
-  // Paginazione
-  const totalStreamPages = rowsPerPage > 0 ? Math.max(1, Math.ceil(fullFilteredStream.length / rowsPerPage)) : 1;
-  
-  const paginatedStream = useMemo(() => {
-    if (rowsPerPage === 0) return fullFilteredStream; // Mostra tutto
-    const start = (currentPage - 1) * rowsPerPage;
-    return fullFilteredStream.slice(start, start + rowsPerPage);
-  }, [fullFilteredStream, currentPage, rowsPerPage]);
-
-  const handleOpenIdentityModal = (vid: string) => {
-    const existing = identityMap[vid];
-    setSelectedVisitorForIdentity(vid);
-    setIdentityName(existing?.name || '');
-    setIdentityEmail(existing?.email || '');
-    setIdentityRole(existing?.role || 'guest');
-  };
-
-  const handleSaveIdentity = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedVisitorForIdentity || !identityName) return;
-
-    setSavingIdentity(true);
     try {
-      const res = await fetch('/api/admin/identity', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          visitorId: selectedVisitorForIdentity,
-          name: identityName,
-          email: identityEmail,
-          role: identityRole,
-        }),
-      });
+      const [
+        summaryRes,
+        timeseriesRes,
+        sourcesRes,
+        funnelRes,
+        pagesRes,
+        geoRes,
+        gscRes,
+      ] = await Promise.all([
+        fetch(`/api/admin/analytics/summary?${rangeParams}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/timeseries?${rangeParams}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/sources?${rangeParams}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/funnel?${rangeParams}&channel=${funnelChannel}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/pages?${rangeParams}&limit=100`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/geo?${rangeParams}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/analytics/search-console?${rangeParams}`).then((r) => r.json()).catch(() => null),
+      ]);
 
+      if (summaryRes) setSummary(summaryRes);
+      if (timeseriesRes?.points) {
+        setTimeseries(timeseriesRes.points);
+        setTimeseriesInterval(timeseriesRes.interval || (timeRange === 'today' ? 'hour' : 'day'));
+      }
+      if (sourcesRes) {
+        setChannels(sourcesRes.channels || []);
+        setCampaigns(sourcesRes.campaigns || []);
+        setReferrers(sourcesRes.referrers || []);
+      }
+      if (funnelRes) setFunnel(funnelRes);
+      if (pagesRes) {
+        setTopPages(pagesRes.pages || []);
+        setTopProducts(pagesRes.products || []);
+      }
+      if (geoRes) {
+        setGeoCities(geoRes.cities || geoRes.geo_metrics || []);
+        setGeoCountries(geoRes.countries || []);
+      }
+      if (gscRes) setGscData(gscRes);
+    } catch (err) {
+      console.error('Error fetching analytics dashboard data:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [getRangeQueryParams, funnelChannel, timeRange]);
+
+  // Stream Data Fetcher
+  const fetchStreamData = useCallback(async () => {
+    setIsStreamLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: streamPage.toString(),
+        limit: streamRowsPerPage.toString(),
+      });
+      if (streamSearch.trim()) params.append('search', streamSearch.trim());
+      if (streamChannel !== 'all') params.append('channel', streamChannel);
+
+      const res = await fetch(`/api/admin/analytics/stream?${params.toString()}`);
       const data = await res.json();
-      if (data.success && data.identity) {
-        setIdentityMap(prev => ({
-          ...prev,
-          [selectedVisitorForIdentity]: data.identity,
-        }));
-        setSelectedVisitorForIdentity(null);
-      } else {
-        alert('Errore salvataggio identità: ' + data.error);
+      if (data.stream) {
+        setStream(data.stream);
+        setStreamTotal(data.total || data.stream.length);
+        setStreamTotalPages(data.totalPages || 1);
       }
     } catch (err) {
-      console.error(err);
-      alert('Errore di connessione');
+      console.error('Error fetching stream data:', err);
     } finally {
-      setSavingIdentity(false);
+      setIsStreamLoading(false);
     }
+  }, [streamPage, streamRowsPerPage, streamSearch, streamChannel]);
+
+  // Initial and range change triggers
+  useEffect(() => {
+    fetchDashboardData();
+  }, [fetchDashboardData]);
+
+  useEffect(() => {
+    fetchStreamData();
+  }, [fetchStreamData]);
+
+  // Handle Funnel channel change separately
+  const handleFunnelChannelChange = async (channel: string) => {
+    setFunnelChannel(channel);
+    const rangeParams = getRangeQueryParams();
+    try {
+      const res = await fetch(`/api/admin/analytics/funnel?${rangeParams}&channel=${channel}`);
+      const data = await res.json();
+      if (data) setFunnel(data);
+    } catch (err) {
+      console.error('Error filtering funnel by channel:', err);
+    }
+  };
+
+  // Handle Date Range switches
+  const handleTimeRangeChange = (newRange: DateRangeKey) => {
+    setTimeRange(newRange);
+    if (newRange !== 'custom') {
+      setCustomFrom('');
+      setCustomTo('');
+    }
+  };
+
+  const handleApplyCustomDate = (from: string, to: string) => {
+    setCustomFrom(from);
+    setCustomTo(to);
+    setTimeRange('custom');
+  };
+
+  // Handle Identity update
+  const handleIdentityUpdated = (visitorId: string, newIdentity: VisitorIdentityRecord) => {
+    setStream((prev) =>
+      prev.map((item) =>
+        item.visitor_id === visitorId ? { ...item, identity: newIdentity } : item
+      )
+    );
+  };
+
+  // Range Label formatting
+  const rangeLabel = useMemo(() => {
+    switch (timeRange) {
+      case 'today':
+        return 'Andamento di Oggi (24 Ore)';
+      case '7d':
+        return 'Andamento Ultimi 7 Giorni';
+      case '30d':
+        return 'Andamento Ultimi 30 Giorni';
+      case 'month':
+        return 'Andamento Mese Corrente';
+      case 'custom':
+        return customFrom && customTo ? `Andamento ${customFrom} → ${customTo}` : 'Andamento Personalizzato';
+      default:
+        return 'Andamento Temporale';
+    }
+  }, [timeRange, customFrom, customTo]);
+
+  // Unified CSV Export
+  const handleExportGlobalCSV = () => {
+    const lines: string[] = [];
+    const dateStr = new Date().toISOString().split('T')[0];
+
+    lines.push(`ISABEL PEPE - LUXURY ANALYTICS REPORT (${dateStr})`);
+    lines.push(`Periodo Analizzato: ${rangeLabel}`);
+    lines.push('');
+
+    // Section 1: Executive KPI
+    lines.push('--- RIEPILOGO ESECUTIVO ---');
+    lines.push('Metrica,Valore');
+    lines.push(`Visitatori Unici Reali,${summary?.real_unique_visitors || 0}`);
+    lines.push(`Visualizzazioni Totali,${summary?.total_page_views || 0}`);
+    lines.push(`Sessioni Totali,${summary?.total_sessions || 0}`);
+    lines.push(`Frequenza di Rimbalzo,${summary?.bounce_rate || 0}%`);
+    lines.push(`Permanenza Media (sec),${summary?.avg_session_duration_seconds || 0}`);
+    lines.push(`Ordini Conclusi,${summary?.total_orders || 0}`);
+    lines.push(`Fatturato Totale (€),${summary?.total_revenue || 0}`);
+    lines.push(`Tasso di Conversione E-Commerce,${summary?.conversion_rate || 0}%`);
+    lines.push('');
+
+    // Section 2: Channels
+    lines.push('--- ATTRIBUZIONE CANALI DI TRAFFICO ---');
+    lines.push('Canale,Visitatori,Sessioni,Pagine/Sessione,Rimbalzo (%),Ordini,Fatturato (€),Conv. Rate (%)');
+    channels.forEach((c) => {
+      lines.push(`"${c.channel}",${c.unique_visitors},${c.sessions},${c.pages_per_session},${c.bounce_rate}%,${c.orders},${c.revenue},${c.conversion_rate}%`);
+    });
+    lines.push('');
+
+    // Section 3: Top Pages
+    lines.push('--- TOP PAGINE ESPLORATE ---');
+    lines.push('Percorso (URL),Visualizzazioni,Visitatori Unici,Permanenza (sec),Rimbalzo (%)');
+    topPages.slice(0, 25).forEach((p) => {
+      lines.push(`"${p.path}",${p.views_count},${p.unique_visitors},${p.avg_time_seconds},${p.bounce_rate}%`);
+    });
+    lines.push('');
+
+    // Section 4: Top Geo
+    lines.push('--- TOP CITTA ITALIANE ---');
+    lines.push('Citta,Regione,Visitatori,Sessioni,Ordini,Fatturato (€)');
+    geoCities.slice(0, 25).forEach((c) => {
+      lines.push(`"${c.city}","${c.region || 'N/A'}",${c.visitors_count},${c.sessions_count},${c.orders_count},${c.revenue}`);
+    });
+
+    const csvContent = 'data:text/csv;charset=utf-8,\uFEFF' + lines.join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `isabel_pepe_analytics_report_${dateStr}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
-    <div className="space-y-8 animate-fadeIn">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <BarChart3 size={24} className="text-[#C0A09A]" />
-            <h1 className="font-serif text-3xl text-gray-900 tracking-wide">
-              Analytics &amp; Traffico Interno
-            </h1>
-          </div>
-          <p className="text-xs text-gray-500 font-light">
-            Monitoraggio First-Party Server-Side 100% proprietario con riconoscimento persone e storico completo
-          </p>
-        </div>
+    <div className="space-y-8 animate-fadeIn pb-12">
+      {/* 1. Header & Time Filter Controls */}
+      <AnalyticsHeader
+        timeRange={timeRange}
+        onTimeRangeChange={handleTimeRangeChange}
+        onOpenCustomDateModal={() => setIsCustomDateModalOpen(true)}
+        onRefresh={() => {
+          fetchDashboardData();
+          fetchStreamData();
+        }}
+        onExportData={handleExportGlobalCSV}
+        isLoading={isLoading}
+        customDateLabel={customFrom && customTo ? `${customFrom.slice(5)} → ${customTo.slice(5)}` : null}
+      />
 
-        {/* Filtro Temporale */}
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-gray-200 shadow-2xs">
-          <button
-            onClick={() => { setTimeRange('today'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-              timeRange === 'today' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Oggi
-          </button>
-          <button
-            onClick={() => { setTimeRange('7d'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-              timeRange === '7d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            7 Giorni
-          </button>
-          <button
-            onClick={() => { setTimeRange('30d'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-              timeRange === '30d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            30 Giorni
-          </button>
-          <button
-            onClick={() => { setTimeRange('all'); setCurrentPage(1); }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-              timeRange === 'all' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
-            }`}
-          >
-            Tutto lo Storico
-          </button>
-        </div>
+      {/* 2. 5 Core KPI Luxury Summary Cards */}
+      <KpiSummaryGrid summary={summary} isLoading={isLoading} />
+
+      {/* 3. Interactive Traffic Trend SVG Chart */}
+      <TrafficTrendChart
+        points={timeseries}
+        interval={timeseriesInterval}
+        rangeLabel={rangeLabel}
+        isLoading={isLoading}
+      />
+
+      {/* 4. Conversion Funnel (5-Stage Purchasing Journey) */}
+      <ConversionFunnelCard
+        funnel={funnel}
+        selectedChannel={funnelChannel}
+        onChannelChange={handleFunnelChannelChange}
+        isLoading={isLoading}
+      />
+
+      {/* 5. Attribution Breakdown & Top Pages */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <AttributionBreakdownCard
+          channels={channels}
+          onOpenCampaignsModal={() => setIsCampaignsModalOpen(true)}
+          isLoading={isLoading}
+        />
+        <TopPagesCard
+          pages={topPages}
+          totalViews={summary?.total_page_views}
+          onOpenPagesModal={() => setIsPagesModalOpen(true)}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* KPI CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
-              Visualizzazioni Totali
-            </span>
-            <div className="w-8 h-8 rounded-full bg-rose-50 flex items-center justify-center text-[#C0A09A]">
-              <Eye size={16} />
-            </div>
-          </div>
-          <div className="text-3xl font-serif text-gray-900 font-semibold">{totalViews.toLocaleString('it-IT')}</div>
-          <p className="text-[11px] text-gray-400 mt-1">Pagine caricate lato server</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
-              Visitatori Unici
-            </span>
-            <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
-              <Users size={16} />
-            </div>
-          </div>
-          <div className="text-3xl font-serif text-gray-900 font-semibold">{uniqueVisitors.toLocaleString('it-IT')}</div>
-          <p className="text-[11px] text-gray-400 mt-1">Dispositivi / Sessioni distinte</p>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
-              Views Schede Prodotto
-            </span>
-            <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600">
-              <Sparkles size={16} />
-            </div>
-          </div>
-          <div className="text-3xl font-serif text-gray-900 font-semibold">{productViews.toLocaleString('it-IT')}</div>
-          <p className="text-[11px] text-gray-400 mt-1">
-            {totalViews > 0 ? Math.round((productViews / totalViews) * 100) : 0}% del traffico totale
-          </p>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold">
-              Tasso di Conversione
-            </span>
-            <div className="w-8 h-8 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
-              <TrendingUp size={16} />
-            </div>
-          </div>
-          <div className="text-3xl font-serif text-gray-900 font-semibold">{conversionRate}%</div>
-          <p className="text-[11px] text-gray-400 mt-1">Acquisti su Visitatori Unici</p>
-        </div>
+      {/* 6. Top Jewels & Geolocation */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        <TopJewelsCard products={topProducts} isLoading={isLoading} />
+        <GeoDistributionCard
+          cities={geoCities}
+          countries={geoCountries}
+          onOpenGeoModal={() => setIsGeoModalOpen(true)}
+          isLoading={isLoading}
+        />
       </div>
 
-      {/* GRAFICO STORICO PERMANENTE */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2">
-              <Database size={16} className="text-[#C0A09A]" />
-              <h3 className="font-serif text-xl text-gray-900 tracking-wide">
-                Andamento Storico Giornaliero
-              </h3>
-            </div>
-            <p className="text-xs text-gray-400 font-light mt-0.5">
-              I dati numerici giornalieri rimangono memorizzati per sempre a memoria storica del brand
-            </p>
-          </div>
+      {/* 7. Google Search Console & SEO Health */}
+      <GscSeoHealthCard gscData={gscData} isLoading={isLoading} />
 
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setChartMode('views')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-                chartMode === 'views' ? 'bg-[#C0A09A] text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Visite Totali
-            </button>
-            <button
-              onClick={() => setChartMode('visitors')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-                chartMode === 'visitors' ? 'bg-gray-900 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Visitatori Unici
-            </button>
-            <button
-              onClick={() => setChartMode('products')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
-                chartMode === 'products' ? 'bg-emerald-600 text-white shadow-xs' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-            >
-              Views Prodotti
-            </button>
-          </div>
-        </div>
+      {/* 8. Live Visitor Stream with Identity Tagging */}
+      <LiveVisitorStream
+        stream={stream}
+        totalCount={streamTotal}
+        currentPage={streamPage}
+        totalPages={streamTotalPages}
+        rowsPerPage={streamRowsPerPage}
+        onPageChange={setStreamPage}
+        onRowsPerPageChange={(rows) => {
+          setStreamRowsPerPage(rows);
+          setStreamPage(1);
+        }}
+        searchTerm={streamSearch}
+        onSearchChange={(s) => {
+          setStreamSearch(s);
+          setStreamPage(1);
+        }}
+        channelFilter={streamChannel}
+        onChannelFilterChange={(c) => {
+          setStreamChannel(c);
+          setStreamPage(1);
+        }}
+        onIdentityUpdated={handleIdentityUpdated}
+        isLoading={isStreamLoading}
+      />
 
-        <div className="pt-6 pb-2">
-          <div className="flex items-end justify-between gap-2 sm:gap-3 h-48 sm:h-56 px-2 border-b border-gray-100">
-            {historicalTimeline.map((item) => {
-              const val = chartMode === 'views' ? item.views : chartMode === 'visitors' ? item.visitors : item.products;
-              const heightPercent = maxValInTimeline > 0 ? Math.max((val / maxValInTimeline) * 100, 4) : 4;
+      {/* Dedicated Drill-Down Modals */}
+      <PagesDrillDownModal
+        isOpen={isPagesModalOpen}
+        onClose={() => setIsPagesModalOpen(false)}
+        pages={topPages}
+        timeRangeLabel={rangeLabel}
+      />
 
-              return (
-                <div key={item.date} className="flex-1 flex flex-col items-center h-full justify-end group relative">
-                  <div className="absolute -top-12 bg-gray-900 text-white text-[10px] py-1 px-2.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-lg font-mono">
-                    <span className="font-semibold">{item.date}</span>: {val} {chartMode === 'views' ? 'visite' : chartMode === 'visitors' ? 'utenti' : 'views'}
-                  </div>
+      <CampaignsDrillDownModal
+        isOpen={isCampaignsModalOpen}
+        onClose={() => setIsCampaignsModalOpen(false)}
+        channels={channels}
+        campaigns={campaigns}
+        referrers={referrers}
+        timeRangeLabel={rangeLabel}
+      />
 
-                  <span className="text-[9px] font-mono text-gray-400 mb-1.5 group-hover:text-gray-900 font-medium">
-                    {val > 0 ? val : ''}
-                  </span>
+      <GeoDrillDownModal
+        isOpen={isGeoModalOpen}
+        onClose={() => setIsGeoModalOpen(false)}
+        cities={geoCities}
+        countries={geoCountries}
+        timeRangeLabel={rangeLabel}
+      />
 
-                  <div
-                    className={`w-full max-w-[32px] rounded-t-md transition-all duration-500 group-hover:opacity-80 ${
-                      chartMode === 'views'
-                        ? 'bg-[#C0A09A]'
-                        : chartMode === 'visitors'
-                        ? 'bg-gray-900'
-                        : 'bg-emerald-600'
-                    }`}
-                    style={{ height: `${heightPercent}%` }}
-                  ></div>
-
-                  <span className="text-[9px] font-mono text-gray-400 mt-2 truncate max-w-full">
-                    {item.displayDate}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* GRIGLIA: TOP PRODOTTI & TOP PAGINE */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        
-        {/* 1. TOP GIOIELLI PIÙ VISUALIZZATI */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="font-serif text-lg text-gray-900 tracking-wide">
-                  💎 Gioielli Più Desiderati &amp; Visti
-                </h3>
-                <p className="text-xs text-gray-400 font-light mt-0.5">I prodotti con il maggior engagement a catalogo</p>
-              </div>
-              <span className="text-[10px] bg-rose-50 text-[#8C6558] font-semibold px-2.5 py-1 rounded-full border border-[#C0A09A]/30">
-                Top {topProducts.length}
-              </span>
-            </div>
-
-            {topProducts.length === 0 ? (
-              <div className="py-12 text-center text-gray-400 text-xs font-light">
-                Nessuna visualizzazione prodotto registrata nel periodo selezionato.
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {topProducts.map((p, idx) => (
-                  <div key={p.slug} className="flex items-center justify-between gap-3 p-3 hover:bg-gray-50 rounded-xl transition border border-transparent hover:border-gray-100">
-                    <div className="flex items-center gap-3 min-w-0">
-                      <span className="text-xs font-mono font-bold text-gray-400 w-4">{idx + 1}.</span>
-                      {p.image ? (
-                        <img src={p.image} alt={p.name} className="w-10 h-10 object-cover rounded-lg border border-gray-100" />
-                      ) : (
-                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs">💎</div>
-                      )}
-                      <div className="truncate">
-                        <Link href={`/prodotto/${p.slug}`} target="_blank" className="font-medium text-xs text-gray-900 hover:text-[#C0A09A] transition truncate block">
-                          {p.name}
-                        </Link>
-                        <span className="text-[10px] text-gray-400 block">{p.category} {p.price > 0 && `• €${p.price}`}</span>
-                      </div>
-                    </div>
-
-                    <div className="text-right shrink-0">
-                      <div className="text-xs font-semibold text-gray-900 font-mono">{p.count} views</div>
-                      <div className="w-20 bg-gray-100 rounded-full h-1.5 mt-1 overflow-hidden">
-                        <div className="bg-[#C0A09A] h-full rounded-full" style={{ width: `${Math.min(100, p.percentage * 3)}%` }}></div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* 2. TOP PAGINE PIÙ VISITATE */}
-        <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs flex flex-col justify-between">
-          <div>
-            <div className="flex items-center justify-between mb-5">
-              <div>
-                <h3 className="font-serif text-lg text-gray-900 tracking-wide">
-                  🧭 Pagine Più Esplorate
-                </h3>
-                <p className="text-xs text-gray-400 font-light mt-0.5">I percorsi di navigazione più frequenti</p>
-              </div>
-              <span className="text-[10px] bg-gray-100 text-gray-600 font-semibold px-2.5 py-1 rounded-full">
-                Mappa Pagine
-              </span>
-            </div>
-
-            {topPages.length === 0 ? (
-              <div className="py-12 text-center text-gray-400 text-xs font-light">
-                Nessuna pagina registrata nel periodo selezionato.
-              </div>
-            ) : (
-              <div className="space-y-3.5">
-                {topPages.map((pg, idx) => (
-                  <div key={pg.path} className="flex items-center justify-between gap-4 p-3 bg-gray-50/70 rounded-xl border border-gray-100">
-                    <div className="flex items-center gap-2.5 min-w-0 truncate">
-                      <span className="text-xs font-mono font-bold text-gray-400">{idx + 1}.</span>
-                      <span className="text-xs font-mono text-gray-800 truncate">{pg.path}</span>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <span className="text-xs font-mono font-semibold text-gray-900">{pg.count} visualizzazioni</span>
-                      <span className="text-[10px] text-gray-400 block font-mono">{pg.percentage}% del traffico</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-      </div>
-
-      {/* 3. LIVE VISITOR STREAM CON RICONOSCIMENTO IDENTITÀ & STORICO COMPLETO */}
-      <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-        
-        {/* Barra Superiore Filtri Stream */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-          <div>
-            <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
-              <h3 className="font-serif text-xl text-gray-900 tracking-wide">
-                Live Visitor Stream &amp; Storico Navigazioni
-              </h3>
-            </div>
-            <p className="text-xs text-gray-400 font-light mt-0.5">
-              Tutte le {fullFilteredStream.length} visite registrate lato server con riconoscimento persona e timestamp esatto
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {/* Selettore Filtro Persona */}
-            <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-xl text-xs">
-              <Filter size={13} className="text-gray-500" />
-              <select
-                value={selectedVisitorFilter}
-                onChange={(e) => {
-                  setSelectedVisitorFilter(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="bg-transparent text-gray-800 outline-none font-medium cursor-pointer"
-              >
-                <option value="all">👥 Tutti i Visitatori ({allUniqueVisitorsList.length})</option>
-                {allUniqueVisitorsList.map(u => (
-                  <option key={u.vid} value={u.vid}>
-                    {u.role === 'founder' ? '👑' : u.role === 'vip' ? '💎' : '👤'} {u.name} ({u.count} views)
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Ricerca per Pagina o Testo */}
-            <div className="relative w-full sm:w-64">
-              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Cerca per pagina, nome..."
-                value={searchPath}
-                onChange={(e) => {
-                  setSearchPath(e.target.value);
-                  setCurrentPage(1);
-                }}
-                className="w-full pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#C0A09A] focus:bg-white transition"
-              />
-            </div>
-
-            {/* Selettore Righe per Pagina */}
-            <div className="flex items-center gap-1.5 text-xs text-gray-500">
-              <span>Mostra:</span>
-              <select
-                value={rowsPerPage}
-                onChange={(e) => {
-                  setRowsPerPage(Number(e.target.value));
-                  setCurrentPage(1);
-                }}
-                className="bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-xl text-xs text-gray-800 font-medium outline-none cursor-pointer"
-              >
-                <option value={25}>25</option>
-                <option value={50}>50</option>
-                <option value={100}>100</option>
-                <option value={250}>250</option>
-                <option value={500}>500</option>
-                <option value={0}>Tutte ({fullFilteredStream.length})</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabella Dati */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="bg-[#FAF8F5] border-b border-gray-100 text-[10px] uppercase tracking-wider text-gray-500">
-                <th className="py-3 px-4 font-semibold">Persona / Visitatore</th>
-                <th className="py-3 px-4 font-semibold">Pagina Visualizzata</th>
-                <th className="py-3 px-4 font-semibold">Consenso GDPR</th>
-                <th className="py-3 px-4 font-semibold text-right">Data &amp; Ora</th>
-                <th className="py-3 px-4 font-semibold text-center">Azione</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100 text-xs">
-              {paginatedStream.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="py-8 text-center text-gray-400 font-light">
-                    Nessuna visita trovata con questi filtri.
-                  </td>
-                </tr>
-              ) : (
-                paginatedStream.map((v) => {
-                  const identity = identityMap[v.visitor_id];
-
-                  return (
-                    <tr key={v.id} className="hover:bg-gray-50/80 transition-colors">
-                      {/* Persona / Identità */}
-                      <td className="py-3 px-4">
-                        {identity ? (
-                          <div className="flex items-center gap-2">
-                            <div className="w-7 h-7 rounded-full bg-[#FAF3F0] border border-[#C0A09A]/40 text-[#8C6558] flex items-center justify-center font-bold text-xs shrink-0">
-                              {identity.role === 'founder' ? '👑' : identity.name.charAt(0).toUpperCase()}
-                            </div>
-                            <div>
-                              <span className="font-semibold text-gray-900 block text-xs">
-                                {identity.name}
-                              </span>
-                              <span className="font-mono text-[9px] text-gray-400 block truncate max-w-[130px]" title={v.visitor_id}>
-                                {v.visitor_id}
-                              </span>
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 font-mono text-[11px] text-gray-500">
-                            <span>{v.visitor_id}</span>
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Pagina */}
-                      <td className="py-3 px-4 font-mono text-[11px] text-gray-900 font-medium">
-                        <div className="flex items-center gap-1.5">
-                          <ArrowUpRight size={13} className="text-[#C0A09A]" />
-                          <span>{v.path}</span>
-                        </div>
-                      </td>
-
-                      {/* Consenso GDPR */}
-                      <td className="py-3 px-4">
-                        {v.consent_id ? (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                            <ShieldCheck size={11} /> {v.consent_id}
-                          </span>
-                        ) : (
-                          <span className="text-[10px] text-gray-400 font-mono">Tecnico Essenziale</span>
-                        )}
-                      </td>
-
-                      {/* Data & Ora */}
-                      <td className="py-3 px-4 text-right text-[11px] text-gray-500 font-mono">
-                        {new Date(v.created_at).toLocaleString('it-IT', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                        })}
-                      </td>
-
-                      {/* Azione Assegna / Modifica Nome */}
-                      <td className="py-3 px-4 text-center">
-                        <button
-                          type="button"
-                          onClick={() => handleOpenIdentityModal(v.visitor_id)}
-                          className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-[10px] font-medium transition cursor-pointer flex items-center gap-1 mx-auto"
-                        >
-                          <Tag size={11} />
-                          <span>{identity ? 'Modifica' : '+ Assegna'}</span>
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Footer Paginazione */}
-        {fullFilteredStream.length > 0 && rowsPerPage > 0 && totalStreamPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 mt-2 border-t border-gray-100 text-xs text-gray-500">
-            <div>
-              Mostrando <span className="font-semibold text-gray-900">{(currentPage - 1) * rowsPerPage + 1}</span> - <span className="font-semibold text-gray-900">{Math.min(currentPage * rowsPerPage, fullFilteredStream.length)}</span> di <span className="font-semibold text-gray-900">{fullFilteredStream.length}</span> visite registrate
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                disabled={currentPage === 1}
-                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                className="px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
-              >
-                <ChevronLeft size={14} />
-                <span>Precedente</span>
-              </button>
-
-              <span className="px-3 py-1 bg-gray-100 rounded-lg font-mono text-[11px] font-medium text-gray-800">
-                {currentPage} / {totalStreamPages}
-              </span>
-
-              <button
-                type="button"
-                disabled={currentPage === totalStreamPages}
-                onClick={() => setCurrentPage(prev => Math.min(totalStreamPages, prev + 1))}
-                className="px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
-              >
-                <span>Successiva</span>
-                <ChevronRight size={14} />
-              </button>
-            </div>
-          </div>
-        )}
-
-      </div>
-
-      {/* MODAL ASSEGNAZIONE NOME / PERSONA */}
-      {selectedVisitorForIdentity && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
-          onClick={() => setSelectedVisitorForIdentity(null)}
-        >
-          <div 
-            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-gray-900 relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedVisitorForIdentity(null)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 cursor-pointer"
-            >
-              <X size={18} />
-            </button>
-
-            <div className="flex items-center gap-2 mb-4">
-              <UserCheck size={20} className="text-[#C0A09A]" />
-              <h3 className="font-serif text-xl text-gray-900">Identifica Visitatore</h3>
-            </div>
-
-            <p className="text-xs text-gray-500 font-light mb-4">
-              Assegna un nome reale o un'etichetta a questo dispositivo per riconoscerlo ovunque nel pannello.
-            </p>
-
-            <div className="p-2.5 bg-gray-50 rounded-xl mb-4 text-[11px] font-mono text-gray-600 border border-gray-200/60 truncate">
-              ID: <span className="font-semibold text-gray-900">{selectedVisitorForIdentity}</span>
-            </div>
-
-            <form onSubmit={handleSaveIdentity} className="space-y-4">
-              <div>
-                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                  Nome Persona / Etichetta *
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Es. Elena (Co-Founder), Mario (iPhone), Amica Giulia..."
-                  value={identityName}
-                  onChange={(e) => setIdentityName(e.target.value)}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                  Email (Opzionale per CRM)
-                </label>
-                <input
-                  type="email"
-                  placeholder="es. elena@isabelpepe.com"
-                  value={identityEmail}
-                  onChange={(e) => setIdentityEmail(e.target.value)}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
-                  Ruolo / Categoria
-                </label>
-                <select
-                  value={identityRole}
-                  onChange={(e) => setIdentityRole(e.target.value)}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition bg-white"
-                >
-                  <option value="founder">👑 Founder / Team Interno</option>
-                  <option value="vip">💎 Cliente VIP / Amico</option>
-                  <option value="customer">🛍️ Cliente</option>
-                  <option value="guest">👤 Visitatore / Lead</option>
-                </select>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
-                <button
-                  type="button"
-                  onClick={() => setSelectedVisitorForIdentity(null)}
-                  className="px-4 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition cursor-pointer"
-                >
-                  Annulla
-                </button>
-                <button
-                  type="submit"
-                  disabled={savingIdentity}
-                  className="px-5 py-2 bg-[#1A1A1A] hover:bg-[#C0A09A] text-white rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
-                >
-                  {savingIdentity ? 'Salvataggio...' : 'Salva Identità'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CustomDateRangeModal
+        isOpen={isCustomDateModalOpen}
+        onClose={() => setIsCustomDateModalOpen(false)}
+        onApply={handleApplyCustomDate}
+        initialFrom={customFrom}
+        initialTo={customTo}
+      />
     </div>
   );
 }

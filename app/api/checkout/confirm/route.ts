@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/email';
+import { incrementDailyMetric } from '@/lib/analytics';
 
 export async function POST(req: Request) {
   try {
@@ -24,6 +25,9 @@ export async function POST(req: Request) {
     const shippingAddress = (session as any).shipping_details?.address || (session as any).collected_information?.shipping_details?.address || {};
     const metadata = session.metadata || {};
     const items = metadata.cart_items ? JSON.parse(metadata.cart_items) : [];
+    const visitorId = metadata.visitor_id || null;
+    const analyticsSessionId = metadata.session_id || null;
+    const nowIso = new Date().toISOString();
 
     // 2. Controlla se l'ordine è già presente nel DB
     const { data: existingOrder } = await supabaseAdmin
@@ -31,6 +35,8 @@ export async function POST(req: Request) {
       .select('id')
       .eq('stripe_session_id', sessionId)
       .maybeSingle();
+
+    let confirmedOrderId: string | null = existingOrder?.id || null;
 
     if (!existingOrder) {
       // Salva l'ordine
@@ -51,6 +57,7 @@ export async function POST(req: Request) {
       if (orderError) {
         console.error('Error inserting order in DB:', orderError);
       } else {
+        confirmedOrderId = orderData.id;
         console.log('✅ Order confirmed and inserted in DB:', orderData.id);
 
         // Invia email di conferma ordine ufficiale in background
@@ -64,13 +71,68 @@ export async function POST(req: Request) {
             shippingAddress,
           }).catch((err) => console.error('Error sending order confirmation email:', err));
         }
+
+        // Funnel Milestone: Update analytics_sessions with completed purchase
+        if (analyticsSessionId) {
+          await supabaseAdmin
+            .from('analytics_sessions')
+            .update({
+              completed_purchase: true,
+              started_checkout: true,
+              added_to_cart: true,
+              is_bounce: false,
+              order_id: confirmedOrderId,
+              revenue: amountTotal,
+              last_active_at: nowIso,
+              updated_at: nowIso,
+            })
+            .eq('session_id', analyticsSessionId);
+        } else if (visitorId) {
+          await supabaseAdmin
+            .from('analytics_sessions')
+            .update({
+              completed_purchase: true,
+              started_checkout: true,
+              added_to_cart: true,
+              is_bounce: false,
+              order_id: confirmedOrderId,
+              revenue: amountTotal,
+              last_active_at: nowIso,
+              updated_at: nowIso,
+            })
+            .eq('visitor_id', visitorId);
+        }
+
+        // Funnel Milestone: Insert purchase event into `analytics_events`
+        await supabaseAdmin.from('analytics_events').insert([
+          {
+            session_id: analyticsSessionId || `sid_${visitorId || sessionId}`,
+            visitor_id: visitorId || `vid_${sessionId}`,
+            event_name: 'purchase',
+            path: '/success',
+            order_id: confirmedOrderId,
+            cart_total: amountTotal,
+            coupon_code: metadata.applied_coupon || null,
+            event_data: {
+              stripe_session_id: sessionId,
+              amount: amountTotal,
+              items_count: items.length,
+              customer_email: customerEmail,
+              items: items,
+            },
+            created_at: nowIso,
+          },
+        ]);
+
+        // Funnel Milestone: Increment daily analytics record
+        incrementDailyMetric({ isOrder: true, amount: amountTotal }).catch(() => {});
       }
 
       // Aggiorna carrello abbandonato a recuperato
       if (metadata.abandoned_cart_id) {
         await supabaseAdmin
           .from('abandoned_carts')
-          .update({ status: 'recovered', updated_at: new Date().toISOString() })
+          .update({ status: 'recovered', updated_at: nowIso })
           .eq('id', metadata.abandoned_cart_id);
       }
 
@@ -135,7 +197,7 @@ export async function POST(req: Request) {
             client_id: 'isabel-pepe',
             event: 'purchase',
             data: {
-              order_id: orderData?.id,
+              order_id: confirmedOrderId,
               stripe_session_id: sessionId,
               email: customerEmail,
               name: customerName,
@@ -144,9 +206,10 @@ export async function POST(req: Request) {
               currency: 'EUR',
               items: items,
               shipping_address: shippingAddress,
-              visitor_id: metadata.visitor_id || null,
+              visitor_id: visitorId,
+              session_id: analyticsSessionId,
               consent_id: metadata.consent_id || null,
-              timestamp: new Date().toISOString(),
+              timestamp: nowIso,
             },
           }),
         }).catch(() => {});
@@ -158,6 +221,7 @@ export async function POST(req: Request) {
       customerEmail,
       customerName,
       amountTotal,
+      orderId: confirmedOrderId,
     });
   } catch (error: any) {
     console.error('Error in checkout confirm route:', error);

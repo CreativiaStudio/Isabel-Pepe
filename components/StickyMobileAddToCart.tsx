@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useCartStore } from '@/store/cart';
 import { ShoppingBag } from 'lucide-react';
+import { trackAnalyticsEvent } from '@/lib/analytics-events';
 
 type Props = {
   product: {
@@ -12,6 +13,8 @@ type Props = {
     discount_price: number | null;
     image_primary: string;
     stock: number;
+    slug?: string;
+    category?: string;
   };
 };
 
@@ -47,6 +50,17 @@ export default function StickyMobileAddToCart({ product }: Props) {
       quantity: 1,
       stock: product.stock,
     });
+
+    // Funnel Milestone Event Hook: add_to_cart (Sticky Mobile)
+    trackAnalyticsEvent('add_to_cart', {
+      product_id: product.id,
+      product_name: product.name,
+      product_slug: product.slug || null,
+      product_category: product.category || null,
+      price: finalPrice,
+      quantity: 1,
+    });
+
     toggleCart(); // Apre automaticamente il carrello drawer per feedback immediato
   };
 
