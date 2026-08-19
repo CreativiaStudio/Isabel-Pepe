@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, Suspense } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Mail, Lock, Sparkles, ShieldCheck, ArrowRight, RefreshCw, CheckCircle2, KeyRound } from 'lucide-react';
+import { Mail, Lock, Sparkles, KeyRound, ArrowRight, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 const ADMIN_EMAILS = ['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'mario@isabelpepe.com', 'mariopepe9@hotmail.it'];
 
@@ -13,19 +13,44 @@ function LoginFormContent() {
   const redirectTarget = searchParams?.get('redirect');
 
   const supabase = createClient();
+  const [activeTab, setActiveTab] = useState<'password' | 'magic'>('password');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [mode, setMode] = useState<'passwordless' | 'password'>('passwordless');
-  const [step, setStep] = useState<'input' | 'verify'>('input');
-  
-  // OTP code state (6 separate digits)
-  const [otp, setOtp] = useState(['', '', '', '', '', '']);
-  const otpInputsRef = useRef<(HTMLInputElement | null)[]>([]);
+  const [magicSent, setMagicSent] = useState(false);
 
-  // 1. Invio Magic Link & OTP Passwordless
-  const handleSendLink = async (e: React.FormEvent) => {
+  // 1. Accesso con Password (Ultra-Veloce & Stabile)
+  const handlePasswordLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim() || !password) return;
+
+    setLoading(true);
+    setError(null);
+
+    const destination = redirectTarget || (ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? '/admin' : '/account');
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+
+      if (error) throw error;
+
+      if (data?.session) {
+        router.push(destination);
+        router.refresh();
+      }
+    } catch (err: any) {
+      setError(err.message === 'Invalid login credentials' ? 'Credenziali non corrette. Verifica email e password.' : err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 2. Invio Magic Link 1-Clic
+  const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) return;
 
@@ -44,102 +69,9 @@ function LoginFormContent() {
       });
 
       if (error) throw error;
-      setStep('verify');
+      setMagicSent(true);
     } catch (err: any) {
       setError(err.message || 'Impossibile inviare il link di accesso. Riprova tra qualche istante.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 2. Login con Password (per Staff & Admin)
-  const handlePasswordLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim() || !password) return;
-
-    setLoading(true);
-    setError(null);
-
-    const destination = redirectTarget || (ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? '/admin' : '/account');
-
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password,
-      });
-
-      if (error) throw error;
-
-      router.push(destination);
-      router.refresh();
-    } catch (err: any) {
-      setError(err.message || 'Credenziali non corrette. Riprova o usa l\'accesso 1-clic.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 3. Gestione digitazione OTP (auto-focus next input)
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) {
-      // Gestione Incolla codice completo
-      const pastedDigits = value.replace(/\D/g, '').slice(0, 6).split('');
-      const newOtp = [...otp];
-      pastedDigits.forEach((digit, i) => {
-        if (i < 6) newOtp[i] = digit;
-      });
-      setOtp(newOtp);
-      const nextIndex = Math.min(pastedDigits.length, 5);
-      otpInputsRef.current[nextIndex]?.focus();
-      return;
-    }
-
-    const digit = value.replace(/\D/g, '');
-    const newOtp = [...otp];
-    newOtp[index] = digit;
-    setOtp(newOtp);
-
-    // Salta al prossimo input se inserita una cifra
-    if (digit && index < 5) {
-      otpInputsRef.current[index + 1]?.focus();
-    }
-  };
-
-  const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      otpInputsRef.current[index - 1]?.focus();
-    }
-  };
-
-  // 4. Verifica Codice OTP
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const token = otp.join('');
-    if (token.length !== 6) {
-      setError('Inserisci il codice completo a 6 cifre ricevuto via email.');
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-
-    const destination = redirectTarget || (ADMIN_EMAILS.includes(email.trim().toLowerCase()) ? '/admin' : '/account');
-
-    try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        email: email.trim(),
-        token,
-        type: 'email',
-      });
-
-      if (error) throw error;
-
-      if (data?.session) {
-        router.push(destination);
-        router.refresh();
-      }
-    } catch (err: any) {
-      setError(err.message || 'Codice non valido o scaduto. Riprova o richiedi un nuovo link.');
     } finally {
       setLoading(false);
     }
@@ -148,242 +80,165 @@ function LoginFormContent() {
   return (
     <div className="p-8 sm:p-12 md:p-14 flex flex-col justify-center">
       
-      {mode === 'password' ? (
-        /* ACCESSO STAFF / ADMIN CON PASSWORD */
-        <div className="space-y-6 animate-in fade-in duration-300">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#8A5E58] font-bold">
-                Pannello di Controllo
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C0A09A]"></span>
-              <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full font-medium">
-                Staff & Admin
-              </span>
-            </div>
-            <h1 className="font-serif text-2xl sm:text-3xl tracking-widest uppercase text-[#1A1A1A]">
-              Accesso Staff
-            </h1>
-            <p className="font-sans text-xs text-gray-500 leading-relaxed max-w-sm">
-              Inserisci la tua email da amministratore e la password per accedere direttamente al gestionale.
-            </p>
-          </div>
+      {/* SELETTORE SCHEDE DI ACCESSO */}
+      <div className="flex border-b border-[#EADFD9] mb-8">
+        <button
+          onClick={() => { setActiveTab('password'); setError(null); setMagicSent(false); }}
+          className={`pb-3.5 font-sans text-xs uppercase tracking-[0.2em] font-semibold transition-all cursor-pointer flex items-center gap-2 border-b-2 mr-8 ${
+            activeTab === 'password'
+              ? 'text-[#1A1A1A] border-[#1A1A1A]'
+              : 'text-gray-400 border-transparent hover:text-gray-700'
+          }`}
+        >
+          <KeyRound size={14} className={activeTab === 'password' ? 'text-[#8A5E58]' : 'text-gray-400'} />
+          <span>Accedi con Password</span>
+        </button>
 
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3.5 text-xs rounded-sm border border-red-200">
-              {error}
-            </div>
-          )}
+        <button
+          onClick={() => { setActiveTab('magic'); setError(null); }}
+          className={`pb-3.5 font-sans text-xs uppercase tracking-[0.2em] font-semibold transition-all cursor-pointer flex items-center gap-2 border-b-2 ${
+            activeTab === 'magic'
+              ? 'text-[#1A1A1A] border-[#1A1A1A]'
+              : 'text-gray-400 border-transparent hover:text-gray-700'
+          }`}
+        >
+          <Sparkles size={14} className={activeTab === 'magic' ? 'text-[#C0A09A]' : 'text-gray-400'} />
+          <span>Link Magico (1-Clic)</span>
+        </button>
+      </div>
 
-          <form onSubmit={handlePasswordLogin} className="space-y-4">
-            <div>
-              <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 font-medium">
-                Email Amministratore
-              </label>
-              <div className="relative">
-                <input 
-                  type="email" 
-                  required 
-                  placeholder="admin@isabelpepe.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400"
-                />
-                <Mail size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
-
-            <div>
-              <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 font-medium">
-                Password
-              </label>
-              <div className="relative">
-                <input 
-                  type="password" 
-                  required 
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400"
-                />
-                <Lock size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
-
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-4 mt-2 font-sans text-xs uppercase tracking-[0.25em] transition-all duration-200 disabled:opacity-50 font-medium rounded-sm shadow-md cursor-pointer flex items-center justify-center gap-2"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw size={14} className="animate-spin text-[#C0A09A]" />
-                  <span>Accesso in corso...</span>
-                </>
-              ) : (
-                <>
-                  <KeyRound size={14} />
-                  <span>Accedi all'Amministrazione</span>
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="text-center pt-3 border-t border-gray-100">
-            <button
-              onClick={() => { setMode('passwordless'); setError(null); }}
-              className="font-sans text-[11px] uppercase tracking-wider text-gray-400 hover:text-[#8A5E58] transition-colors underline cursor-pointer"
-            >
-              ← Torna all'accesso 1-Clic senza password
-            </button>
-          </div>
-        </div>
-      ) : step === 'input' ? (
-        /* ACCESSO PASSWORDLESS (CLIENTI & MAGIC LINK ADMIN) */
-        <div className="space-y-6 animate-in fade-in duration-300">
-          
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#8A5E58] font-bold">
-                Atelier Privato
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#C0A09A]"></span>
-              <span className="font-sans text-[9px] uppercase tracking-[0.2em] text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full font-medium">
-                100% Passwordless
-              </span>
-            </div>
-            <h1 className="font-serif text-2xl sm:text-3xl tracking-widest uppercase text-[#1A1A1A]">
-              Accedi al tuo Account
-            </h1>
-            <p className="font-sans text-xs text-gray-500 leading-relaxed max-w-sm">
-              Nessuna password da ricordare. Inserisci la tua email per accedere all'istante con un clic o tramite codice di sicurezza.
-            </p>
-          </div>
-
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3.5 text-xs rounded-sm border border-red-200">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleSendLink} className="space-y-5">
-            <div>
-              <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-2 font-medium">
-                Indirizzo Email
-              </label>
-              <div className="relative">
-                <input 
-                  type="email" 
-                  required 
-                  placeholder="iltuoindirizzo@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] focus:ring-1 focus:ring-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400 shadow-xs"
-                />
-                <Mail size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-              </div>
-            </div>
-
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-4 font-sans text-xs uppercase tracking-[0.25em] transition-all duration-200 disabled:opacity-50 font-medium rounded-sm shadow-md cursor-pointer flex items-center justify-center gap-2 group"
-            >
-              {loading ? (
-                <>
-                  <RefreshCw size={14} className="animate-spin text-[#C0A09A]" />
-                  <span>Invio in corso...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles size={14} className="text-[#C0A09A] group-hover:scale-110 transition-transform" />
-                  <span>Ricevi Link di Accesso</span>
-                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Vantaggi & Tasto Staff */}
-          <div className="pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-3 text-[11px] text-gray-500 font-sans">
-            <div className="flex items-center gap-2">
-              <ShieldCheck size={14} className="text-[#C0A09A] shrink-0" />
-              <span>Sicurezza Crittografica</span>
-            </div>
-            <button
-              onClick={() => { setMode('password'); setError(null); }}
-              className="text-[10px] uppercase tracking-wider text-gray-400 hover:text-[#8A5E58] transition-colors flex items-center gap-1 cursor-pointer"
-            >
-              <Lock size={11} />
-              <span>Accesso Staff / Password</span>
-            </button>
-          </div>
-
-        </div>
-      ) : (
-        /* SCHERMATA VERIFICA CODICE OTP */
-        <div className="space-y-6 animate-in fade-in duration-300">
-          
-          <div className="text-center space-y-3">
-            <div className="w-14 h-14 bg-[#FAF4F2] border border-[#C0A09A] rounded-full flex items-center justify-center mx-auto text-[#8A5E58] shadow-xs animate-bounce">
-              <Mail size={26} strokeWidth={1.5} />
-            </div>
-            
-            <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#8A5E58] font-bold block">
-              Link & Codice Inviati
-            </span>
-            <h2 className="font-serif text-2xl uppercase tracking-widest text-[#1A1A1A]">
-              Controlla la tua Email
-            </h2>
-            <p className="font-sans text-xs text-gray-600 max-w-xs mx-auto leading-relaxed">
-              Abbiamo inviato un'email a <strong>{email}</strong>. Clicca sul pulsante nell'email oppure inserisci il codice a 6 cifre qui sotto:
-            </p>
-          </div>
-
-          {error && (
-            <div className="bg-red-50 text-red-600 p-3.5 text-xs rounded-sm border border-red-200 text-center">
-              {error}
-            </div>
-          )}
-
-          {/* Form OTP a 6 Cifre */}
-          <form onSubmit={handleVerifyOtp} className="space-y-5">
-            <div className="flex justify-center gap-2 sm:gap-2.5">
-              {otp.map((digit, index) => (
-                <input
-                  key={index}
-                  ref={(el) => { otpInputsRef.current[index] = el; }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={6}
-                  value={digit}
-                  onChange={(e) => handleOtpChange(index, e.target.value)}
-                  onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                  className="w-10 h-13 sm:w-12 sm:h-14 text-center font-serif text-xl sm:text-2xl font-bold bg-white border border-[#EADFD9] focus:border-[#8A5E58] focus:ring-2 focus:ring-[#FAF3F0] outline-none rounded-sm transition-all text-gray-900 shadow-xs"
-                />
-              ))}
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading || otp.join('').length !== 6}
-              className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-3.5 font-sans text-xs uppercase tracking-[0.25em] transition-colors disabled:opacity-40 font-medium rounded-sm shadow-sm cursor-pointer"
-            >
-              {loading ? 'Verifica in corso...' : 'Conferma ed Entra'}
-            </button>
-          </form>
-
-          <div className="text-center pt-2 border-t border-gray-100 space-y-2">
-            <button
-              onClick={() => { setStep('input'); setOtp(['', '', '', '', '', '']); setError(null); }}
-              className="font-sans text-[11px] uppercase tracking-wider text-gray-400 hover:text-[#8A5E58] transition-colors underline cursor-pointer"
-            >
-              ← Modifica email o richiedi nuovo link
-            </button>
-          </div>
-
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3.5 text-xs rounded-sm border border-red-200 mb-6">
+          {error}
         </div>
       )}
+
+      {/* SCHEDA 1: ACCESSO CON PASSWORD */}
+      {activeTab === 'password' && (
+        <form onSubmit={handlePasswordLogin} className="space-y-4 animate-in fade-in duration-200">
+          <div>
+            <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 font-medium">
+              Indirizzo Email
+            </label>
+            <div className="relative">
+              <input 
+                type="email" 
+                required 
+                placeholder="iltuoindirizzo@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400"
+              />
+              <Mail size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+
+          <div>
+            <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 font-medium">
+              Password
+            </label>
+            <div className="relative">
+              <input 
+                type="password" 
+                required 
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400"
+              />
+              <Lock size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-4 mt-3 font-sans text-xs uppercase tracking-[0.25em] transition-all duration-200 disabled:opacity-50 font-medium rounded-sm shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+          >
+            {loading ? (
+              <span>Autenticazione in corso...</span>
+            ) : (
+              <>
+                <span>Accedi all'Account</span>
+                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+              </>
+            )}
+          </button>
+        </form>
+      )}
+
+      {/* SCHEDA 2: LINK MAGICO */}
+      {activeTab === 'magic' && (
+        <div className="animate-in fade-in duration-200">
+          {magicSent ? (
+            <div className="space-y-4 text-center p-6 bg-[#FAF7F5] border border-[#EADFD9] rounded-sm">
+              <div className="w-12 h-12 bg-white border border-[#C0A09A] text-[#8A5E58] rounded-full flex items-center justify-center mx-auto shadow-xs">
+                <CheckCircle2 size={24} />
+              </div>
+              <h3 className="font-serif text-lg uppercase tracking-wider text-[#1A1A1A]">
+                Link Inviato con Successo!
+              </h3>
+              <p className="font-sans text-xs text-gray-600 leading-relaxed">
+                Abbiamo inviato un link di accesso a <strong>{email}</strong>.<br />
+                Apri la tua email e clicca sul pulsante per entrare all'istante senza password.
+              </p>
+              <button
+                onClick={() => setMagicSent(false)}
+                className="font-sans text-[11px] uppercase tracking-wider text-[#8A5E58] underline cursor-pointer mt-2"
+              >
+                Invia di nuovo o cambia email
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleMagicLink} className="space-y-4">
+              <p className="font-sans text-xs text-gray-500 mb-2 leading-relaxed">
+                Inserisci la tua email. Ti invieremo un link protetto per accedere con 1 solo clic senza digitare alcuna password.
+              </p>
+
+              <div>
+                <label className="block font-sans text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1.5 font-medium">
+                  Indirizzo Email
+                </label>
+                <div className="relative">
+                  <input 
+                    type="email" 
+                    required 
+                    placeholder="iltuoindirizzo@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full border border-[#EADFD9] px-4 py-3.5 bg-white outline-none focus:border-[#C0A09A] transition-all font-sans text-sm rounded-sm text-gray-900 placeholder:text-gray-400"
+                  />
+                  <Mail size={18} className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                </div>
+              </div>
+
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-4 font-sans text-xs uppercase tracking-[0.25em] transition-all duration-200 disabled:opacity-50 font-medium rounded-sm shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+              >
+                {loading ? (
+                  <span>Invio in corso...</span>
+                ) : (
+                  <>
+                    <Sparkles size={14} className="text-[#C0A09A]" />
+                    <span>Invia Link Magico</span>
+                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  </>
+                )}
+              </button>
+            </form>
+          )}
+        </div>
+      )}
+
+      {/* FOOTER SICUREZZA */}
+      <div className="pt-6 mt-6 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400 font-sans">
+        <div className="flex items-center gap-1.5">
+          <ShieldCheck size={14} className="text-[#C0A09A]" />
+          <span>Atelier Isabel Pepe • Connessione Protetta</span>
+        </div>
+      </div>
 
     </div>
   );
@@ -412,18 +267,18 @@ export default function LoginPage() {
           <div className="absolute bottom-10 left-8 right-8 text-white space-y-3">
             <div className="w-8 h-[2px] bg-[#C0A09A]"></div>
             <span className="font-sans text-[9px] uppercase tracking-[0.3em] text-[#C0A09A] font-semibold block">
-              Esperienza Su Misura
+              Atelier Privato
             </span>
             <h2 className="font-serif text-2xl tracking-widest uppercase leading-tight text-white">
               L'Eccellenza della Gioielleria Senza Confini
             </h2>
             <p className="font-sans text-[11px] leading-relaxed opacity-85 max-w-xs text-gray-300">
-              Accedi alla tua area privata per consultare lo stato delle creazioni in lavorazione, tracciare le consegne e scoprire le collezioni private.
+              Accedi alla tua area privata per consultare lo stato delle creazioni in lavorazione, tracciare le consegne e gestire l'atelier.
             </p>
           </div>
         </div>
 
-        {/* Maschera di Login Passwordless con Suspense */}
+        {/* Maschera di Login con Suspense */}
         <Suspense fallback={<div className="p-12 text-center text-gray-400 font-sans text-xs">Caricamento...</div>}>
           <LoginFormContent />
         </Suspense>
