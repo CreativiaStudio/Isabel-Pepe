@@ -54,8 +54,9 @@ function LoginFormContent() {
         router.push(destination);
         router.refresh();
       } else if (mode === 'forgot') {
+        const origin = typeof window !== 'undefined' ? window.location.origin : 'https://www.isabelpepe.com';
         const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
-          redirectTo: typeof window !== 'undefined' ? `${window.location.origin}/reset-password` : undefined,
+          redirectTo: `${origin}/auth/callback?type=recovery&next=/reset-password`,
         });
         if (error) throw error;
         setForgotSuccess(true);
