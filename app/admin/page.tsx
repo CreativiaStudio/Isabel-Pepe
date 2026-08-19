@@ -27,6 +27,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   let consents: any[] = [];
   let pageViews: any[] = [];
   let dailyAnalytics: any[] = [];
+  let identities: any[] = [];
   let totalViews = 0;
 
   try {
@@ -67,6 +68,11 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .limit(365);
     dailyAnalytics = da || [];
 
+    const { data: idData } = await supabaseAdmin
+      .from('visitor_identities')
+      .select('*');
+    identities = idData || [];
+
     const { data: pv, count } = await supabaseAdmin
       .from('page_views')
       .select('*', { count: 'exact' })
@@ -101,6 +107,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         consents={consents || []}
         pageViews={pageViews || []}
         dailyAnalytics={dailyAnalytics || []}
+        identities={identities || []}
         stats={stats}
         initialEditId={editId} 
       />

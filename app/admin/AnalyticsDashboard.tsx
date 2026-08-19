@@ -14,7 +14,12 @@ import {
   Calendar, 
   Search,
   ChevronRight,
-  Database
+  Database,
+  UserCheck,
+  Tag,
+  Edit2,
+  X,
+  Check
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -36,18 +41,50 @@ interface DailyRecord {
   total_revenue: number;
 }
 
+interface VisitorIdentity {
+  visitor_id: string;
+  name: string;
+  email?: string | null;
+  role?: string | null;
+  notes?: string | null;
+}
+
 interface AnalyticsDashboardProps {
   pageViews: PageView[];
   dailyAnalytics?: DailyRecord[];
+  identities?: VisitorIdentity[];
   products: any[];
   orders: any[];
   carts: any[];
 }
 
-export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = [], products = [], orders = [], carts = [] }: AnalyticsDashboardProps) {
+export default function AnalyticsDashboard({ 
+  pageViews = [], 
+  dailyAnalytics = [], 
+  identities = [], 
+  products = [], 
+  orders = [], 
+  carts = [] 
+}: AnalyticsDashboardProps) {
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | 'today'>('all');
   const [chartMode, setChartMode] = useState<'views' | 'visitors' | 'products'>('views');
   const [searchPath, setSearchPath] = useState('');
+
+  // Identità locali (aggiornabili in real-time)
+  const [identityMap, setIdentityMap] = useState<Record<string, VisitorIdentity>>(() => {
+    const map: Record<string, VisitorIdentity> = {};
+    identities.forEach(id => {
+      map[id.visitor_id] = id;
+    });
+    return map;
+  });
+
+  // Modal assegnazione identità
+  const [selectedVisitorForIdentity, setSelectedVisitorForIdentity] = useState<string | null>(null);
+  const [identityName, setIdentityName] = useState('');
+  const [identityEmail, setIdentityEmail] = useState('');
+  const [identityRole, setIdentityRole] = useState('guest');
+  const [savingIdentity, setSavingIdentity] = useState(false);
 
   // 1. Filtraggio temporale delle page_views correnti
   const filteredViews = useMemo(() => {
@@ -88,10 +125,8 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
 
   // 3. Generazione Timeline Giornaliera per il Grafico Storico
   const historicalTimeline = useMemo(() => {
-    // Raggruppa le visite per giorno (YYYY-MM-DD)
     const map: Record<string, { date: string; views: number; visitors: Set<string>; products: number }> = {};
     
-    // Inizializza gli ultimi 14 giorni per avere sempre un grafico completo
     const numDays = timeRange === 'today' ? 1 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 14;
     for (let i = numDays - 1; i >= 0; i--) {
       const d = new Date();
@@ -100,7 +135,6 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
       map[key] = { date: key, views: 0, visitors: new Set(), products: 0 };
     }
 
-    // Incorpora record da dailyAnalytics permanenti
     dailyAnalytics.forEach(da => {
       if (map[da.date]) {
         map[da.date].views += da.total_views || 0;
@@ -108,7 +142,6 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
       }
     });
 
-    // Popola con i log recenti di page_views
     filteredViews.forEach(v => {
       const day = v.created_at?.split('T')[0];
       if (day) {
@@ -162,7 +195,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
       .slice(0, 8);
   }, [filteredViews, products, totalViews]);
 
-  // 5. Pagine Più Visitate (Top Pages)
+  // 5. Pagine Più Visitate
   const topPages = useMemo(() => {
     const counts: Record<string, number> = {};
     filteredViews.forEach(v => {
@@ -183,9 +216,62 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
   // 6. Ultime Visite Live in Tempo Reale
   const liveStream = useMemo(() => {
     return filteredViews
-      .filter(v => searchPath ? v.path?.toLowerCase().includes(searchPath.toLowerCase()) || v.visitor_id?.toLowerCase().includes(searchPath.toLowerCase()) : true)
-      .slice(0, 20);
-  }, [filteredViews, searchPath]);
+      .filter(v => {
+        const identity = identityMap[v.visitor_id];
+        const search = searchPath.toLowerCase();
+        if (!search) return true;
+        return (
+          v.path?.toLowerCase().includes(search) ||
+          v.visitor_id?.toLowerCase().includes(search) ||
+          identity?.name?.toLowerCase().includes(search) ||
+          identity?.email?.toLowerCase().includes(search)
+        );
+      })
+      .slice(0, 30);
+  }, [filteredViews, searchPath, identityMap]);
+
+  const handleOpenIdentityModal = (vid: string) => {
+    const existing = identityMap[vid];
+    setSelectedVisitorForIdentity(vid);
+    setIdentityName(existing?.name || '');
+    setIdentityEmail(existing?.email || '');
+    setIdentityRole(existing?.role || 'guest');
+  };
+
+  const handleSaveIdentity = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedVisitorForIdentity || !identityName) return;
+
+    setSavingIdentity(true);
+    try {
+      const res = await fetch('/api/admin/identity', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          visitorId: selectedVisitorForIdentity,
+          name: identityName,
+          email: identityEmail,
+          role: identityRole,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.success && data.identity) {
+        setIdentityMap(prev => ({
+          ...prev,
+          [selectedVisitorForIdentity]: data.identity,
+        }));
+        setSelectedVisitorForIdentity(null);
+      } else {
+        alert('Errore salvataggio identità: ' + data.error);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Errore di connessione');
+    } finally {
+      setSavingIdentity(false);
+    }
+  };
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -199,7 +285,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
             </h1>
           </div>
           <p className="text-xs text-gray-500 font-light">
-            Monitoraggio First-Party Server-Side 100% proprietario con storico permanente aggregato a norma GDPR
+            Monitoraggio First-Party Server-Side 100% proprietario con riconoscimento persone e storico permanente
           </p>
         </div>
 
@@ -207,7 +293,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
         <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-gray-200 shadow-2xs">
           <button
             onClick={() => setTimeRange('today')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === 'today' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -215,7 +301,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
           </button>
           <button
             onClick={() => setTimeRange('7d')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === '7d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -223,7 +309,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
           </button>
           <button
             onClick={() => setTimeRange('30d')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === '30d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -231,7 +317,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
           </button>
           <button
             onClick={() => setTimeRange('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === 'all' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
@@ -297,7 +383,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
         </div>
       </div>
 
-      {/* GRAFICO STORICO PERMANENTE (DAILY TRAFFIC TIMELINE) */}
+      {/* GRAFICO STORICO PERMANENTE */}
       <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
@@ -308,7 +394,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
               </h3>
             </div>
             <p className="text-xs text-gray-400 font-light mt-0.5">
-              I dati numerici giornalieri rimangono memorizzati per sempre a memoria storica delle visite del brand
+              I dati numerici giornalieri rimangono memorizzati per sempre a memoria storica del brand
             </p>
           </div>
 
@@ -340,7 +426,6 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
           </div>
         </div>
 
-        {/* Visualizzazione Grafico a Barre */}
         <div className="pt-6 pb-2">
           <div className="flex items-end justify-between gap-2 sm:gap-3 h-48 sm:h-56 px-2 border-b border-gray-100">
             {historicalTimeline.map((item) => {
@@ -349,17 +434,14 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
 
               return (
                 <div key={item.date} className="flex-1 flex flex-col items-center h-full justify-end group relative">
-                  {/* Tooltip Hover */}
                   <div className="absolute -top-12 bg-gray-900 text-white text-[10px] py-1 px-2.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20 shadow-lg font-mono">
                     <span className="font-semibold">{item.date}</span>: {val} {chartMode === 'views' ? 'visite' : chartMode === 'visitors' ? 'utenti' : 'views'}
                   </div>
 
-                  {/* Valore sopra la barra */}
                   <span className="text-[9px] font-mono text-gray-400 mb-1.5 group-hover:text-gray-900 font-medium">
                     {val > 0 ? val : ''}
                   </span>
 
-                  {/* Barra */}
                   <div
                     className={`w-full max-w-[32px] rounded-t-md transition-all duration-500 group-hover:opacity-80 ${
                       chartMode === 'views'
@@ -371,7 +453,6 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
                     style={{ height: `${heightPercent}%` }}
                   ></div>
 
-                  {/* Etichetta Data */}
                   <span className="text-[9px] font-mono text-gray-400 mt-2 truncate max-w-full">
                     {item.displayDate}
                   </span>
@@ -476,7 +557,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
 
       </div>
 
-      {/* 3. LIVE VISITOR STREAM (FEED IN TEMPO REALE) */}
+      {/* 3. LIVE VISITOR STREAM CON RICONOSCIMENTO IDENTITÀ */}
       <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
@@ -487,7 +568,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
               </h3>
             </div>
             <p className="text-xs text-gray-400 font-light mt-0.5">
-              Tutte le visite registrate lato server in tempo reale con ID Visitatore e Consenso GDPR
+              Visite in tempo reale con identificazione persona, badge Co-Founder/VIP e consenso GDPR
             </p>
           </div>
 
@@ -495,7 +576,7 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
             <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Filtra per pagina o Visitor ID..."
+              placeholder="Cerca per nome, pagina o ID..."
               value={searchPath}
               onChange={(e) => setSearchPath(e.target.value)}
               className="w-full pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#C0A09A] focus:bg-white transition"
@@ -507,56 +588,193 @@ export default function AnalyticsDashboard({ pageViews = [], dailyAnalytics = []
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-[#FAF8F5] border-b border-gray-100 text-[10px] uppercase tracking-wider text-gray-500">
+                <th className="py-3 px-4 font-semibold">Persona / Visitatore</th>
                 <th className="py-3 px-4 font-semibold">Pagina Visualizzata</th>
-                <th className="py-3 px-4 font-semibold">Visitor ID</th>
                 <th className="py-3 px-4 font-semibold">Consenso GDPR</th>
                 <th className="py-3 px-4 font-semibold text-right">Data &amp; Ora</th>
+                <th className="py-3 px-4 font-semibold text-center">Azione</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-xs">
               {liveStream.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-8 text-center text-gray-400 font-light">
-                    Nessuna visita registrata al momento. Le nuove visite appariranno qui istantaneamente.
+                  <td colSpan={5} className="py-8 text-center text-gray-400 font-light">
+                    Nessuna visita trovata con questi filtri.
                   </td>
                 </tr>
               ) : (
-                liveStream.map((v) => (
-                  <tr key={v.id} className="hover:bg-gray-50/80 transition-colors">
-                    <td className="py-3 px-4 font-mono text-[11px] text-gray-900 font-medium">
-                      <div className="flex items-center gap-1.5">
-                        <ArrowUpRight size={13} className="text-[#C0A09A]" />
-                        <span>{v.path}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4 font-mono text-[11px] text-gray-500">
-                      {v.visitor_id}
-                    </td>
-                    <td className="py-3 px-4">
-                      {v.consent_id ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                          <ShieldCheck size={11} /> {v.consent_id}
-                        </span>
-                      ) : (
-                        <span className="text-[10px] text-gray-400 font-mono">Tecnico Essenziale</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-4 text-right text-[11px] text-gray-500 font-mono">
-                      {new Date(v.created_at).toLocaleString('it-IT', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        second: '2-digit',
-                      })}
-                    </td>
-                  </tr>
-                ))
+                liveStream.map((v) => {
+                  const identity = identityMap[v.visitor_id];
+
+                  return (
+                    <tr key={v.id} className="hover:bg-gray-50/80 transition-colors">
+                      {/* Persona / Identità */}
+                      <td className="py-3 px-4">
+                        {identity ? (
+                          <div className="flex items-center gap-2">
+                            <div className="w-7 h-7 rounded-full bg-[#FAF3F0] border border-[#C0A09A]/40 text-[#8C6558] flex items-center justify-center font-bold text-xs shrink-0">
+                              {identity.role === 'founder' ? '👑' : identity.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <span className="font-semibold text-gray-900 block text-xs">
+                                {identity.name}
+                              </span>
+                              <span className="font-mono text-[9px] text-gray-400 block truncate max-w-[130px]">
+                                {v.visitor_id}
+                              </span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 font-mono text-[11px] text-gray-500">
+                            <span>{v.visitor_id}</span>
+                          </div>
+                        )}
+                      </td>
+
+                      {/* Pagina */}
+                      <td className="py-3 px-4 font-mono text-[11px] text-gray-900 font-medium">
+                        <div className="flex items-center gap-1.5">
+                          <ArrowUpRight size={13} className="text-[#C0A09A]" />
+                          <span>{v.path}</span>
+                        </div>
+                      </td>
+
+                      {/* Consenso GDPR */}
+                      <td className="py-3 px-4">
+                        {v.consent_id ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                            <ShieldCheck size={11} /> {v.consent_id}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-gray-400 font-mono">Tecnico Essenziale</span>
+                        )}
+                      </td>
+
+                      {/* Data & Ora */}
+                      <td className="py-3 px-4 text-right text-[11px] text-gray-500 font-mono">
+                        {new Date(v.created_at).toLocaleString('it-IT', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                        })}
+                      </td>
+
+                      {/* Azione Assegna / Modifica Nome */}
+                      <td className="py-3 px-4 text-center">
+                        <button
+                          type="button"
+                          onClick={() => handleOpenIdentityModal(v.visitor_id)}
+                          className="px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md text-[10px] font-medium transition cursor-pointer flex items-center gap-1 mx-auto"
+                        >
+                          <Tag size={11} />
+                          <span>{identity ? 'Modifica' : '+ Assegna'}</span>
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* MODAL ASSEGNAZIONE NOME / PERSONA */}
+      {selectedVisitorForIdentity && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn"
+          onClick={() => setSelectedVisitorForIdentity(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-gray-100 text-gray-900 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedVisitorForIdentity(null)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-900 cursor-pointer"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="flex items-center gap-2 mb-4">
+              <UserCheck size={20} className="text-[#C0A09A]" />
+              <h3 className="font-serif text-xl text-gray-900">Identifica Visitatore</h3>
+            </div>
+
+            <p className="text-xs text-gray-500 font-light mb-4">
+              Assegna un nome reale o un'etichetta a questo dispositivo per riconoscerlo ovunque nel pannello.
+            </p>
+
+            <div className="p-2.5 bg-gray-50 rounded-xl mb-4 text-[11px] font-mono text-gray-600 border border-gray-200/60 truncate">
+              ID: <span className="font-semibold text-gray-900">{selectedVisitorForIdentity}</span>
+            </div>
+
+            <form onSubmit={handleSaveIdentity} className="space-y-4">
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                  Nome Persona / Etichetta *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Es. Elena (Co-Founder), Mario (iPhone), Amica Giulia..."
+                  value={identityName}
+                  onChange={(e) => setIdentityName(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                  Email (Opzionale per CRM)
+                </label>
+                <input
+                  type="email"
+                  placeholder="es. elena@isabelpepe.com"
+                  value={identityEmail}
+                  onChange={(e) => setIdentityEmail(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase tracking-wider text-gray-500 font-semibold mb-1">
+                  Ruolo / Categoria
+                </label>
+                <select
+                  value={identityRole}
+                  onChange={(e) => setIdentityRole(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-xs text-gray-900 outline-none focus:border-[#C0A09A] transition bg-white"
+                >
+                  <option value="founder">👑 Founder / Team Interno</option>
+                  <option value="vip">💎 Cliente VIP / Amico</option>
+                  <option value="customer">🛍️ Cliente</option>
+                  <option value="guest">👤 Visitatore / Lead</option>
+                </select>
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setSelectedVisitorForIdentity(null)}
+                  className="px-4 py-2 border border-gray-200 rounded-xl text-xs text-gray-600 hover:bg-gray-50 transition cursor-pointer"
+                >
+                  Annulla
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingIdentity}
+                  className="px-5 py-2 bg-[#1A1A1A] hover:bg-[#C0A09A] text-white rounded-xl text-xs font-semibold transition cursor-pointer disabled:opacity-50"
+                >
+                  {savingIdentity ? 'Salvataggio...' : 'Salva Identità'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
