@@ -219,14 +219,14 @@ export default function CartDrawer() {
                   placeholder="La tua email *" 
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors"
+                  className="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors bg-white text-gray-900 placeholder:text-gray-500 placeholder:opacity-100 font-normal"
                 />
                 <input 
                   type="tel" 
                   placeholder="Cellulare (opzionale - per SMS corriere)" 
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
-                  className="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors"
+                  className="w-full border border-gray-200 px-4 py-3 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors bg-white text-gray-900 placeholder:text-gray-500 placeholder:opacity-100 font-normal"
                 />
 
                 {/* Promo Code Section */}
@@ -235,10 +235,10 @@ export default function CartDrawer() {
                   <div className="flex gap-2">
                     <input 
                       type="text" 
-                      placeholder="Inserisci coupon" 
+                      placeholder="INSERISCI COUPON" 
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      className="flex-1 border border-gray-200 px-4 py-2 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors uppercase"
+                      className="flex-1 border border-gray-200 px-4 py-2 text-sm focus:border-[#C0A09A] outline-none rounded-sm transition-colors uppercase bg-white text-gray-900 placeholder:text-gray-500 placeholder:opacity-100 font-normal"
                     />
                     <button 
                       onClick={handleApplyPromo}
