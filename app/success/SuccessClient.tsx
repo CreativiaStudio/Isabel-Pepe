@@ -21,14 +21,33 @@ export default function SuccessClient() {
     setIsOpen(false);
     clearCart();
 
-    // 2. Se abbiamo sessionId, possiamo recuperare l'email salvata localmente
-    const savedEmail = localStorage.getItem('isabel_customer_email');
-    const savedName = localStorage.getItem('isabel_customer_name');
-    if (savedEmail || savedName) {
-      setOrderDetails({
-        customerEmail: savedEmail || undefined,
-        customerName: savedName || undefined,
-      });
+    // 2. Se abbiamo sessionId, confermiamo e registriamo l'ordine all'istante
+    if (sessionId) {
+      fetch('/api/checkout/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data && data.success) {
+            setOrderDetails({
+              customerEmail: data.customerEmail,
+              customerName: data.customerName,
+              amount: data.amountTotal,
+            });
+          }
+        })
+        .catch((err) => console.error('Error confirming order:', err));
+    } else {
+      const savedEmail = localStorage.getItem('isabel_customer_email');
+      const savedName = localStorage.getItem('isabel_customer_name');
+      if (savedEmail || savedName) {
+        setOrderDetails({
+          customerEmail: savedEmail || undefined,
+          customerName: savedName || undefined,
+        });
+      }
     }
   }, [clearCart, setIsOpen, sessionId]);
 
