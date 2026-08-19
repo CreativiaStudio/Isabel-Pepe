@@ -97,9 +97,8 @@ export async function POST(request: Request) {
       }
     }
 
-    // Crea la sessione
+    // Crea la sessione con Dynamic Payment Methods (Cards, Apple Pay, Google Pay, Klarna, Link)
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'paypal', 'klarna', 'scalapay'],
       line_items: lineItems,
       mode: 'payment',
       customer_email: customerEmail || undefined, // Precompila l'email su Stripe
