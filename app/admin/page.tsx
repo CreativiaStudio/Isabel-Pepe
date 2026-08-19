@@ -77,7 +77,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .from('page_views')
       .select('*', { count: 'exact' })
       .order('created_at', { ascending: false })
-      .limit(1000);
+      .limit(10000);
     
     pageViews = pv || [];
     totalViews = count || pageViews.length || 0;

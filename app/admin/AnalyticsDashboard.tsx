@@ -13,13 +13,15 @@ import {
   ShieldCheck, 
   Calendar, 
   Search,
+  ChevronLeft,
   ChevronRight,
   Database,
   UserCheck,
   Tag,
   Edit2,
   X,
-  Check
+  Check,
+  Filter
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -69,6 +71,11 @@ export default function AnalyticsDashboard({
   const [timeRange, setTimeRange] = useState<'all' | '7d' | '30d' | 'today'>('all');
   const [chartMode, setChartMode] = useState<'views' | 'visitors' | 'products'>('views');
   const [searchPath, setSearchPath] = useState('');
+  const [selectedVisitorFilter, setSelectedVisitorFilter] = useState<string>('all');
+  
+  // Paginazione & Dimensione Tabella
+  const [rowsPerPage, setRowsPerPage] = useState<number>(50);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Identità locali (aggiornabili in real-time)
   const [identityMap, setIdentityMap] = useState<Record<string, VisitorIdentity>>(() => {
@@ -213,22 +220,54 @@ export default function AnalyticsDashboard({
       .slice(0, 8);
   }, [filteredViews, totalViews]);
 
-  // 6. Ultime Visite Live in Tempo Reale
-  const liveStream = useMemo(() => {
-    return filteredViews
-      .filter(v => {
+  // 6. Lista di tutti i Visitatori Unici per il menu filtro
+  const allUniqueVisitorsList = useMemo(() => {
+    const map: Record<string, { vid: string; name: string; role: string; count: number }> = {};
+    filteredViews.forEach(v => {
+      if (!map[v.visitor_id]) {
         const identity = identityMap[v.visitor_id];
-        const search = searchPath.toLowerCase();
-        if (!search) return true;
-        return (
-          v.path?.toLowerCase().includes(search) ||
-          v.visitor_id?.toLowerCase().includes(search) ||
-          identity?.name?.toLowerCase().includes(search) ||
-          identity?.email?.toLowerCase().includes(search)
-        );
-      })
-      .slice(0, 30);
-  }, [filteredViews, searchPath, identityMap]);
+        map[v.visitor_id] = {
+          vid: v.visitor_id,
+          name: identity ? identity.name : v.visitor_id,
+          role: identity?.role || 'guest',
+          count: 0,
+        };
+      }
+      map[v.visitor_id].count++;
+    });
+    return Object.values(map).sort((a, b) => b.count - a.count);
+  }, [filteredViews, identityMap]);
+
+  // 7. Filtraggio Live Stream Completo (Senza Limiti Fissi)
+  const fullFilteredStream = useMemo(() => {
+    return filteredViews.filter(v => {
+      const identity = identityMap[v.visitor_id];
+      const search = searchPath.toLowerCase();
+
+      // Filtro per persona/visitatore selezionato
+      if (selectedVisitorFilter !== 'all' && v.visitor_id !== selectedVisitorFilter) {
+        return false;
+      }
+
+      // Filtro per testo cercato
+      if (!search) return true;
+      return (
+        v.path?.toLowerCase().includes(search) ||
+        v.visitor_id?.toLowerCase().includes(search) ||
+        identity?.name?.toLowerCase().includes(search) ||
+        identity?.email?.toLowerCase().includes(search)
+      );
+    });
+  }, [filteredViews, searchPath, selectedVisitorFilter, identityMap]);
+
+  // Paginazione
+  const totalStreamPages = rowsPerPage > 0 ? Math.max(1, Math.ceil(fullFilteredStream.length / rowsPerPage)) : 1;
+  
+  const paginatedStream = useMemo(() => {
+    if (rowsPerPage === 0) return fullFilteredStream; // Mostra tutto
+    const start = (currentPage - 1) * rowsPerPage;
+    return fullFilteredStream.slice(start, start + rowsPerPage);
+  }, [fullFilteredStream, currentPage, rowsPerPage]);
 
   const handleOpenIdentityModal = (vid: string) => {
     const existing = identityMap[vid];
@@ -285,14 +324,14 @@ export default function AnalyticsDashboard({
             </h1>
           </div>
           <p className="text-xs text-gray-500 font-light">
-            Monitoraggio First-Party Server-Side 100% proprietario con riconoscimento persone e storico permanente
+            Monitoraggio First-Party Server-Side 100% proprietario con riconoscimento persone e storico completo
           </p>
         </div>
 
         {/* Filtro Temporale */}
         <div className="flex items-center gap-1.5 bg-white p-1 rounded-xl border border-gray-200 shadow-2xs">
           <button
-            onClick={() => setTimeRange('today')}
+            onClick={() => { setTimeRange('today'); setCurrentPage(1); }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === 'today' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -300,7 +339,7 @@ export default function AnalyticsDashboard({
             Oggi
           </button>
           <button
-            onClick={() => setTimeRange('7d')}
+            onClick={() => { setTimeRange('7d'); setCurrentPage(1); }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === '7d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -308,7 +347,7 @@ export default function AnalyticsDashboard({
             7 Giorni
           </button>
           <button
-            onClick={() => setTimeRange('30d')}
+            onClick={() => { setTimeRange('30d'); setCurrentPage(1); }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === '30d' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -316,7 +355,7 @@ export default function AnalyticsDashboard({
             30 Giorni
           </button>
           <button
-            onClick={() => setTimeRange('all')}
+            onClick={() => { setTimeRange('all'); setCurrentPage(1); }}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer ${
               timeRange === 'all' ? 'bg-[#1A1A1A] text-white' : 'text-gray-600 hover:bg-gray-100'
             }`}
@@ -557,33 +596,82 @@ export default function AnalyticsDashboard({
 
       </div>
 
-      {/* 3. LIVE VISITOR STREAM CON RICONOSCIMENTO IDENTITÀ */}
+      {/* 3. LIVE VISITOR STREAM CON RICONOSCIMENTO IDENTITÀ & STORICO COMPLETO */}
       <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-2xs">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        
+        {/* Barra Superiore Filtri Stream */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
           <div>
             <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
               <h3 className="font-serif text-xl text-gray-900 tracking-wide">
-                Live Visitor Stream
+                Live Visitor Stream &amp; Storico Navigazioni
               </h3>
             </div>
             <p className="text-xs text-gray-400 font-light mt-0.5">
-              Visite in tempo reale con identificazione persona, badge Co-Founder/VIP e consenso GDPR
+              Tutte le {fullFilteredStream.length} visite registrate lato server con riconoscimento persona e timestamp esatto
             </p>
           </div>
 
-          <div className="relative w-full sm:w-80">
-            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Cerca per nome, pagina o ID..."
-              value={searchPath}
-              onChange={(e) => setSearchPath(e.target.value)}
-              className="w-full pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#C0A09A] focus:bg-white transition"
-            />
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Selettore Filtro Persona */}
+            <div className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-xl text-xs">
+              <Filter size={13} className="text-gray-500" />
+              <select
+                value={selectedVisitorFilter}
+                onChange={(e) => {
+                  setSelectedVisitorFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="bg-transparent text-gray-800 outline-none font-medium cursor-pointer"
+              >
+                <option value="all">👥 Tutti i Visitatori ({allUniqueVisitorsList.length})</option>
+                {allUniqueVisitorsList.map(u => (
+                  <option key={u.vid} value={u.vid}>
+                    {u.role === 'founder' ? '👑' : u.role === 'vip' ? '💎' : '👤'} {u.name} ({u.count} views)
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Ricerca per Pagina o Testo */}
+            <div className="relative w-full sm:w-64">
+              <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Cerca per pagina, nome..."
+                value={searchPath}
+                onChange={(e) => {
+                  setSearchPath(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="w-full pl-9 pr-4 py-1.5 bg-gray-50 border border-gray-200 rounded-xl text-xs text-gray-800 placeholder-gray-400 outline-none focus:border-[#C0A09A] focus:bg-white transition"
+              />
+            </div>
+
+            {/* Selettore Righe per Pagina */}
+            <div className="flex items-center gap-1.5 text-xs text-gray-500">
+              <span>Mostra:</span>
+              <select
+                value={rowsPerPage}
+                onChange={(e) => {
+                  setRowsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="bg-gray-50 border border-gray-200 px-2.5 py-1.5 rounded-xl text-xs text-gray-800 font-medium outline-none cursor-pointer"
+              >
+                <option value={25}>25</option>
+                <option value={50}>50</option>
+                <option value={100}>100</option>
+                <option value={250}>250</option>
+                <option value={500}>500</option>
+                <option value={0}>Tutte ({fullFilteredStream.length})</option>
+              </select>
+            </div>
           </div>
         </div>
 
+        {/* Tabella Dati */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -596,14 +684,14 @@ export default function AnalyticsDashboard({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 text-xs">
-              {liveStream.length === 0 ? (
+              {paginatedStream.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-8 text-center text-gray-400 font-light">
                     Nessuna visita trovata con questi filtri.
                   </td>
                 </tr>
               ) : (
-                liveStream.map((v) => {
+                paginatedStream.map((v) => {
                   const identity = identityMap[v.visitor_id];
 
                   return (
@@ -619,7 +707,7 @@ export default function AnalyticsDashboard({
                               <span className="font-semibold text-gray-900 block text-xs">
                                 {identity.name}
                               </span>
-                              <span className="font-mono text-[9px] text-gray-400 block truncate max-w-[130px]">
+                              <span className="font-mono text-[9px] text-gray-400 block truncate max-w-[130px]" title={v.visitor_id}>
                                 {v.visitor_id}
                               </span>
                             </div>
@@ -679,6 +767,42 @@ export default function AnalyticsDashboard({
             </tbody>
           </table>
         </div>
+
+        {/* Footer Paginazione */}
+        {fullFilteredStream.length > 0 && rowsPerPage > 0 && totalStreamPages > 1 && (
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 mt-2 border-t border-gray-100 text-xs text-gray-500">
+            <div>
+              Mostrando <span className="font-semibold text-gray-900">{(currentPage - 1) * rowsPerPage + 1}</span> - <span className="font-semibold text-gray-900">{Math.min(currentPage * rowsPerPage, fullFilteredStream.length)}</span> di <span className="font-semibold text-gray-900">{fullFilteredStream.length}</span> visite registrate
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                className="px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
+              >
+                <ChevronLeft size={14} />
+                <span>Precedente</span>
+              </button>
+
+              <span className="px-3 py-1 bg-gray-100 rounded-lg font-mono text-[11px] font-medium text-gray-800">
+                {currentPage} / {totalStreamPages}
+              </span>
+
+              <button
+                type="button"
+                disabled={currentPage === totalStreamPages}
+                onClick={() => setCurrentPage(prev => Math.min(totalStreamPages, prev + 1))}
+                className="px-3 py-1.5 border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
+              >
+                <span>Successiva</span>
+                <ChevronRight size={14} />
+              </button>
+            </div>
+          </div>
+        )}
+
       </div>
 
       {/* MODAL ASSEGNAZIONE NOME / PERSONA */}
