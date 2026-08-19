@@ -98,6 +98,33 @@ export async function POST(req: Request) {
             }]);
         }
       }
+
+      // Inoltro Server-Side Purchase Event a N8N per Meta Conversions API (CAPI)
+      const n8nWebhookUrl = process.env.N8N_MASTER_WEBHOOK_URL || 'https://n8n.creativiastudio.com/webhook/master-creativia-os';
+      try {
+        fetch(n8nWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            client_id: 'isabel-pepe',
+            event: 'purchase',
+            data: {
+              order_id: orderData?.id,
+              stripe_session_id: sessionId,
+              email: customerEmail,
+              name: customerName,
+              phone: session.customer_details?.phone || '',
+              amount: amountTotal,
+              currency: 'EUR',
+              items: items,
+              shipping_address: shippingAddress,
+              visitor_id: metadata.visitor_id || null,
+              consent_id: metadata.consent_id || null,
+              timestamp: new Date().toISOString(),
+            },
+          }),
+        }).catch(() => {});
+      } catch (e) {}
     }
 
     return NextResponse.json({

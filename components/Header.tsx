@@ -196,8 +196,28 @@ export default function Header() {
           </div>
 
           {/* Menu Scrollabile */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-8">
+          <div className="flex-1 overflow-y-auto p-6 space-y-7">
             
+            {/* Sezione Profilo & Area Riservata Mobile */}
+            <div className="p-4 bg-[#FAF7F5] border border-[#EADFD9] rounded-sm flex items-center justify-between shadow-sm">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-white border border-[#C0A09A] flex items-center justify-center text-[#8A5E58]">
+                  <User size={18} strokeWidth={1.5} />
+                </div>
+                <div>
+                  <span className="font-serif text-sm text-gray-900 font-semibold block">Il Mio Account</span>
+                  <span className="font-sans text-[10px] text-gray-500 uppercase tracking-wider block">Ordini & Spedizioni</span>
+                </div>
+              </div>
+              <Link 
+                href="/account" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-[10px] uppercase font-sans tracking-widest bg-[#1A1A1A] hover:bg-[#8A5E58] text-white px-3.5 py-2 rounded-sm font-medium transition-colors"
+              >
+                Accedi →
+              </Link>
+            </div>
+
             {/* Sezione Collezioni */}
             <div>
               <span className="font-sans text-[10px] text-[#C0A09A] uppercase tracking-[0.3em] font-semibold block mb-4">
