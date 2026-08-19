@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 export async function POST(req: Request) {
   try {
@@ -51,6 +52,18 @@ export async function POST(req: Request) {
         console.error('Error inserting order in DB:', orderError);
       } else {
         console.log('✅ Order confirmed and inserted in DB:', orderData.id);
+
+        // Invia email di conferma ordine ufficiale in background
+        if (customerEmail && orderData?.id) {
+          sendOrderConfirmationEmail({
+            customerEmail,
+            customerName,
+            orderId: orderData.id,
+            amountTotal,
+            items,
+            shippingAddress,
+          }).catch((err) => console.error('Error sending order confirmation email:', err));
+        }
       }
 
       // Aggiorna carrello abbandonato a recuperato

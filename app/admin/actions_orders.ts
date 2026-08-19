@@ -2,7 +2,7 @@
 
 import { supabaseAdmin } from '@/lib/supabase';
 import { revalidatePath } from 'next/cache';
-import { sendShippingConfirmationEmail } from '@/lib/email';
+import { sendShippingNotificationEmail } from '@/lib/email';
 
 // Fetch orders with optional status filter
 export async function getOrders(status?: string) {
@@ -52,13 +52,14 @@ export async function updateOrderStatus(id: string, status: string, trackingCode
   }
 
   // Invia l'email di conferma se spedito
-  if (status === 'shipped' && currentOrder && trackingCode) {
-    await sendShippingConfirmationEmail(
-      currentOrder.customer_email,
-      currentOrder.customer_name,
-      trackingCode,
-      currentOrder.id
-    );
+  if (status === 'shipped' && currentOrder && (trackingCode || currentOrder.tracking_code)) {
+    sendShippingNotificationEmail({
+      customerEmail: currentOrder.customer_email,
+      customerName: currentOrder.customer_name,
+      orderId: currentOrder.id,
+      trackingCode: trackingCode || currentOrder.tracking_code,
+      courierName: 'GLS Express 24/48h',
+    }).catch(err => console.error('Error sending shipping email:', err));
   }
 
   revalidatePath('/admin');

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
+import { sendOrderConfirmationEmail } from '@/lib/email';
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -31,7 +32,7 @@ export async function POST(req: Request) {
       // Estrai le informazioni necessarie
       const sessionId = session.id;
       const customerEmail = session.customer_details?.email || '';
-      const customerName = session.customer_details?.name || 'Cliente Sconosciuto';
+      const customerName = session.customer_details?.name || 'Cliente Isabel Pepe';
       const amountTotal = (session.amount_total || 0) / 100;
       const shippingAddress = (session as any).shipping_details?.address || (session as any).collected_information?.shipping_details?.address || {};
       const metadata = session.metadata || {};
@@ -58,6 +59,18 @@ export async function POST(req: Request) {
       }
 
       console.log('Ordine salvato con successo:', orderData.id);
+
+      // Invia email di conferma ordine ufficiale
+      if (customerEmail && orderData?.id) {
+        sendOrderConfirmationEmail({
+          customerEmail,
+          customerName,
+          orderId: orderData.id,
+          amountTotal,
+          items,
+          shippingAddress,
+        }).catch((err) => console.error('Error sending order confirmation email on webhook:', err));
+      }
 
       // 1. Recupero Carrello (se presente)
       if (metadata.abandoned_cart_id) {
