@@ -82,21 +82,21 @@ export default function Footer() {
         {/* GRIGLIA PRINCIPALE FOOTER (5 Colonne) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 mb-16">
           
-          {/* COLONNA 1 & 2: BRAND & L'UNIVERSO ISABEL PEPE NEWSLETTER */}
+          {/* COLONNA 1 & 2: BRAND & ISABEL PEPE PRIVILEGE NEWSLETTER */}
           <div className="sm:col-span-2 lg:pr-12">
-            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-2 uppercase text-[#FAF6F0] inline-block font-bold">
+            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-2 uppercase text-champagne-shimmer inline-block">
               ISABEL PEPE
             </h2>
             
             <div className="flex items-center gap-2 mb-3">
               <span className="h-[1px] w-6 bg-[#C0A09A]/80"></span>
               <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[#E8D3CF] font-semibold">
-                L'UNIVERSO ISABEL PEPE
+                ISABEL PEPE PRIVILEGE
               </span>
             </div>
 
             <p className="font-sans text-[#D6CECA] text-xs sm:text-[13px] leading-relaxed mb-6 font-normal tracking-wide max-w-md">
-              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di gioielleria demi-fine.
+              Ricevi un dono di benvenuto del <strong>10%</strong> sul tuo primo gioiello e accedi a vantaggi e selezioni esclusive dedicate a te.
             </p>
 
             {/* Newsletter Form o Success State */}
@@ -105,7 +105,7 @@ export default function Footer() {
                 <div className="flex items-center gap-2 text-[#E8D3CF]">
                   <Sparkles size={16} className="shrink-0" />
                   <span className="font-serif text-sm uppercase tracking-widest text-[#FAF6F0] font-semibold">
-                    Benvenuta nell'Universo Isabel Pepe
+                    Benvenuta in Isabel Pepe Privilege
                   </span>
                 </div>
                 <p className="font-sans text-xs text-gray-300 leading-relaxed font-light">
@@ -180,7 +180,7 @@ export default function Footer() {
                         <span>Accesso...</span>
                       </>
                     ) : (
-                      <span>Ricevi il 10%</span>
+                      <span>Entra nel Club</span>
                     )}
                   </button>
                 </div>
@@ -195,17 +195,17 @@ export default function Footer() {
                       setGdprConsent(e.target.checked);
                       if (status === 'error') setStatus('idle');
                     }}
-                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-white/30 bg-white/5 text-[#C0A09A] accent-[#C0A09A] cursor-pointer shrink-0"
+                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-white/40 bg-white/10 text-[#C0A09A] accent-[#C0A09A] cursor-pointer shrink-0"
                     disabled={status === 'loading'}
                   />
                   <label
                     htmlFor="footer-gdpr-consent"
-                    className="text-[10px] text-gray-400 tracking-wider leading-relaxed font-light select-none cursor-pointer"
+                    className="text-xs text-[#E8D3CF] tracking-wide leading-relaxed font-normal select-none cursor-pointer"
                   >
                     Accetto l'
                     <Link
                       href="/privacy"
-                      className="text-gray-300 underline hover:text-[#C0A09A] transition-colors ml-1 mr-1"
+                      className="text-white font-medium underline hover:text-[#C0A09A] transition-colors ml-1 mr-1"
                     >
                       Informativa sulla Privacy
                     </Link>
@@ -221,7 +221,7 @@ export default function Footer() {
                   </div>
                 )}
 
-                <span className="text-[10px] text-gray-500 tracking-wider block font-light">
+                <span className="text-xs text-[#D6CECA] tracking-wide block font-light">
                   🔒 Rispettiamo la tua privacy. Nessun invio superfluo, cancellazione in 1 click.
                 </span>
               </form>
@@ -230,32 +230,32 @@ export default function Footer() {
 
           {/* COLONNA 3: COLLEZIONI */}
           <div>
-            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#C0A09A] font-semibold">
+            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#FAF6F0] font-bold">
               Collezioni
             </h3>
             <ul className="space-y-3.5">
               <li>
-                <Link href="/shop?category=Collane" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/shop?category=Collane" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Collane & Punto Luce
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Orecchini" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/shop?category=Orecchini" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Orecchini & Pendenti
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Anelli" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/shop?category=Anelli" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Anelli Solitari & Pavé
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Set" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/shop?category=Set" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Set Parure Royale
                 </Link>
               </li>
               <li>
-                <Link href="/shop" className="text-xs text-[#C0A09A] hover:text-white transition-colors duration-300 tracking-wider font-medium">
+                <Link href="/shop" className="text-xs sm:text-[13px] text-[#E8D3CF] hover:text-white transition-colors duration-200 tracking-wide font-semibold">
                   Tutti i Gioielli →
                 </Link>
               </li>
@@ -264,38 +264,38 @@ export default function Footer() {
 
           {/* COLONNA 4: SERVIZIO CLIENTI */}
           <div>
-            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#C0A09A] font-semibold">
+            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#FAF6F0] font-bold">
               Servizio Clienti
             </h3>
             <ul className="space-y-3.5">
               <li>
-                <Link href="/assistenza-clienti" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/assistenza-clienti" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Assistenza Clienti
                 </Link>
               </li>
               <li>
-                <Link href="/spedizioni-resi" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/spedizioni-resi" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Spedizioni & Resi (14gg)
                 </Link>
               </li>
               <li>
-                <Link href="/garanzia" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/garanzia" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Garanzia & Autenticità
                 </Link>
               </li>
               <li>
-                <Link href="/guida-taglie" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/guida-taglie" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Guida alle Taglie Anelli
                 </Link>
               </li>
               <li>
-                <Link href="/cura-gioielli" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/cura-gioielli" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Cura del Gioiello
                 </Link>
               </li>
               <li>
-                <Link href="/impegno-animali" className="text-xs text-[#C0A09A] hover:text-white transition-colors duration-300 tracking-wider font-medium flex items-center gap-1.5">
-                  <HeartHandshake size={14} className="shrink-0" />
+                <Link href="/impegno-animali" className="text-xs sm:text-[13px] text-[#E8D3CF] hover:text-white transition-colors duration-200 tracking-wide font-semibold flex items-center gap-1.5">
+                  <HeartHandshake size={15} className="shrink-0 text-[#C0A09A]" />
                   <span>Impegno per gli Animali</span>
                 </Link>
               </li>
@@ -304,27 +304,27 @@ export default function Footer() {
 
           {/* COLONNA 5: CONFORMITÀ LEGALE & SOCIAL */}
           <div>
-            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#C0A09A] font-semibold">
+            <h3 className="font-sans tracking-[0.25em] text-xs uppercase mb-6 text-[#FAF6F0] font-bold">
               Legale & Social
             </h3>
             <ul className="space-y-3.5 mb-8">
               <li>
-                <Link href="/privacy" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/privacy" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Privacy Policy (GDPR)
                 </Link>
               </li>
               <li>
-                <Link href="/cookie-policy" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/cookie-policy" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Cookie Policy
                 </Link>
               </li>
               <li>
-                <Link href="/termini-condizioni" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/termini-condizioni" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Termini e Condizioni
                 </Link>
               </li>
               <li>
-                <Link href="/termini-condizioni#recesso" className="text-xs text-gray-400 hover:text-white transition-colors duration-300 tracking-wider font-light">
+                <Link href="/termini-condizioni#recesso" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Diritto di Recesso (14 giorni)
                 </Link>
               </li>
@@ -336,9 +336,9 @@ export default function Footer() {
                       window.dispatchEvent(new CustomEvent('open_cookie_preferences'));
                     }
                   }}
-                  className="text-xs text-[#C0A09A] hover:text-white transition-colors duration-300 tracking-wider font-light cursor-pointer text-left"
+                  className="text-xs sm:text-[13px] text-[#E8D3CF] hover:text-white transition-colors duration-200 tracking-wide font-medium cursor-pointer text-left flex items-center gap-1.5"
                 >
-                  ⚙️ Gestisci Consensi Cookie
+                  <span>⚙️ Gestisci Consensi Cookie</span>
                 </button>
               </li>
             </ul>
@@ -351,7 +351,7 @@ export default function Footer() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Instagram Isabel Pepe"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/20 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#E8D3CF] hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/30 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
                 title="Instagram"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -365,7 +365,7 @@ export default function Footer() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="TikTok Isabel Pepe"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/20 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#E8D3CF] hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/30 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
                 title="TikTok"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -379,7 +379,7 @@ export default function Footer() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Pinterest Isabel Pepe"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/20 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#E8D3CF] hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/30 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
                 title="Pinterest"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -393,7 +393,7 @@ export default function Footer() {
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="Facebook Isabel Pepe"
-                className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/20 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center text-[#E8D3CF] hover:text-white hover:border-[#C0A09A] hover:bg-[#C0A09A]/30 transition-all duration-300 hover:scale-110 active:scale-95 shadow-sm"
                 title="Facebook"
               >
                 <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -410,7 +410,7 @@ export default function Footer() {
           
           {/* Badges Pagamento con Icone Ufficiali */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <span className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-semibold">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#D6CECA] font-semibold">
               Pagamenti Sicuri & Rateali:
             </span>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto">
@@ -480,9 +480,9 @@ export default function Footer() {
           </div>
 
           {/* Impegno Etico */}
-          <div className="flex items-center justify-center text-[10px] sm:text-[11px] uppercase tracking-[0.15em] sm:tracking-[0.2em] text-gray-400 font-light w-full lg:w-auto">
-            <Link href="/impegno-animali" className="text-[#C0A09A] hover:text-white transition-colors flex items-center justify-center gap-2 font-medium text-center">
-              <HeartHandshake size={15} className="shrink-0" />
+          <div className="flex items-center justify-center text-xs uppercase tracking-[0.18em] text-[#D6CECA] font-normal w-full lg:w-auto">
+            <Link href="/impegno-animali" className="text-[#E8D3CF] hover:text-white transition-colors flex items-center justify-center gap-2 font-medium text-center">
+              <HeartHandshake size={16} className="shrink-0 text-[#C0A09A]" />
               <span className="text-center">L'Arte del Dono — Il 5% per gli Animali</span>
             </Link>
           </div>
@@ -490,10 +490,10 @@ export default function Footer() {
         </div>
 
         {/* FOOTER BOTTOM: DATI SOCIETARI & COPYRIGHT */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] tracking-[0.2em] text-gray-500 uppercase font-light text-center md:text-left">
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#D6CECA] uppercase font-normal text-center md:text-left">
           <p>© {new Date().getFullYear()} ISABEL PEPE. TUTTI I DIRITTI RISERVATI.</p>
-          <p className="normal-case tracking-normal text-gray-400 text-[11px] text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-light">
-            Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-medium text-white tracking-wider">Creativia Studio</span>
+          <p className="normal-case tracking-normal text-[#D6CECA] text-xs text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal">
+            Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-semibold text-white tracking-wider">Creativia Studio</span>
           </p>
         </div>
 
