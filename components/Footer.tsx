@@ -96,7 +96,7 @@ export default function Footer() {
             </div>
 
             <p className="font-sans text-[#D6CECA] text-xs sm:text-[13px] leading-relaxed mb-6 font-normal tracking-wide max-w-md">
-              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di alta gioielleria.
+              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di gioielleria demi-fine.
             </p>
 
             {/* Newsletter Form o Success State */}

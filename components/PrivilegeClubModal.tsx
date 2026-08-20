@@ -199,7 +199,7 @@ export default function PrivilegeClubModal() {
         <div className="relative md:w-5/12 bg-[#0D0D0D] hidden sm:block overflow-hidden min-h-[220px] md:min-h-full">
           <img
             src="/Brand/anello-imperial-modella-seta-nera.jpg"
-            alt="Isabel Pepe Creazioni Haute Joaillerie"
+            alt="Isabel Pepe Creazioni Gioielleria Demi-Fine"
             className="w-full h-full object-cover object-center opacity-85 hover:scale-105 transition-transform duration-1000"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/40 flex flex-col justify-between p-6">
@@ -213,7 +213,7 @@ export default function PrivilegeClubModal() {
                 Isabel Pepe
               </span>
               <p className="font-sans text-[11px] text-gray-300 font-light leading-relaxed tracking-wide">
-                L'eccellenza dell'Alta Gioielleria Demi-Fine: argento 925, placcatura oro 18K a spessore e pietre di pura luce.
+                L'eccellenza della Gioielleria Demi-Fine: argento 925, placcatura oro 18K a spessore e pietre di pura luce.
               </p>
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function PrivilegeClubModal() {
             </h2>
 
             <p className="font-sans text-xs sm:text-[13px] text-gray-600 leading-relaxed font-light">
-              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di alta gioielleria.
+              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di gioielleria demi-fine.
             </p>
           </div>
 

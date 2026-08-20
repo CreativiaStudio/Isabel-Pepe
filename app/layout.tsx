@@ -51,7 +51,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: "image/jpeg",
-        alt: "Isabel Pepe — Alta Gioielleria Demi-Fine",
+        alt: "Isabel Pepe — Gioielli Demi-Fine",
       },
     ],
   },

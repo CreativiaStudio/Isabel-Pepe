@@ -59,7 +59,7 @@ export default function PackagingModal({ isOpen, onClose }: PackagingModalProps)
               L'Esperienza Unboxing
             </h3>
             <p className="font-sans text-xs sm:text-sm text-gray-600 leading-relaxed">
-              Ogni creazione Isabel Pepe è custodita all'interno del nostro iconico packaging d'alta gioielleria, studiato nei minimi dettagli per stupire chi lo riceve.
+              Ogni creazione Isabel Pepe è custodita all'interno del nostro iconico cofanetto luxury, studiato nei minimi dettagli per stupire chi lo riceve.
             </p>
           </div>
 

@@ -138,7 +138,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </div>
           <div className="min-w-0">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#8A5E58] font-bold block truncate">
-              Packaging d'Alta Gioielleria Incluso
+              Cofanetto Luxury Incluso
             </span>
             <p className="text-xs text-gray-800 font-medium leading-tight truncate">
               Box rigido luxury, panno lucidante, box esterno & garanzia

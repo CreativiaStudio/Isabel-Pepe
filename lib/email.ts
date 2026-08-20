@@ -335,7 +335,7 @@ export function generatePrivilegeWelcomeEmailHtml({
     <tr>
       <td style="padding: 48px 36px 28px 36px; text-align: center;">
         <p style="margin: 0 0 10px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.35em; color: #8A5E58; font-weight: 700;">
-          HAUTE JOAILLERIE ITALIANA
+          GIOIELLERIA DEMI-FINE ITALIANA
         </p>
         <h1 style="margin: 0 0 12px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 32px; letter-spacing: 0.25em; text-transform: uppercase; color: #C0A09A; font-weight: 700; line-height: 1.2;">
           ISABEL PEPE
@@ -357,7 +357,7 @@ export function generatePrivilegeWelcomeEmailHtml({
           Gentile <strong>${displayName}</strong>, è un piacere darti il benvenuto nell'<strong>Universo Isabel Pepe</strong>.
         </p>
         <p style="margin: 0 0 28px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
-          La tua iscrizione ti apre le porte alle nostre creazioni d'alta gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
+          La tua iscrizione ti apre le porte alle nostre creazioni di gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
         </p>
 
         <!-- Luxury Coupon Box -->
@@ -468,10 +468,10 @@ export function generatePrivilegeWelcomeEmailHtml({
           Isabel Pepe
         </p>
         <p style="margin: 0 0 14px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58;">
-          Haute Joaillerie Italiana
+          Gioielleria Demi-Fine Italiana
         </p>
         <p style="margin: 0 0 12px 0; font-size: 11px; line-height: 1.6; color: #888888;">
-          Ricevi questa comunicazione perché hai confermato la tua iscrizione a Isabel Pepe Privilege con consenso al trattamento dati.
+          Ricevi questa comunicazione perché hai confermato la tua iscrizione all'Universo Isabel Pepe con consenso al trattamento dati.
         </p>
         <p style="margin: 0; font-size: 11px; color: #888888;">
           <a href="${privacyUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 8px;">Informativa Privacy</a>
@@ -498,15 +498,15 @@ export function generatePrivilegeWelcomeEmailText({
   const privacyUrl = `${SITE_URL}/privacy`;
   const unsubscribeUrl = `${SITE_URL}/privacy#unsubscribe`;
 
-  return `ISABEL PEPE — HAUTE JOAILLERIE ITALIANA
-ISABEL PEPE PRIVILEGE
+  return `ISABEL PEPE — GIOIELLERIA DEMI-FINE ITALIANA
+L'UNIVERSO ISABEL PEPE
 
-Benvenuta in Isabel Pepe Privilege
+Benvenuta nell'Universo Isabel Pepe
 
 Gentile ${displayName},
-è un onore accoglierti in Isabel Pepe Privilege.
+è un piacere darti il benvenuto nell'Universo Isabel Pepe.
 
-La tua iscrizione ti apre le porte alle nostre creazioni d'alta gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
+La tua iscrizione ti apre le porte alle nostre creazioni di gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
 
 --------------------------------------------------
 IL TUO DONO DI BENVENUTO ESCLUSIVO
@@ -526,7 +526,7 @@ ${shopUrl}
 Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione: info@isabelpepe.com
 
 --------------------------------------------------
-Isabel Pepe • Haute Joaillerie Italiana
+Isabel Pepe • Gioielleria Demi-Fine Italiana
 Informativa Privacy: ${privacyUrl}
 Disiscrizione: ${unsubscribeUrl}
 `;
