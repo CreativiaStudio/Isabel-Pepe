@@ -335,7 +335,7 @@ async function runChallenger2Suite() {
   await challengerRunner.test('C2.7: sendPrivilegeWelcomeEmail handles invalid, empty, or non-string emails safely', async () => {
     const r1 = await sendPrivilegeWelcomeEmail({ to: '' });
     assertEqual(r1.success, false);
-    assert(Boolean(r1.error));
+    assert(Boolean(r1.error), 'Expected r1.error to be truthy');
 
     const r2 = await sendPrivilegeWelcomeEmail({ to: 'not_an_email' });
     assertEqual(r2.success, false);
