@@ -46,8 +46,11 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
   async function handleDelete(id: string) {
     if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
       setDeletingId(id);
-      await deleteProduct(id);
+      const result = await deleteProduct(id);
       setDeletingId(null);
+      if (result?.error) {
+        alert(`❌ Errore eliminazione: ${result.error}`);
+      }
     }
   }
 
