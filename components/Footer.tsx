@@ -200,12 +200,12 @@ export default function Footer() {
                   />
                   <label
                     htmlFor="footer-gdpr-consent"
-                    className="text-xs text-[#E8D3CF] tracking-wide leading-relaxed font-normal select-none cursor-pointer"
+                    className="text-xs text-[#F3EBE6] tracking-wide leading-relaxed font-normal select-none cursor-pointer"
                   >
                     Accetto l'
                     <Link
                       href="/privacy"
-                      className="text-white font-medium underline hover:text-[#C0A09A] transition-colors ml-1 mr-1"
+                      className="text-white font-semibold underline hover:text-[#C0A09A] transition-colors ml-1 mr-1"
                     >
                       Informativa sulla Privacy
                     </Link>
@@ -221,7 +221,7 @@ export default function Footer() {
                   </div>
                 )}
 
-                <span className="text-xs text-[#D6CECA] tracking-wide block font-light">
+                <span className="text-xs text-[#E5DCD6] tracking-wide block font-light">
                   🔒 Rispettiamo la tua privacy. Nessun invio superfluo, cancellazione in 1 click.
                 </span>
               </form>
@@ -235,22 +235,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3.5">
               <li>
-                <Link href="/shop?category=Collane" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/shop?category=Collane" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Collane & Punto Luce
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Orecchini" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/shop?category=Orecchini" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Orecchini & Pendenti
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Anelli" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/shop?category=Anelli" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Anelli Solitari & Pavé
                 </Link>
               </li>
               <li>
-                <Link href="/shop?category=Set" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/shop?category=Set" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Set Parure Royale
                 </Link>
               </li>
@@ -269,27 +269,27 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3.5">
               <li>
-                <Link href="/assistenza-clienti" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/assistenza-clienti" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Assistenza Clienti
                 </Link>
               </li>
               <li>
-                <Link href="/spedizioni-resi" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/spedizioni-resi" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Spedizioni & Resi (14gg)
                 </Link>
               </li>
               <li>
-                <Link href="/garanzia" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/garanzia" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Garanzia & Autenticità
                 </Link>
               </li>
               <li>
-                <Link href="/guida-taglie" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/guida-taglie" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Guida alle Taglie Anelli
                 </Link>
               </li>
               <li>
-                <Link href="/cura-gioielli" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/cura-gioielli" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Cura del Gioiello
                 </Link>
               </li>
@@ -309,22 +309,22 @@ export default function Footer() {
             </h3>
             <ul className="space-y-3.5 mb-8">
               <li>
-                <Link href="/privacy" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/privacy" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Privacy Policy (GDPR)
                 </Link>
               </li>
               <li>
-                <Link href="/cookie-policy" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/cookie-policy" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Cookie Policy
                 </Link>
               </li>
               <li>
-                <Link href="/termini-condizioni" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/termini-condizioni" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Termini e Condizioni
                 </Link>
               </li>
               <li>
-                <Link href="/termini-condizioni#recesso" className="text-xs sm:text-[13px] text-[#D6CECA] hover:text-white transition-colors duration-200 tracking-wide font-normal">
+                <Link href="/termini-condizioni#recesso" className="text-xs sm:text-[13px] text-[#F3EBE6] hover:text-white transition-colors duration-200 tracking-wide font-normal">
                   Diritto di Recesso (14 giorni)
                 </Link>
               </li>
@@ -410,7 +410,7 @@ export default function Footer() {
           
           {/* Badges Pagamento con Icone Ufficiali */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <span className="text-[11px] uppercase tracking-[0.2em] text-[#D6CECA] font-semibold">
+            <span className="text-[11px] uppercase tracking-[0.2em] text-[#E5DCD6] font-semibold">
               Pagamenti Sicuri & Rateali:
             </span>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto">
@@ -480,7 +480,7 @@ export default function Footer() {
           </div>
 
           {/* Impegno Etico */}
-          <div className="flex items-center justify-center text-xs uppercase tracking-[0.18em] text-[#D6CECA] font-normal w-full lg:w-auto">
+          <div className="flex items-center justify-center text-xs uppercase tracking-[0.18em] text-[#E5DCD6] font-normal w-full lg:w-auto">
             <Link href="/impegno-animali" className="text-[#E8D3CF] hover:text-white transition-colors flex items-center justify-center gap-2 font-medium text-center">
               <HeartHandshake size={16} className="shrink-0 text-[#C0A09A]" />
               <span className="text-center">L'Arte del Dono — Il 5% per gli Animali</span>
@@ -490,9 +490,9 @@ export default function Footer() {
         </div>
 
         {/* FOOTER BOTTOM: DATI SOCIETARI & COPYRIGHT */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#D6CECA] uppercase font-normal text-center md:text-left">
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#E5DCD6] uppercase font-normal text-center md:text-left">
           <p>© {new Date().getFullYear()} ISABEL PEPE. TUTTI I DIRITTI RISERVATI.</p>
-          <p className="normal-case tracking-normal text-[#D6CECA] text-xs text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal">
+          <p className="normal-case tracking-normal text-[#E5DCD6] text-xs text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal">
             Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-semibold text-white tracking-wider">Creativia Studio</span>
           </p>
         </div>
