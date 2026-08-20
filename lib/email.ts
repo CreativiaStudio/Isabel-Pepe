@@ -1,6 +1,12 @@
-const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
-const SENDER_EMAIL = process.env.RESEND_FROM_EMAIL || 'Isabel Pepe <info@isabelpepe.com>';
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://isabelpepe.com').replace(/\/$/, '');
+
+function getEmailConfig() {
+  return {
+    apiKey: process.env.RESEND_API_KEY || '',
+    senderEmail: process.env.RESEND_FROM_EMAIL || 'Isabel Pepe <info@isabelpepe.com>',
+    siteUrl: (process.env.NEXT_PUBLIC_SITE_URL || 'https://isabelpepe.com').replace(/\/$/, ''),
+  };
+}
 
 async function sendEmail({
   to,
@@ -13,14 +19,16 @@ async function sendEmail({
   html: string;
   text?: string;
 }) {
-  if (!RESEND_API_KEY) {
+  const { apiKey, senderEmail } = getEmailConfig();
+
+  if (!apiKey) {
     console.warn('⚠️ RESEND_API_KEY non configurata, email saltata.');
     return { success: false, error: 'Missing API key' };
   }
 
   try {
     const payload: Record<string, any> = {
-      from: SENDER_EMAIL,
+      from: senderEmail,
       to: Array.isArray(to) ? to : [to],
       subject,
       html,
@@ -33,7 +41,7 @@ async function sendEmail({
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
