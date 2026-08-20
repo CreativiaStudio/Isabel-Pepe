@@ -1,31 +1,48 @@
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const SENDER_EMAIL = process.env.RESEND_FROM_EMAIL || 'Isabel Pepe <info@isabelpepe.com>';
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://isabelpepe.com').replace(/\/$/, '');
 
-async function sendEmail({ to, subject, html }: { to: string | string[]; subject: string; html: string }) {
+async function sendEmail({
+  to,
+  subject,
+  html,
+  text,
+}: {
+  to: string | string[];
+  subject: string;
+  html: string;
+  text?: string;
+}) {
   if (!RESEND_API_KEY) {
     console.warn('⚠️ RESEND_API_KEY non configurata, email saltata.');
     return { success: false, error: 'Missing API key' };
   }
 
   try {
+    const payload: Record<string, any> = {
+      from: SENDER_EMAIL,
+      to: Array.isArray(to) ? to : [to],
+      subject,
+      html,
+    };
+
+    if (text) {
+      payload.text = text;
+    }
+
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${RESEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        from: SENDER_EMAIL,
-        to: Array.isArray(to) ? to : [to],
-        subject,
-        html,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
     if (res.ok) {
       console.log('✅ Email inviata con successo via Resend:', data.id);
-      return { success: true, data };
+      return { success: true, id: data.id, data };
     } else {
       console.error('❌ Errore invio Resend:', data);
       return { success: false, error: data };
@@ -136,7 +153,7 @@ export async function sendOrderConfirmationEmail({
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 30px auto;">
           <tr>
             <td align="center" style="border-radius: 2px; background-color: #1A1A1A;">
-              <a href="https://www.isabelpepe.com/account" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+              <a href="${SITE_URL}/account" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
                 Visualizza lo Stato dell'Ordine &rarr;
               </a>
             </td>
@@ -231,7 +248,7 @@ export async function sendShippingNotificationEmail({
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 30px auto;">
           <tr>
             <td align="center" style="border-radius: 2px; background-color: #1A1A1A;">
-              <a href="https://www.isabelpepe.com/account" target="_blank" style="display: inline-block; padding: 15px 34px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+              <a href="${SITE_URL}/account" target="_blank" style="display: inline-block; padding: 15px 34px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
                 Il Mio Account Isabel Pepe &rarr;
               </a>
             </td>
@@ -274,4 +291,272 @@ export async function sendShippingConfirmationEmail(
     trackingCode,
     courierName: 'GLS Express 24/48h',
   });
+}
+
+// 3. EMAIL BENVENUTA ATELIER PRIVÉ & PRIVILEGE CLUB (PRIVILEGE10)
+export interface PrivilegeWelcomeEmailParams {
+  to?: string;
+  email?: string;
+  customerEmail?: string;
+  firstName?: string;
+  customerName?: string;
+  couponCode?: string;
+}
+
+export function generatePrivilegeWelcomeEmailHtml({
+  firstName,
+  couponCode = 'PRIVILEGE10',
+}: {
+  firstName?: string;
+  couponCode?: string;
+}): string {
+  const displayName = firstName?.trim() || 'Cliente Esclusiva';
+  const shopUrl = `${SITE_URL}/shop`;
+  const privacyUrl = `${SITE_URL}/privacy`;
+  const unsubscribeUrl = `${SITE_URL}/privacy#unsubscribe`;
+
+  return `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Benvenuta nell'Atelier Privé — Isabel Pepe</title>
+</head>
+<body style="margin: 0; padding: 40px 15px; background-color: #FAF8F5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; color: #0D0D0D; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #EADFD9; border-radius: 4px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04); overflow: hidden;">
+    
+    <!-- Top Decorative Line -->
+    <tr>
+      <td style="height: 3px; background: linear-gradient(90deg, #8A5E58 0%, #C0A09A 50%, #8A5E58 100%);"></td>
+    </tr>
+
+    <!-- Header Section -->
+    <tr>
+      <td style="padding: 48px 36px 28px 36px; text-align: center;">
+        <p style="margin: 0 0 10px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.35em; color: #8A5E58; font-weight: 700;">
+          HAUTE JOAILLERIE ITALIANA
+        </p>
+        <h1 style="margin: 0 0 12px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 32px; letter-spacing: 0.25em; text-transform: uppercase; color: #C0A09A; font-weight: 700; line-height: 1.2;">
+          ISABEL PEPE
+        </h1>
+        <div style="height: 1px; width: 64px; background-color: #C0A09A; margin: 0 auto 20px auto;"></div>
+        <p style="margin: 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 16px; letter-spacing: 0.22em; text-transform: uppercase; color: #0D0D0D; font-weight: 600;">
+          L'ATELIER PRIVÉ
+        </p>
+      </td>
+    </tr>
+
+    <!-- Welcome Body -->
+    <tr>
+      <td style="padding: 0 36px 32px 36px; text-align: center;">
+        <h2 style="margin: 0 0 18px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 24px; color: #0D0D0D; font-weight: 500; letter-spacing: 0.04em; line-height: 1.35;">
+          Benvenuta nella nostra cerchia più esclusiva
+        </h2>
+        <p style="margin: 0 0 18px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
+          Gentile <strong>${displayName}</strong>, è un onore accoglierti nell'<strong>Atelier Privé Isabel Pepe</strong>.
+        </p>
+        <p style="margin: 0 0 28px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
+          La tua iscrizione ti apre le porte a un mondo dove l'eccellenza dell'alta gioielleria italiana si fonde con l'artigianalità senza tempo, la cura meticolosa delle pietre preziose e il design d'autore.
+        </p>
+
+        <!-- Luxury Coupon Box -->
+        <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #FAF7F5; border: 1px solid #E4D5CE; border-radius: 4px; margin: 0 0 36px 0;">
+          <tr>
+            <td style="padding: 28px 24px; text-align: center;">
+              <p style="margin: 0 0 8px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: #8A5E58; font-weight: 700;">
+                IL TUO REGALO DI BENVENUTO ESCLUSIVO
+              </p>
+              <p style="margin: 0 0 16px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 24px; font-weight: 600; color: #0D0D0D; letter-spacing: 0.05em;">
+                10% di Privilegio Riservato
+              </p>
+              <div style="display: inline-block; background-color: #FFFFFF; border: 1px dashed #C0A09A; padding: 14px 32px; border-radius: 2px; margin-bottom: 12px;">
+                <span style="font-family: 'Courier New', Courier, monospace; font-size: 22px; font-weight: bold; letter-spacing: 0.28em; color: #0D0D0D;">
+                  ${couponCode}
+                </span>
+              </div>
+              <p style="margin: 0; font-size: 12px; color: #736763; line-height: 1.5;">
+                Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto riservato ai soci.
+              </p>
+            </td>
+          </tr>
+        </table>
+
+        <!-- 3 Privilege Perks Section -->
+        <div style="text-align: left; margin-bottom: 36px; padding: 24px 20px; background-color: #FFFFFF; border-top: 1px solid #F0EAE6; border-bottom: 1px solid #F0EAE6;">
+          <p style="margin: 0 0 20px 0; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #8A5E58; font-weight: 700;">
+            I PRIVILEGI DEL CLUB PRIVÉ
+          </p>
+
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
+            <tr>
+              <td width="36" valign="top" style="padding-top: 2px;">
+                <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; background-color: #FAF7F5; border: 1px solid #C0A09A; color: #8A5E58; font-size: 11px; font-weight: bold;">
+                  1
+                </span>
+              </td>
+              <td valign="top">
+                <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
+                  Accesso Anticipato 48h
+                </p>
+                <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
+                  Scopri in anteprima assoluta le nuove collezioni, le edizioni numerate e i pezzi unici prima della presentazione ufficiale.
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
+            <tr>
+              <td width="36" valign="top" style="padding-top: 2px;">
+                <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; background-color: #FAF7F5; border: 1px solid #C0A09A; color: #8A5E58; font-size: 11px; font-weight: bold;">
+                  2
+                </span>
+              </td>
+              <td valign="top">
+                <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
+                  Vendite Private Stagionali
+                </p>
+                <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
+                  Inviti esclusivi agli appuntamenti di vendita privata e capsule collection riservate unicamente ai membri dell'Atelier.
+                </p>
+              </td>
+            </tr>
+          </table>
+
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="36" valign="top" style="padding-top: 2px;">
+                <span style="display: inline-block; width: 24px; height: 24px; line-height: 24px; text-align: center; border-radius: 50%; background-color: #FAF7F5; border: 1px solid #C0A09A; color: #8A5E58; font-size: 11px; font-weight: bold;">
+                  3
+                </span>
+              </td>
+              <td valign="top">
+                <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
+                  Servizio di Cura &amp; Pulizia Gratuita
+                </p>
+                <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
+                  Assistenza a vita e trattamento di lucidatura professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Luxury CTA Button -->
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 32px auto;">
+          <tr>
+            <td align="center" style="border-radius: 2px; background-color: #0D0D0D;">
+              <a href="${shopUrl}" target="_blank" style="display: inline-block; padding: 18px 42px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+                ESPLORA LA COLLEZIONE &rarr;
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Concierge / Atelier Note -->
+        <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #888888; font-style: italic;">
+          Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione.
+        </p>
+      </td>
+    </tr>
+
+    <!-- Footer Section -->
+    <tr>
+      <td style="padding: 28px 36px 36px 36px; background-color: #FAF8F5; border-top: 1px solid #EADFD9; text-align: center;">
+        <p style="margin: 0 0 6px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: #0D0D0D; font-weight: 600;">
+          Atelier Isabel Pepe
+        </p>
+        <p style="margin: 0 0 14px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58;">
+          Haute Joaillerie Italiana
+        </p>
+        <p style="margin: 0 0 12px 0; font-size: 11px; line-height: 1.6; color: #888888;">
+          Ricevi questa comunicazione perché hai confermato la tua iscrizione all'Atelier Privé Isabel Pepe con consenso al trattamento dati.
+        </p>
+        <p style="margin: 0; font-size: 11px; color: #888888;">
+          <a href="${privacyUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 8px;">Informativa Privacy</a>
+          •
+          <a href="${unsubscribeUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 8px;">Gestione Consensi &amp; Disiscrizione</a>
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</body>
+</html>`;
+}
+
+export function generatePrivilegeWelcomeEmailText({
+  firstName,
+  couponCode = 'PRIVILEGE10',
+}: {
+  firstName?: string;
+  couponCode?: string;
+}): string {
+  const displayName = firstName?.trim() || 'Cliente Esclusiva';
+  const shopUrl = `${SITE_URL}/shop`;
+  const privacyUrl = `${SITE_URL}/privacy`;
+  const unsubscribeUrl = `${SITE_URL}/privacy#unsubscribe`;
+
+  return `ISABEL PEPE — HAUTE JOAILLERIE ITALIANA
+L'ATELIER PRIVÉ
+
+Benvenuta nella nostra cerchia più esclusiva
+
+Gentile ${displayName},
+è un onore accoglierti nell'Atelier Privé Isabel Pepe.
+
+La tua iscrizione ti apre le porte a un mondo dove l'eccellenza dell'alta gioielleria italiana si fonde con l'artigianalità senza tempo, la cura meticolosa delle pietre preziose e il design d'autore.
+
+--------------------------------------------------
+IL TUO REGALO DI BENVENUTO ESCLUSIVO
+10% di Privilegio Riservato
+CODICE COUPON: ${couponCode}
+--------------------------------------------------
+Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto riservato ai soci.
+
+I PRIVILEGI DEL CLUB PRIVÉ:
+1. Accesso Anticipato 48h: Scopri in anteprima assoluta le nuove collezioni, le edizioni numerate e i pezzi unici prima della presentazione ufficiale.
+2. Vendite Private Stagionali: Inviti esclusivi agli appuntamenti di vendita privata e capsule collection riservate unicamente ai membri dell'Atelier.
+3. Servizio di Cura & Pulizia Gratuita: Assistenza a vita e trattamento di lucidatura professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+
+Esplora la Collezione:
+${shopUrl}
+
+Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione: info@isabelpepe.com
+
+--------------------------------------------------
+Atelier Isabel Pepe • Haute Joaillerie Italiana
+Informativa Privacy: ${privacyUrl}
+Disiscrizione: ${unsubscribeUrl}
+`;
+}
+
+export async function sendPrivilegeWelcomeEmail(
+  params: PrivilegeWelcomeEmailParams | { to: string; firstName?: string; couponCode?: string }
+): Promise<{ success: boolean; id?: string; data?: any; error?: any }> {
+  try {
+    const targetEmail = params?.to || (params as PrivilegeWelcomeEmailParams)?.customerEmail || (params as PrivilegeWelcomeEmailParams)?.email;
+    if (!targetEmail || typeof targetEmail !== 'string' || !targetEmail.includes('@')) {
+      console.error('❌ Errore invio email Privilege Welcome: indirizzo email non valido', targetEmail);
+      return { success: false, error: 'Indirizzo email mancante o non valido' };
+    }
+
+    const firstName = params?.firstName || (params as PrivilegeWelcomeEmailParams)?.customerName || '';
+    const couponCode = params?.couponCode || 'PRIVILEGE10';
+
+    const subject = "Benvenuta nell'Atelier Privé — Il Tuo Regalo Esclusivo Isabel Pepe";
+    const html = generatePrivilegeWelcomeEmailHtml({ firstName, couponCode });
+    const text = generatePrivilegeWelcomeEmailText({ firstName, couponCode });
+
+    return await sendEmail({
+      to: targetEmail.trim(),
+      subject,
+      html,
+      text,
+    });
+  } catch (error: any) {
+    console.error('❌ Eccezione durante sendPrivilegeWelcomeEmail:', error);
+    return { success: false, error: error?.message || error };
+  }
 }

@@ -1,43 +1,231 @@
 'use client';
 
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { HeartHandshake, Heart } from 'lucide-react';
+import { HeartHandshake, Heart, Check, Copy, Sparkles, AlertCircle, Loader2 } from 'lucide-react';
 
 export default function Footer() {
+  const [email, setEmail] = useState('');
+  const [gdprConsent, setGdprConsent] = useState(false);
+  const [websiteUrl, setWebsiteUrl] = useState(''); // Anti-bot honeypot
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const normalizedEmail = email.trim();
+    if (!normalizedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+      setStatus('error');
+      setErrorMessage('Inserisci un indirizzo email valido.');
+      return;
+    }
+
+    if (!gdprConsent) {
+      setStatus('error');
+      setErrorMessage('È necessario accettare l’Informativa sulla Privacy per accedere al Club.');
+      return;
+    }
+
+    setStatus('loading');
+    setErrorMessage('');
+
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: normalizedEmail,
+          gdprConsent: true,
+          source: 'footer',
+          website_url: websiteUrl,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setStatus('error');
+        setErrorMessage(data.error || 'Si è verificato un errore durante l’iscrizione. Riprova più tardi.');
+        return;
+      }
+
+      // Success
+      setStatus('success');
+      try {
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('isabel_subscribed', 'true');
+          localStorage.setItem('isabel_customer_email', normalizedEmail);
+        }
+      } catch {
+        // Storage access fallback
+      }
+    } catch {
+      setStatus('error');
+      setErrorMessage('Connessione al server non riuscita. Riprova tra qualche istante.');
+    }
+  };
+
+  const handleCopyCode = () => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText('PRIVILEGE10');
+      setCopied(true);
+      setTimeout(() => setCopied(false), 3000);
+    }
+  };
+
   return (
     <footer className="bg-[#0D0D0D] text-white pt-20 pb-12 px-4 sm:px-6 mt-auto border-t border-[#C0A09A]/40 overflow-hidden">
       <div className="max-w-[1400px] mx-auto w-full">
         
-        {/* GRIGLIA PRINCIPALE FOOTER (4 Colonne) */}
+        {/* GRIGLIA PRINCIPALE FOOTER (5 Colonne) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 mb-16">
           
-          {/* COLONNA 1 & 2: BRAND & NEWSLETTER EXECUTIVE */}
+          {/* COLONNA 1 & 2: BRAND & L'ATELIER PRIVÉ NEWSLETTER */}
           <div className="sm:col-span-2 lg:pr-12">
-            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-3 uppercase text-champagne-shimmer inline-block">
+            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-2 uppercase text-champagne-shimmer inline-block">
               ISABEL PEPE
             </h2>
+            
+            <div className="flex items-center gap-2 mb-3">
+              <span className="h-[1px] w-6 bg-[#C0A09A]/60"></span>
+              <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[#C0A09A] font-medium">
+                L'Atelier Privé — Il Club Esclusivo
+              </span>
+            </div>
+
             <p className="font-sans text-gray-400 text-xs leading-relaxed mb-6 font-light tracking-wider max-w-md">
-              Iscriviti al nostro Club Esclusivo per accedere in anteprima alle nuove collezioni e consigli di stile personalizzati.
+              Unisciti al cerchio riservato Isabel Pepe: ricevi il dono di benvenuto del <strong>10%</strong> sul tuo primo ordine, anteprime esclusive 48h sulle nuove creazioni e inviti alle vendite private.
             </p>
 
-            {/* Form Newsletter Premium */}
-            <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3 max-w-md">
-              <input
-                type="email"
-                placeholder="Inserisci la tua email..."
-                className="bg-white/5 border border-white/15 text-xs text-white placeholder-gray-500 px-4 py-3.5 outline-none focus:border-[#C0A09A] focus:bg-white/10 transition-all duration-300 rounded-none w-full"
-                required
-              />
-              <button
-                type="submit"
-                className="bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-[11px] uppercase tracking-[0.25em] px-8 py-3.5 font-medium transition-all duration-500 whitespace-nowrap shadow-lg"
-              >
-                Iscriviti
-              </button>
-            </form>
-            <span className="text-[10px] text-gray-500 tracking-wider block mt-3 font-light">
-              🔒 Rispettiamo la tua privacy. Puoi disiscriverti in qualsiasi momento.
-            </span>
+            {/* Newsletter Form o Success State */}
+            {status === 'success' ? (
+              <div className="bg-white/5 border border-[#C0A09A]/60 p-5 rounded-xs space-y-3.5 max-w-md animate-in fade-in zoom-in-95 duration-300">
+                <div className="flex items-center gap-2 text-[#C0A09A]">
+                  <Sparkles size={16} className="shrink-0" />
+                  <span className="font-serif text-sm uppercase tracking-widest text-white font-semibold">
+                    Benvenuta nell'Atelier Privé
+                  </span>
+                </div>
+                <p className="font-sans text-xs text-gray-300 leading-relaxed font-light">
+                  Il tuo dono esclusivo del <strong>10%</strong> è stato sbloccato. Abbiamo inviato la conferma alla tua email.
+                </p>
+                <div className="flex items-center justify-between bg-black/40 border border-[#C0A09A]/40 px-3.5 py-2.5 rounded-xs">
+                  <div className="space-y-0.5">
+                    <span className="font-sans text-[9px] uppercase tracking-widest text-gray-400 block font-light">
+                      Codice Regalo Esclusivo
+                    </span>
+                    <span className="font-mono text-sm tracking-widest text-[#E8D3CF] font-bold">
+                      PRIVILEGE10
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyCode}
+                    className="flex items-center gap-1.5 bg-[#C0A09A] hover:bg-white text-[#0D0D0D] px-3.5 py-2 text-[10px] uppercase font-sans tracking-[0.2em] font-semibold transition-all duration-300 rounded-xs cursor-pointer shadow-sm"
+                  >
+                    {copied ? (
+                      <>
+                        <Check size={13} className="text-green-700" />
+                        <span>Copiato!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={13} />
+                        <span>Copia Codice</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <span className="text-[10px] text-[#C0A09A]/80 tracking-wider block font-light">
+                  ✨ Valido su tutte le collezioni senza spesa minima.
+                </span>
+              </div>
+            ) : (
+              <form onSubmit={handleSubscribe} className="space-y-3 max-w-md" noValidate>
+                {/* Honeypot hidden input (anti-bot) */}
+                <input
+                  type="text"
+                  name="website_url"
+                  value={websiteUrl}
+                  onChange={(e) => setWebsiteUrl(e.target.value)}
+                  style={{ display: 'none' }}
+                  tabIndex={-1}
+                  autoComplete="off"
+                  aria-hidden="true"
+                />
+
+                <div className="flex flex-col sm:flex-row gap-2.5">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      if (status === 'error') setStatus('idle');
+                    }}
+                    placeholder="Il tuo indirizzo email..."
+                    className="bg-white/5 border border-white/20 text-xs text-white placeholder-gray-500 px-4 py-3.5 outline-none focus:border-[#C0A09A] focus:bg-white/10 transition-all duration-300 rounded-none w-full"
+                    disabled={status === 'loading'}
+                    required
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === 'loading'}
+                    className="bg-[#C0A09A] hover:bg-white text-[#0D0D0D] hover:text-[#0D0D0D] text-[11px] uppercase tracking-[0.25em] px-7 py-3.5 font-semibold transition-all duration-500 whitespace-nowrap shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {status === 'loading' ? (
+                      <>
+                        <Loader2 size={14} className="animate-spin text-[#0D0D0D]" />
+                        <span>Accesso...</span>
+                      </>
+                    ) : (
+                      <span>Iscriviti</span>
+                    )}
+                  </button>
+                </div>
+
+                {/* GDPR Consent Checkbox */}
+                <div className="flex items-start gap-2.5 pt-1">
+                  <input
+                    type="checkbox"
+                    id="footer-gdpr-consent"
+                    checked={gdprConsent}
+                    onChange={(e) => {
+                      setGdprConsent(e.target.checked);
+                      if (status === 'error') setStatus('idle');
+                    }}
+                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-white/30 bg-white/5 text-[#C0A09A] accent-[#C0A09A] cursor-pointer shrink-0"
+                    disabled={status === 'loading'}
+                  />
+                  <label
+                    htmlFor="footer-gdpr-consent"
+                    className="text-[10px] text-gray-400 tracking-wider leading-relaxed font-light select-none cursor-pointer"
+                  >
+                    Accetto l'
+                    <Link
+                      href="/privacy"
+                      className="text-gray-300 underline hover:text-[#C0A09A] transition-colors ml-1 mr-1"
+                    >
+                      Informativa sulla Privacy
+                    </Link>
+                    e acconsento alla ricezione di comunicazioni esclusive e anteprime dell'Atelier.
+                  </label>
+                </div>
+
+                {/* Error Message */}
+                {status === 'error' && errorMessage && (
+                  <div className="flex items-center gap-1.5 text-rose-300 text-xs tracking-wide pt-1 animate-in fade-in duration-200">
+                    <AlertCircle size={14} className="shrink-0 text-rose-400" />
+                    <span>{errorMessage}</span>
+                  </div>
+                )}
+
+                <span className="text-[10px] text-gray-500 tracking-wider block font-light">
+                  🔒 Rispettiamo la tua privacy. Nessun invio superfluo, cancellazione in 1 click.
+                </span>
+              </form>
+            )}
           </div>
 
           {/* COLONNA 3: COLLEZIONI */}

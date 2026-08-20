@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -13,6 +13,7 @@ import CartsTable from './CartsTable';
 import ConsentTable from './ConsentTable';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import JarvisDashboard from './JarvisDashboard';
+import NewsletterTable from './NewsletterTable';
 
 interface DashboardClientWrapperProps {
   products: any[];
@@ -23,25 +24,27 @@ interface DashboardClientWrapperProps {
   pageViews?: any[];
   dailyAnalytics?: any[];
   identities?: any[];
+  newsletterSubscribers?: any[];
   stats?: any;
   initialEditId?: string;
 }
 
-export default function DashboardClientWrapper({ 
-  products, 
-  orders, 
-  customers, 
-  carts, 
-  consents = [], 
-  pageViews = [], 
-  dailyAnalytics = [], 
-  identities = [], 
-  stats, 
-  initialEditId 
+export default function DashboardClientWrapper({
+  products,
+  orders,
+  customers,
+  carts,
+  consents = [],
+  pageViews = [],
+  dailyAnalytics = [],
+  identities = [],
+  newsletterSubscribers = [],
+  stats,
+  initialEditId,
 }: DashboardClientWrapperProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
 
@@ -49,9 +52,9 @@ export default function DashboardClientWrapper({
   useEffect(() => {
     const tab = searchParams.get('tab');
     if (tab) setActiveTab(tab);
-    
+
     if (initialEditId) {
-      const prod = products.find(p => p.id === initialEditId);
+      const prod = products.find((p) => p.id === initialEditId);
       if (prod) {
         setEditingProduct(prod);
         setActiveTab('products');
@@ -82,64 +85,63 @@ export default function DashboardClientWrapper({
       {/* Contenuto Principale Dinamico */}
       <div className="flex-1 overflow-y-auto h-screen bg-[#FAFAFA]">
         <div className="p-8 max-w-7xl mx-auto">
-          
           {activeTab === 'dashboard' && (
             <DashboardHome products={products} orders={orders} onNavigate={handleTabChange} />
           )}
 
+          {activeTab === 'privilege_club' && (
+            <NewsletterTable subscribers={newsletterSubscribers} />
+          )}
+
+          {activeTab === 'newsletter' && (
+            <NewsletterTable subscribers={newsletterSubscribers} />
+          )}
+
           {activeTab === 'analytics' && (
-            <AnalyticsDashboard 
-              pageViews={pageViews} 
-              dailyAnalytics={dailyAnalytics} 
-              identities={identities} 
-              products={products} 
-              orders={orders} 
-              carts={carts} 
+            <AnalyticsDashboard
+              pageViews={pageViews}
+              dailyAnalytics={dailyAnalytics}
+              identities={identities}
+              products={products}
+              orders={orders}
+              carts={carts}
             />
           )}
 
-          {activeTab === 'jarvis' && (
-            <JarvisDashboard stats={stats!} />
-          )}
+          {activeTab === 'jarvis' && <JarvisDashboard stats={stats!} />}
 
-          {activeTab === 'orders' && (
-            <OrdersTable orders={orders} />
-          )}
+          {activeTab === 'orders' && <OrdersTable orders={orders} />}
 
-          {activeTab === 'crm' && (
-            <CrmTable customers={customers} />
-          )}
+          {activeTab === 'crm' && <CrmTable customers={customers} />}
 
-          {activeTab === 'carts' && (
-            <CartsTable carts={carts} />
-          )}
+          {activeTab === 'carts' && <CartsTable carts={carts} />}
 
-          {activeTab === 'consents' && (
-            <ConsentTable consents={consents} />
-          )}
+          {activeTab === 'consents' && <ConsentTable consents={consents} />}
 
           {activeTab === 'products' && (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
               {/* Colonna Sinistra: Tabella (occupa tutto se non stiamo editando, altrimenti 2/3) */}
-              <div className={editingProduct ? "lg:col-span-2 space-y-6" : "lg:col-span-3 space-y-6"}>
-                <ProductTable products={products} onEdit={handleEditProduct} onAddNew={() => setEditingProduct({})} />
+              <div className={editingProduct ? 'lg:col-span-2 space-y-6' : 'lg:col-span-3 space-y-6'}>
+                <ProductTable
+                  products={products}
+                  onEdit={handleEditProduct}
+                  onAddNew={() => setEditingProduct({})}
+                />
               </div>
-              
+
               {/* Colonna Destra: Modulo Inserimento/Modifica (visibile solo in editing/nuovo) */}
               {editingProduct && (
                 <div className="lg:col-span-1 sticky top-4 self-start">
-                  <ProductForm 
-                    initialData={Object.keys(editingProduct).length > 0 ? editingProduct : undefined} 
-                    onCancel={handleCancelEdit} 
+                  <ProductForm
+                    initialData={Object.keys(editingProduct).length > 0 ? editingProduct : undefined}
+                    onCancel={handleCancelEdit}
                   />
                 </div>
               )}
             </div>
           )}
 
-          {activeTab === 'shipping' && (
-            <ShippingTable orders={orders} />
-          )}
+          {activeTab === 'shipping' && <ShippingTable orders={orders} />}
 
           {activeTab === 'settings' && (
             <div className="bg-white p-8 border border-gray-100 rounded-sm">
@@ -147,7 +149,6 @@ export default function DashboardClientWrapper({
               <p className="font-sans text-[11px] text-gray-500 uppercase tracking-widest">In arrivo...</p>
             </div>
           )}
-
         </div>
       </div>
     </>

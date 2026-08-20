@@ -73,6 +73,7 @@ import Footer from "@/components/Footer";
 import CartDrawer from "@/components/CartDrawer";
 import WishlistDrawer from "@/components/WishlistDrawer";
 import CookieBanner from "@/components/CookieBanner";
+import PrivilegeClubModal from "@/components/PrivilegeClubModal";
 import Tracker from "@/components/Tracker";
 import { Suspense } from "react";
 
@@ -96,7 +97,9 @@ export default function RootLayout({
         <CartDrawer />
         <WishlistDrawer />
         <CookieBanner />
+        <PrivilegeClubModal />
       </body>
     </html>
   );
 }
+

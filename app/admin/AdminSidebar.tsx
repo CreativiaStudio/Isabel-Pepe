@@ -1,5 +1,19 @@
 import React from 'react';
-import { Package, LayoutDashboard, ShoppingCart, Truck, Settings, LogOut, Users, ShoppingBag, Bot, ShieldCheck, BarChart3 } from 'lucide-react';
+import {
+  Package,
+  LayoutDashboard,
+  ShoppingCart,
+  Truck,
+  Settings,
+  LogOut,
+  Users,
+  ShoppingBag,
+  Bot,
+  ShieldCheck,
+  BarChart3,
+  Crown,
+  Sparkles,
+} from 'lucide-react';
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -9,6 +23,7 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'privilege_club', label: 'Privilege Club', icon: Crown, highlight: true },
     { id: 'analytics', label: 'Analytics & Traffico', icon: BarChart3 },
     { id: 'jarvis', label: 'Jarvis AI', icon: Bot },
     { id: 'orders', label: 'Ordini', icon: ShoppingCart },
@@ -26,7 +41,7 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
         <p className="font-sans text-[9px] uppercase tracking-[0.2em] text-[#C0A09A] mt-1">Admin Panel</p>
       </div>
 
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -34,30 +49,37 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
             <button
               key={item.id}
               onClick={() => setActiveTab(item.id)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] ${
-                isActive 
-                  ? 'bg-[#1A1A1A] text-white' 
+              className={`w-full flex items-center justify-between px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] cursor-pointer ${
+                isActive
+                  ? 'bg-[#1A1A1A] text-white'
+                  : item.highlight
+                  ? 'text-[#8A5E58] bg-[#FAF4F2]/60 hover:bg-[#FAF4F2] hover:text-[#8A5E58]'
                   : 'text-gray-500 hover:bg-gray-50 hover:text-gray-900'
               }`}
             >
-              <Icon className="w-4 h-4" />
-              {item.label}
+              <div className="flex items-center gap-3">
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : item.highlight ? 'text-[#C0A09A]' : 'text-gray-400'}`} />
+                <span>{item.label}</span>
+              </div>
+              {item.highlight && !isActive && (
+                <span className="w-2 h-2 rounded-full bg-[#C0A09A]" />
+              )}
             </button>
           );
         })}
       </nav>
 
       <div className="p-4 border-t border-gray-100 space-y-2">
-        <button 
+        <button
           onClick={() => setActiveTab('settings')}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] text-gray-500 hover:bg-gray-50 hover:text-gray-900 cursor-pointer"
         >
           <Settings className="w-4 h-4" />
           Impostazioni
         </button>
-        <button 
-          onClick={() => window.location.href = '/account'}
-          className="w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] text-red-400 hover:bg-red-50 hover:text-red-500"
+        <button
+          onClick={() => (window.location.href = '/account')}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-md transition-colors text-left font-sans text-[11px] uppercase tracking-[0.1em] text-red-400 hover:bg-red-50 hover:text-red-500 cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
           Esci Admin

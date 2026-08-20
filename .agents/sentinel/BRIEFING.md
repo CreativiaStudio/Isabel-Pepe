@@ -1,27 +1,24 @@
-# BRIEFING — 2026-08-19T17:30:28Z
+# BRIEFING — 2026-08-20T08:05:10Z
 
 ## Mission
-Implement an ultra-advanced, first-party analytics and traffic intelligence system for the Isabel Pepe luxury e-commerce (bot-immune tracking, multi-channel attribution, conversion funnel, geolocation, Search Console integration, high-end admin dashboard & drill-down pages).
+Oversee the implementation and victory audit of the Isabel Pepe Privilege Club ecosystem.
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel
-- Orchestrator: e3189b3f-80a1-46af-9f4c-ef020fcd30ef
-- Victory Auditor: 3364e099-4bbc-488a-bd0e-67464906eda3
-- Current Orchestrator: e3189b3f-80a1-46af-9f4c-ef020fcd30ef
-- Current Victory Auditor: 3364e099-4bbc-488a-bd0e-67464906eda3
+- Orchestrator: 2a8f2a2a-59aa-4158-a679-5c1d4f933e76 (Gen 2 successor)
+- Victory Auditor: 98b9918c-05f0-406c-82a3-7dc5c50ada6d
 
 ## 🔒 Key Constraints
 - No technical decisions — relay only
 - Victory Audit is MANDATORY before reporting completion
-
-## Routing Rationale
-- Routed to `teamwork_preview_orchestrator` (General path). Requires full-stack architecture, client/server tracking upgrade, database schema / aggregation queries, high-end UI components, drill-down analytics views, Search Console integration, and end-to-end verification.
+- Must route via Routing Decision Table (routed to teamwork_preview_orchestrator for General SWE project)
+- Must maintain cron monitoring for progress and liveness
 
 ## User Context
-- **Last user request**: Implement an ultra-advanced, first-party analytics and traffic intelligence system for the Isabel Pepe luxury e-commerce.
+- **Last user request**: Implement the complete "Isabel Pepe Privilege Club" ecosystem (Footer & GDPR compliance, Resend welcome email with PRIVILEGE10 code, discreet luxury invitation popup, and Admin CRM filterable views + CSV export).
 - **Pending clarifications**: none
-- **Delivered results**: First-party tracking engine with bot filtering, omnichannel attribution, 30-min sessioning, 5-stage e-commerce conversion funnel, admin analytics dashboard, drill-down modals (Pages, Campaigns, Geo), Search Console integration, and Supabase analytics schema.
+- **Delivered results**: Complete Isabel Pepe Privilege Club ecosystem implemented, fully verified via independent victory audit with 100% pass rate.
 
 ## Project Status
 - **Phase**: complete
@@ -32,11 +29,6 @@ Implement an ultra-advanced, first-party analytics and traffic intelligence syst
 - **Retry count**: 0
 
 ## Artifact Index
-- ORIGINAL_REQUEST.md — Verbatim record of user requests
-- .agents/ORIGINAL_REQUEST.md — Agent record of user requests
-- .agents/sentinel/handoff.md — Sentinel final handoff report
-- .agents/orchestrator_4/ — Orchestrator workspace
-- .agents/victory_auditor_2/handoff.md — Victory Auditor verdict report
-
-
-
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\ORIGINAL_REQUEST.md — Authoritative record of user request
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator_2\handoff.md — Orchestrator completion report
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel\handoff.md — Sentinel final handoff report

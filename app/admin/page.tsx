@@ -28,6 +28,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   let pageViews: any[] = [];
   let dailyAnalytics: any[] = [];
   let identities: any[] = [];
+  let newsletterSubscribers: any[] = [];
   let totalViews = 0;
 
   try {
@@ -73,6 +74,12 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       .select('*');
     identities = idData || [];
 
+    const { data: subs } = await supabaseAdmin
+      .from('newsletter_subscribers')
+      .select('*')
+      .order('created_at', { ascending: false });
+    newsletterSubscribers = subs || [];
+
     const { data: pv, count } = await supabaseAdmin
       .from('page_views')
       .select('*', { count: 'exact' })
@@ -108,6 +115,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
         pageViews={pageViews || []}
         dailyAnalytics={dailyAnalytics || []}
         identities={identities || []}
+        newsletterSubscribers={newsletterSubscribers || []}
         stats={stats}
         initialEditId={editId} 
       />
