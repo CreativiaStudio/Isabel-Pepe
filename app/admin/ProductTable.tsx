@@ -1,10 +1,13 @@
 'use client'
 
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { updateProductField, updateProductImage, seedSampleProducts, deleteProduct } from './actions';
 import { Check, Edit2, Image as ImageIcon, Loader2, Play, Trash2, Search, ArrowUpDown, ArrowUp, ArrowDown, Filter, Eye, EyeOff, Plus } from 'lucide-react';
 
-export default function ProductTable({ products, onEdit, onAddNew }: { products: any[], onEdit?: (product: any) => void, onAddNew?: () => void }) {
+export default function ProductTable({ products = [], onEdit, onAddNew }: { products: any[], onEdit?: (product: any) => void, onAddNew?: () => void }) {
+  const router = useRouter();
+  const [productList, setProductList] = useState<any[]>(products || []);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editField, setEditField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>('');
@@ -15,6 +18,11 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [targetImageType, setTargetImageType] = useState<'primary'|'secondary'>('primary');
 
+  // Sincronizza lo stato locale quando i props cambiano
+  useEffect(() => {
+    setProductList(products || []);
+  }, [products]);
+
   // Filtri e Ordinamento
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('Tutte');
@@ -22,13 +30,16 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
   const [sortField, setSortField] = useState<'price' | 'status' | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc' | null>(null);
 
-  const activeCount = useMemo(() => (products || []).filter(p => p.is_active).length, [products]);
-  const draftCount = useMemo(() => (products || []).filter(p => !p.is_active).length, [products]);
+  const activeCount = useMemo(() => (productList || []).filter(p => p.is_active).length, [productList]);
+  const draftCount = useMemo(() => (productList || []).filter(p => !p.is_active).length, [productList]);
 
   async function handleSaveField(id: string, field: string) {
-    await updateProductField(id, field, field === 'price' || field === 'stock' ? Number(editValue) : editValue);
+    const val = field === 'price' || field === 'stock' ? Number(editValue) : editValue;
+    setProductList(prev => prev.map(p => p.id === id ? { ...p, [field]: val } : p));
     setEditingId(null);
     setEditField(null);
+    await updateProductField(id, field, val);
+    router.refresh();
   }
 
   function startEditing(id: string, field: string, currentValue: any) {
@@ -41,23 +52,47 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
     setLoadingSeed(true);
     await seedSampleProducts();
     setLoadingSeed(false);
+    router.refresh();
   }
 
   async function handleDelete(id: string) {
-    if (window.confirm('Sei sicuro di voler eliminare questo prodotto?')) {
-      setDeletingId(id);
+    if (!window.confirm('Sei sicuro di voler eliminare questo prodotto?')) return;
+
+    const previousList = [...productList];
+    // Aggiornamento ottimistico immediato: scompare subito dalla UI
+    setProductList(prev => prev.filter(p => p.id !== id));
+    setDeletingId(id);
+
+    try {
+      // 1. Prova tramite Server Action
       const result = await deleteProduct(id);
-      setDeletingId(null);
+      
+      // 2. Se fallisce o non supportato, prova tramite REST API
       if (result?.error) {
-        alert(`❌ Errore eliminazione: ${result.error}`);
+        const res = await fetch(`/api/admin/products?id=${id}`, { method: 'DELETE' });
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || result.error || 'Errore durante l\'eliminazione');
+        }
       }
+      
+      router.refresh();
+    } catch (err: any) {
+      console.error('Delete error:', err);
+      // Ripristina la lista se l'eliminazione è fallita
+      setProductList(previousList);
+      alert(`❌ Errore eliminazione: ${err.message || 'Impossibile eliminare il prodotto'}`);
+    } finally {
+      setDeletingId(null);
     }
   }
 
   async function handleToggleVisibility(id: string, currentStatus: boolean) {
     setTogglingId(id);
+    setProductList(prev => prev.map(p => p.id === id ? { ...p, is_active: !currentStatus } : p));
     await updateProductField(id, 'is_active', !currentStatus);
     setTogglingId(null);
+    router.refresh();
   }
 
   function openImagePopup(id: string, type: 'primary' | 'secondary') {
@@ -74,6 +109,7 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
     await updateProductImage(editingId, file, targetImageType);
     setUploadingImageId(null);
     setEditingId(null);
+    router.refresh();
   }
 
   function togglePriceSort() {
@@ -102,7 +138,7 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
 
   // Applica filtri e ordinamento
   const filteredProducts = useMemo(() => {
-    let result = [...(products || [])];
+    let result = [...(productList || [])];
 
     // 1. Ricerca (Cerca sia nel Nome che nello SKU)
     if (searchQuery) {
@@ -135,7 +171,7 @@ export default function ProductTable({ products, onEdit, onAddNew }: { products:
     }
 
     return result;
-  }, [products, searchQuery, categoryFilter, statusFilter, sortField, sortOrder]);
+  }, [productList, searchQuery, categoryFilter, statusFilter, sortField, sortOrder]);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">

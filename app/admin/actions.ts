@@ -271,34 +271,12 @@ export async function updateFullProduct(id: string, formData: FormData) {
 
 export async function deleteProduct(id: string) {
   try {
-    // Prima archivia su Stripe se esiste stripe_product_id
-    const { data: product } = await supabaseAdmin
-      .from('products')
-      .select('stripe_product_id, slug')
-      .eq('id', id)
-      .single();
-
-    // Timeout di 8 secondi per non bloccare la UI
-    const deletePromise = supabaseAdmin.from('products').delete().eq('id', id);
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error('Timeout: operazione troppo lenta. Controlla i vincoli del database.')), 8000)
-    );
-
-    const { error } = await Promise.race([deletePromise, timeoutPromise]) as any;
-
+    const { error } = await supabaseAdmin.from('products').delete().eq('id', id);
     if (error) throw new Error(error.message);
-
-    // Disattiva il prodotto su Stripe (non lo elimina, evita errori)
-    if (product?.stripe_product_id) {
-      try {
-        await stripe.products.update(product.stripe_product_id, { active: false });
-      } catch (_) { /* ignora errori Stripe */ }
-    }
 
     revalidatePath('/admin');
     revalidatePath('/shop');
     revalidatePath('/');
-    if (product?.slug) revalidatePath(`/prodotto/${product.slug}`);
     return { success: true };
   } catch (error: any) {
     console.error('deleteProduct error:', error);
