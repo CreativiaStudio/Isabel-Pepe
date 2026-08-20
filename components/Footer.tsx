@@ -82,30 +82,30 @@ export default function Footer() {
         {/* GRIGLIA PRINCIPALE FOOTER (5 Colonne) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12 mb-16">
           
-          {/* COLONNA 1 & 2: BRAND & L'ATELIER PRIVÉ NEWSLETTER */}
+          {/* COLONNA 1 & 2: BRAND & ISABEL PEPE PRIVILEGE NEWSLETTER */}
           <div className="sm:col-span-2 lg:pr-12">
-            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-2 uppercase text-champagne-shimmer inline-block">
+            <h2 className="font-serif tracking-[0.25em] text-3xl sm:text-4xl mb-2 uppercase text-[#FAF6F0] inline-block font-bold">
               ISABEL PEPE
             </h2>
             
             <div className="flex items-center gap-2 mb-3">
-              <span className="h-[1px] w-6 bg-[#C0A09A]/60"></span>
-              <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[#C0A09A] font-medium">
-                L'Atelier Privé — Il Club Esclusivo
+              <span className="h-[1px] w-6 bg-[#C0A09A]/80"></span>
+              <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[#E8D3CF] font-semibold">
+                ISABEL PEPE PRIVILEGE
               </span>
             </div>
 
-            <p className="font-sans text-gray-400 text-xs leading-relaxed mb-6 font-light tracking-wider max-w-md">
-              Unisciti al cerchio riservato Isabel Pepe: ricevi il dono di benvenuto del <strong>10%</strong> sul tuo primo ordine, anteprime esclusive 48h sulle nuove creazioni e inviti alle vendite private.
+            <p className="font-sans text-[#D6CECA] text-xs sm:text-[13px] leading-relaxed mb-6 font-normal tracking-wide max-w-md">
+              Ricevi un dono di benvenuto del <strong>10%</strong> sul tuo primo gioiello e accedi a vantaggi e selezioni esclusive dedicate a te.
             </p>
 
             {/* Newsletter Form o Success State */}
             {status === 'success' ? (
               <div className="bg-white/5 border border-[#C0A09A]/60 p-5 rounded-xs space-y-3.5 max-w-md animate-in fade-in zoom-in-95 duration-300">
-                <div className="flex items-center gap-2 text-[#C0A09A]">
+                <div className="flex items-center gap-2 text-[#E8D3CF]">
                   <Sparkles size={16} className="shrink-0" />
-                  <span className="font-serif text-sm uppercase tracking-widest text-white font-semibold">
-                    Benvenuta nell'Atelier Privé
+                  <span className="font-serif text-sm uppercase tracking-widest text-[#FAF6F0] font-semibold">
+                    Benvenuta in Isabel Pepe Privilege
                   </span>
                 </div>
                 <p className="font-sans text-xs text-gray-300 leading-relaxed font-light">
@@ -180,7 +180,7 @@ export default function Footer() {
                         <span>Accesso...</span>
                       </>
                     ) : (
-                      <span>Iscriviti</span>
+                      <span>Entra nel Club</span>
                     )}
                   </button>
                 </div>
@@ -209,7 +209,7 @@ export default function Footer() {
                     >
                       Informativa sulla Privacy
                     </Link>
-                    e acconsento alla ricezione di comunicazioni esclusive e anteprime dell'Atelier.
+                    e acconsento alla ricezione di comunicazioni e vantaggi esclusivi.
                   </label>
                 </div>
 

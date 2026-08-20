@@ -236,11 +236,11 @@ export default function PrivilegeClubModal() {
               id="privilege-modal-title"
               className="font-serif text-2xl sm:text-3xl uppercase tracking-widest text-[#1A1A1A] font-normal"
             >
-              L'Atelier Privé
+              Isabel Pepe Privilege
             </h2>
 
             <p className="font-sans text-xs sm:text-[13px] text-gray-600 leading-relaxed font-light">
-              Entra nel cerchio riservato dei nostri clienti d'élite e ricevi un <strong>dono di benvenuto del 10%</strong> sul tuo primo ordine.
+              Ricevi un <strong>dono di benvenuto del 10%</strong> sul tuo primo gioiello e accedi a vantaggi e selezioni esclusive dedicate a te.
             </p>
           </div>
 
@@ -250,7 +250,7 @@ export default function PrivilegeClubModal() {
               <div className="flex items-center gap-2 text-[#8A5E58]">
                 <Sparkles size={18} />
                 <h3 className="font-serif text-base uppercase tracking-widest font-semibold text-[#1A1A1A]">
-                  Benvenuta nel Privilege Club
+                  Benvenuta in Isabel Pepe Privilege
                 </h3>
               </div>
 
@@ -316,25 +316,13 @@ export default function PrivilegeClubModal() {
                 </div>
 
                 <div className="flex items-start gap-2 bg-white/70 p-2.5 rounded-xs border border-[#EADFD9]">
-                  <Clock size={15} className="text-[#8A5E58] shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-serif text-[11px] font-bold uppercase tracking-wider text-gray-900 block leading-tight">
-                      Anteprima 48h
-                    </span>
-                    <span className="font-sans text-[10px] text-gray-500 font-light block leading-tight">
-                      Edizioni limitate
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2 bg-white/70 p-2.5 rounded-xs border border-[#EADFD9]">
                   <Sparkles size={15} className="text-[#8A5E58] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-serif text-[11px] font-bold uppercase tracking-wider text-gray-900 block leading-tight">
-                      Vendite Private
+                      Creazioni Esclusive
                     </span>
                     <span className="font-sans text-[10px] text-gray-500 font-light block leading-tight">
-                      Inviti riservati
+                      Novità dedicate
                     </span>
                   </div>
                 </div>
@@ -350,9 +338,21 @@ export default function PrivilegeClubModal() {
                     </span>
                   </div>
                 </div>
+
+                <div className="flex items-start gap-2 bg-white/70 p-2.5 rounded-xs border border-[#EADFD9]">
+                  <Clock size={15} className="text-[#8A5E58] shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-serif text-[11px] font-bold uppercase tracking-wider text-gray-900 block leading-tight">
+                      Spedizione Rapida
+                    </span>
+                    <span className="font-sans text-[10px] text-gray-500 font-light block leading-tight">
+                      48h assicurata
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              {/* Form */}
+              {/* Privilege Registration Form */}
               <form onSubmit={handleSubmit} className="space-y-3" noValidate>
                 {/* Honeypot hidden input (anti-bot) */}
                 <input
@@ -366,15 +366,16 @@ export default function PrivilegeClubModal() {
                   aria-hidden="true"
                 />
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="space-y-2">
                   <input
                     type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    placeholder="Nome (opzionale)"
-                    className="sm:col-span-1 bg-white border border-[#D5C7C1] text-xs text-gray-900 placeholder-gray-400 px-3.5 py-3 outline-none focus:border-[#8A5E58] transition-colors rounded-none w-full"
+                    placeholder="Il tuo nome (opzionale)"
+                    className="w-full bg-white border border-[#EADFD9] px-3.5 py-2.5 text-xs text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#C0A09A] transition-colors rounded-xs"
                     disabled={status === 'loading'}
                   />
+
                   <input
                     type="email"
                     value={email}
@@ -382,31 +383,15 @@ export default function PrivilegeClubModal() {
                       setEmail(e.target.value);
                       if (status === 'error') setStatus('idle');
                     }}
-                    placeholder="Il tuo indirizzo email..."
-                    className="sm:col-span-2 bg-white border border-[#D5C7C1] text-xs text-gray-900 placeholder-gray-400 px-3.5 py-3 outline-none focus:border-[#8A5E58] transition-colors rounded-none w-full"
+                    placeholder="Il tuo indirizzo email *"
+                    className="w-full bg-white border border-[#EADFD9] px-3.5 py-2.5 text-xs text-gray-900 placeholder:text-gray-400 outline-none focus:border-[#C0A09A] transition-colors rounded-xs"
                     disabled={status === 'loading'}
                     required
                   />
                 </div>
 
-                {/* Submit Button */}
-                <button
-                  type="submit"
-                  disabled={status === 'loading'}
-                  className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white text-xs uppercase tracking-[0.25em] py-3.5 font-semibold transition-all duration-300 shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                >
-                  {status === 'loading' ? (
-                    <>
-                      <Loader2 size={15} className="animate-spin text-white" />
-                      <span>Attivazione Privilegi...</span>
-                    </>
-                  ) : (
-                    <span>Ricevi il Dono 10% & Accedi →</span>
-                  )}
-                </button>
-
                 {/* GDPR Consent Checkbox */}
-                <div className="flex items-start gap-2 pt-1">
+                <div className="flex items-start gap-2 pt-0.5">
                   <input
                     type="checkbox"
                     id="modal-gdpr-consent"

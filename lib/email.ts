@@ -342,7 +342,7 @@ export function generatePrivilegeWelcomeEmailHtml({
         </h1>
         <div style="height: 1px; width: 64px; background-color: #C0A09A; margin: 0 auto 20px auto;"></div>
         <p style="margin: 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 16px; letter-spacing: 0.22em; text-transform: uppercase; color: #0D0D0D; font-weight: 600;">
-          L'ATELIER PRIVÉ
+          ISABEL PEPE PRIVILEGE
         </p>
       </td>
     </tr>
@@ -351,13 +351,13 @@ export function generatePrivilegeWelcomeEmailHtml({
     <tr>
       <td style="padding: 0 36px 32px 36px; text-align: center;">
         <h2 style="margin: 0 0 18px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 24px; color: #0D0D0D; font-weight: 500; letter-spacing: 0.04em; line-height: 1.35;">
-          Benvenuta nella nostra cerchia più esclusiva
+          Benvenuta in Isabel Pepe Privilege
         </h2>
         <p style="margin: 0 0 18px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
-          Gentile <strong>${displayName}</strong>, è un onore accoglierti nell'<strong>Atelier Privé Isabel Pepe</strong>.
+          Gentile <strong>${displayName}</strong>, è un onore accoglierti in <strong>Isabel Pepe Privilege</strong>.
         </p>
         <p style="margin: 0 0 28px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
-          La tua iscrizione ti apre le porte a un mondo dove l'eccellenza dell'alta gioielleria italiana si fonde con l'artigianalità senza tempo, la cura meticolosa delle pietre preziose e il design d'autore.
+          La tua iscrizione ti apre le porte alle nostre creazioni d'alta gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
         </p>
 
         <!-- Luxury Coupon Box -->
@@ -365,7 +365,7 @@ export function generatePrivilegeWelcomeEmailHtml({
           <tr>
             <td style="padding: 28px 24px; text-align: center;">
               <p style="margin: 0 0 8px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em; color: #8A5E58; font-weight: 700;">
-                IL TUO REGALO DI BENVENUTO ESCLUSIVO
+                IL TUO DONO DI BENVENUTO ESCLUSIVO
               </p>
               <p style="margin: 0 0 16px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 24px; font-weight: 600; color: #0D0D0D; letter-spacing: 0.05em;">
                 10% di Privilegio Riservato
@@ -376,7 +376,7 @@ export function generatePrivilegeWelcomeEmailHtml({
                 </span>
               </div>
               <p style="margin: 0; font-size: 12px; color: #736763; line-height: 1.5;">
-                Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto riservato ai soci.
+                Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto sul tuo primo gioiello.
               </p>
             </td>
           </tr>
@@ -385,7 +385,7 @@ export function generatePrivilegeWelcomeEmailHtml({
         <!-- 3 Privilege Perks Section -->
         <div style="text-align: left; margin-bottom: 36px; padding: 24px 20px; background-color: #FFFFFF; border-top: 1px solid #F0EAE6; border-bottom: 1px solid #F0EAE6;">
           <p style="margin: 0 0 20px 0; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em; color: #8A5E58; font-weight: 700;">
-            I PRIVILEGI DEL CLUB PRIVÉ
+            I VANTAGGI DI ISABEL PEPE PRIVILEGE
           </p>
 
           <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 16px;">
@@ -397,10 +397,10 @@ export function generatePrivilegeWelcomeEmailHtml({
               </td>
               <td valign="top">
                 <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
-                  Accesso Anticipato 48h
+                  Creazioni & Selezioni Esclusive
                 </p>
                 <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
-                  Scopri in anteprima assoluta le nuove collezioni, le edizioni numerate e i pezzi unici prima della presentazione ufficiale.
+                  Scopri in anteprima le nuove creazioni, le parure e i gioielli d'alta gamma selezionati per te.
                 </p>
               </td>
             </tr>
@@ -415,10 +415,10 @@ export function generatePrivilegeWelcomeEmailHtml({
               </td>
               <td valign="top">
                 <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
-                  Vendite Private Stagionali
+                  Doni & Inviti Riservati
                 </p>
                 <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
-                  Inviti esclusivi agli appuntamenti di vendita privata e capsule collection riservate unicamente ai membri dell'Atelier.
+                  Attenzioni dedicate, regali di compleanno e vantaggi pensati unicamente per i membri iscritti.
                 </p>
               </td>
             </tr>
@@ -436,7 +436,7 @@ export function generatePrivilegeWelcomeEmailHtml({
                   Servizio di Cura &amp; Pulizia Gratuita
                 </p>
                 <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
-                  Assistenza a vita e trattamento di lucidatura professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+                  Assistenza a vita e panno lucidante professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
                 </p>
               </td>
             </tr>
@@ -545,7 +545,7 @@ export async function sendPrivilegeWelcomeEmail(
     const firstName = params?.firstName || (params as PrivilegeWelcomeEmailParams)?.customerName || '';
     const couponCode = params?.couponCode || 'PRIVILEGE10';
 
-    const subject = "Benvenuta nell'Atelier Privé — Il Tuo Regalo Esclusivo Isabel Pepe";
+    const subject = "💎 Benvenuta in Isabel Pepe Privilege — Il tuo dono esclusivo del 10%";
     const html = generatePrivilegeWelcomeEmailHtml({ firstName, couponCode });
     const text = generatePrivilegeWelcomeEmailText({ firstName, couponCode });
 
