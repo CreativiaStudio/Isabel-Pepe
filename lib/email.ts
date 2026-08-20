@@ -342,7 +342,7 @@ export function generatePrivilegeWelcomeEmailHtml({
         </h1>
         <div style="height: 1px; width: 64px; background-color: #C0A09A; margin: 0 auto 20px auto;"></div>
         <p style="margin: 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 16px; letter-spacing: 0.22em; text-transform: uppercase; color: #0D0D0D; font-weight: 600;">
-          ISABEL PEPE PRIVILEGE
+          L'UNIVERSO ISABEL PEPE
         </p>
       </td>
     </tr>
@@ -351,10 +351,10 @@ export function generatePrivilegeWelcomeEmailHtml({
     <tr>
       <td style="padding: 0 36px 32px 36px; text-align: center;">
         <h2 style="margin: 0 0 18px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 24px; color: #0D0D0D; font-weight: 500; letter-spacing: 0.04em; line-height: 1.35;">
-          Benvenuta in Isabel Pepe Privilege
+          Benvenuta nell'Universo Isabel Pepe
         </h2>
         <p style="margin: 0 0 18px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
-          Gentile <strong>${displayName}</strong>, è un onore accoglierti in <strong>Isabel Pepe Privilege</strong>.
+          Gentile <strong>${displayName}</strong>, è un piacere darti il benvenuto nell'<strong>Universo Isabel Pepe</strong>.
         </p>
         <p style="margin: 0 0 28px 0; font-size: 14px; line-height: 1.75; color: #4A4A4A;">
           La tua iscrizione ti apre le porte alle nostre creazioni d'alta gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
@@ -545,7 +545,7 @@ export async function sendPrivilegeWelcomeEmail(
     const firstName = params?.firstName || (params as PrivilegeWelcomeEmailParams)?.customerName || '';
     const couponCode = params?.couponCode || 'PRIVILEGE10';
 
-    const subject = "💎 Benvenuta in Isabel Pepe Privilege — Il tuo dono esclusivo del 10%";
+    const subject = "💎 Il tuo 10% di Benvenuto — L'Universo Isabel Pepe";
     const html = generatePrivilegeWelcomeEmailHtml({ firstName, couponCode });
     const text = generatePrivilegeWelcomeEmailText({ firstName, couponCode });
 

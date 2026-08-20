@@ -236,11 +236,11 @@ export default function PrivilegeClubModal() {
               id="privilege-modal-title"
               className="font-serif text-2xl sm:text-3xl uppercase tracking-widest text-[#1A1A1A] font-normal"
             >
-              Isabel Pepe Privilege
+              L'Universo Isabel Pepe
             </h2>
 
             <p className="font-sans text-xs sm:text-[13px] text-gray-600 leading-relaxed font-light">
-              Ricevi un <strong>dono di benvenuto del 10%</strong> sul tuo primo gioiello e accedi a vantaggi e selezioni esclusive dedicate a te.
+              Iscriviti per ricevere il <strong>10% di benvenuto</strong> sulla tua prima creazione e scoprire in anteprima le nuove collezioni di alta gioielleria.
             </p>
           </div>
 
@@ -250,7 +250,7 @@ export default function PrivilegeClubModal() {
               <div className="flex items-center gap-2 text-[#8A5E58]">
                 <Sparkles size={18} />
                 <h3 className="font-serif text-base uppercase tracking-widest font-semibold text-[#1A1A1A]">
-                  Benvenuta in Isabel Pepe Privilege
+                  Benvenuta nell'Universo Isabel Pepe
                 </h3>
               </div>
 
@@ -319,10 +319,10 @@ export default function PrivilegeClubModal() {
                   <Sparkles size={15} className="text-[#8A5E58] shrink-0 mt-0.5" />
                   <div>
                     <span className="font-serif text-[11px] font-bold uppercase tracking-wider text-gray-900 block leading-tight">
-                      Creazioni Esclusive
+                      Nuove Creazioni
                     </span>
                     <span className="font-sans text-[10px] text-gray-500 font-light block leading-tight">
-                      Novità dedicate
+                      In anteprima
                     </span>
                   </div>
                 </div>
@@ -400,33 +400,48 @@ export default function PrivilegeClubModal() {
                       setGdprConsent(e.target.checked);
                       if (status === 'error') setStatus('idle');
                     }}
-                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-gray-400 text-[#8A5E58] accent-[#8A5E58] cursor-pointer shrink-0"
+                    className="mt-0.5 w-3.5 h-3.5 rounded-none border border-gray-300 text-[#8A5E58] accent-[#8A5E58] cursor-pointer shrink-0"
                     disabled={status === 'loading'}
                   />
                   <label
                     htmlFor="modal-gdpr-consent"
-                    className="text-[10px] text-gray-500 tracking-wider leading-relaxed font-light select-none cursor-pointer"
+                    className="text-[10px] text-gray-500 leading-relaxed select-none cursor-pointer"
                   >
                     Accetto l'
                     <Link
                       href="/privacy"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-700 underline hover:text-[#8A5E58] transition-colors ml-1 mr-1"
+                      onClick={handleClose}
+                      className="text-[#8A5E58] underline hover:text-[#1A1A1A] ml-0.5 mr-0.5"
                     >
                       Informativa sulla Privacy
                     </Link>
-                    e acconsento alla ricezione di comunicazioni esclusive e anteprime.
+                    e acconsento a ricevere comunicazioni e vantaggi esclusivi.
                   </label>
                 </div>
 
                 {/* Error Message */}
                 {status === 'error' && errorMessage && (
-                  <div className="flex items-center gap-1.5 text-rose-700 text-xs tracking-wide pt-1 animate-in fade-in duration-200">
-                    <AlertCircle size={14} className="shrink-0 text-rose-600" />
+                  <div className="flex items-center gap-1.5 text-rose-600 text-xs pt-0.5 animate-in fade-in duration-200">
+                    <AlertCircle size={14} className="shrink-0 text-rose-500" />
                     <span>{errorMessage}</span>
                   </div>
                 )}
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="w-full bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-3 px-4 text-xs uppercase font-sans tracking-[0.25em] font-semibold transition-all duration-300 rounded-xs shadow-md flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-1"
+                >
+                  {status === 'loading' ? (
+                    <>
+                      <Loader2 size={14} className="animate-spin text-white" />
+                      <span>Accesso in corso...</span>
+                    </>
+                  ) : (
+                    <span>Ricevi il 10% di Benvenuto</span>
+                  )}
+                </button>
               </form>
 
               {/* Dismiss link */}
