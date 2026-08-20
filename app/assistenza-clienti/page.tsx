@@ -24,9 +24,9 @@ export default function AssistenzaClientiPage() {
         {/* HERO SECTION */}
         <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#F0E6E1] mb-12 aspect-[16/9] sm:aspect-[21/9] bg-[#FAF8F5]">
           <img 
-            src="/Brand/assistenza_hero.jpg" 
-            alt="Isabel Pepe — Servizio Clienti & Customer Care" 
-            className="w-full h-full object-cover object-[center_40%]"
+            src="/Brand/cofanetto-luxury-packaging-isabel-pepe.jpg" 
+            alt="Isabel Pepe — Servizio Clienti & Cofanetto Luxury" 
+            className="w-full h-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
           
