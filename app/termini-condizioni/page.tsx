@@ -55,7 +55,7 @@ export default function TerminiCondizioniPage() {
               3. Spedizioni e Consegna
             </h2>
             <p>
-              Le spedizioni con corriere espresso (Poste Italiane / Packlink) sono sempre gratuite su tutti gli ordini e vengono affidate e consegnate entro 48 ore lavorative dalla conferma del pagamento. Il cliente riceverà via email il codice di tracciamento (Tracking Code) per seguire la spedizione in tempo reale.
+              Le spedizioni con corriere espresso (Poste Italiane / SDA) sono sempre gratuite su tutti gli ordini e vengono affidate e consegnate entro 48 ore lavorative dalla conferma del pagamento. Il cliente riceverà via email il codice di tracciamento (Tracking Code) per seguire la spedizione in tempo reale.
             </p>
           </section>
 

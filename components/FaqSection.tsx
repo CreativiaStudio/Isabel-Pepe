@@ -11,11 +11,11 @@ interface FaqItem {
 const defaultFaqs: FaqItem[] = [
   {
     question: "Come posso tracciare il mio ordine?",
-    answer: "Non appena il tuo ordine viene affidato al corriere espresso (Packlink PRO / Poste Italiane), riceverai una mail di conferma contenente il codice di tracciamento unico (Tracking Code). Potrai monitorare lo stato della consegna in tempo reale."
+    answer: "Non appena il tuo ordine viene affidato al corriere espresso (Poste Italiane / SDA), riceverai una mail di conferma contenente il codice di tracciamento unico (Tracking Code). Potrai monitorare lo stato della consegna in tempo reale."
   },
   {
     question: "Quali sono i tempi e i costi di spedizione?",
-    answer: "Spediamo in 48 ore lavorative in tutta Italia con corriere espresso (Poste Italiane / Packlink PRO). La spedizione express è SEMPRE GRATUITA su tutti gli ordini, senza alcun minimo di spesa."
+    answer: "Spediamo in 48 ore lavorative in tutta Italia con corriere espresso (Poste Italiane / SDA). La spedizione express è SEMPRE GRATUITA su tutti gli ordini, senza alcun minimo di spesa."
   },
   {
     question: "Come posso effettuare un reso?",

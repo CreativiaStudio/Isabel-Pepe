@@ -331,7 +331,8 @@ export default function Header() {
               </Link>
             </div>
 
-            {/* WhatsApp Diretto dal Drawer */}
+            {/* WhatsApp Diretto dal Drawer - TEMPORANEAMENTE NASCOSTO IN ATTESA DI WHATSAPP BUSINESS API UFFICIALE */}
+            {/*
             <div className="pt-2">
               <a 
                 href="https://wa.me/393280000000?text=Ciao%20Isabel%20Pepe!%20Vorrei%20informazioni." 
@@ -343,6 +344,7 @@ export default function Header() {
                 Chat WhatsApp Direct
               </a>
             </div>
+            */}
 
           </div>
         </div>

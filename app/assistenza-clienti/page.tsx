@@ -6,13 +6,13 @@ import ContactForm from '@/components/ContactForm';
 import FaqSection from '@/components/FaqSection';
 
 export const metadata: Metadata = {
-  title: 'Assistenza Clienti & Concierge',
+  title: 'Assistenza Clienti & Supporto',
   description:
-    'Hai bisogno di supporto? Contatta il Concierge Isabel Pepe via WhatsApp o email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
+    'Hai bisogno di supporto? Contatta il Servizio Clienti Isabel Pepe via email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
   openGraph: {
-    title: 'Assistenza Clienti & Concierge | Isabel Pepe',
+    title: 'Assistenza Clienti & Supporto | Isabel Pepe',
     description:
-      'Hai bisogno di supporto? Contatta il Concierge Isabel Pepe via WhatsApp o email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
+      'Hai bisogno di supporto? Contatta il Servizio Clienti Isabel Pepe via email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
   },
 };
 
@@ -21,29 +21,30 @@ export default function AssistenzaClientiPage() {
     <div className="bg-white min-h-screen pt-28 sm:pt-32 pb-24 px-4 sm:px-6 text-[#1A1A1A]">
       <div className="max-w-5xl mx-auto">
         
-        {/* HERO SECTION CON FOTOGRAFIA ATELIER CONCIERGE */}
+        {/* HERO SECTION */}
         <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#F0E6E1] mb-12 aspect-[16/9] sm:aspect-[21/9] bg-[#FAF8F5]">
           <img 
             src="/Brand/assistenza_hero.jpg" 
-            alt="Isabel Pepe — Atelier Concierge & Customer Care" 
+            alt="Isabel Pepe — Servizio Clienti & Customer Care" 
             className="w-full h-full object-cover object-[center_40%]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent"></div>
           
           <div className="absolute bottom-6 sm:bottom-10 left-6 sm:left-12 right-6 sm:right-12 text-white">
             <span className="font-sans text-[10px] sm:text-xs text-[#E8D7D3] uppercase tracking-[0.35em] font-semibold block mb-2">
-              Atelier Concierge & Customer Care
+              Servizio Clienti & Assistenza Dedicata
             </span>
             <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl tracking-widest uppercase leading-tight drop-shadow-md">
               Assistenza Clienti
             </h1>
             <p className="text-xs sm:text-sm text-gray-200 font-light max-w-xl mt-2 leading-relaxed hidden sm:block">
-              Siamo a tua completa disposizione per consigli di stile, personalizzazioni e supporto dedicato.
+              Siamo a tua completa disposizione per consigli di stile, informazioni su ordini e supporto dedicato.
             </p>
           </div>
         </div>
 
-        {/* BOX WHATSAPP IN EVIDENZA */}
+        {/* BOX WHATSAPP - TEMPORANEAMENTE NASCOSTO IN ATTESA DI WHATSAPP BUSINESS API UFFICIALE META CON CHAT BACKEND */}
+        {/*
         <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-10 rounded-3xl mb-16 shadow-sm flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="flex items-center gap-6">
             <div className="w-16 h-16 rounded-full bg-[#25D366]/10 text-[#25D366] flex items-center justify-center flex-shrink-0 shadow-inner">
@@ -54,10 +55,10 @@ export default function AssistenzaClientiPage() {
                 Risposta Istantanea
               </span>
               <h2 className="font-serif text-2xl text-gray-900 tracking-wider">
-                Chatta Diretto con l'Atelier
+                Chatta con il Servizio Clienti
               </h2>
               <p className="font-sans text-xs text-gray-600 font-light mt-1">
-                Contatta il nostro personal shopper su WhatsApp per assistenza immediata.
+                Contatta il nostro team per assistenza immediata.
               </p>
             </div>
           </div>
@@ -72,6 +73,7 @@ export default function AssistenzaClientiPage() {
             Apri Chat WhatsApp
           </a>
         </div>
+        */}
 
         {/* CANALI DI CONTATTO & INFO */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
@@ -94,7 +96,7 @@ export default function AssistenzaClientiPage() {
                 <a href="mailto:resi@isabelpepe.com" className="hover:underline">resi@isabelpepe.com</a>
               </div>
               <div className="pt-1">
-                <span className="text-[10px] text-gray-400 font-sans uppercase block">Info & Comunicazione:</span>
+                <span className="text-[10px] text-gray-400 font-sans uppercase block">Info Generali:</span>
                 <a href="mailto:info@isabelpepe.com" className="hover:underline">info@isabelpepe.com</a>
               </div>
             </div>
@@ -105,8 +107,8 @@ export default function AssistenzaClientiPage() {
               <div className="w-12 h-12 rounded-full bg-[#C0A09A]/10 text-[#C0A09A] flex items-center justify-center mx-auto mb-4">
                 <Clock size={22} strokeWidth={1.5} />
               </div>
-              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Atelier Digitale</h3>
-              <p className="text-xs text-gray-500 font-light mb-4">Siamo un brand 100% online, sempre a tua disposizione.</p>
+              <h3 className="font-serif text-lg tracking-wider text-gray-900 uppercase mb-2">Orari & Disponibilità</h3>
+              <p className="text-xs text-gray-500 font-light mb-4">Il nostro team è a tua completa disposizione per ogni richiesta.</p>
             </div>
             <div className="bg-[#FAF8F5] p-3.5 rounded-xl border border-[#F0E6E1]/60 text-xs text-gray-600 font-light space-y-1">
               <p className="font-medium text-gray-900">Supporto Clienti</p>

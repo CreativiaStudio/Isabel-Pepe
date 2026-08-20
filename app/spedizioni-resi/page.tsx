@@ -36,7 +36,7 @@ export default function SpedizioniResiPage() {
         <div className="bg-[#FAF8F5] border border-[#F0E6E1] p-8 sm:p-12 rounded-2xl mb-16 shadow-sm">
           <div className="flex items-center gap-3 text-[#C0A09A] mb-4">
             <Truck size={24} />
-            <span className="text-xs uppercase tracking-[0.25em] font-semibold">Servizio Spedizioni Packlink PRO & Poste Italiane</span>
+            <span className="text-xs uppercase tracking-[0.25em] font-semibold">Servizio Spedizioni Espresse Poste Italiane & SDA</span>
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
@@ -46,7 +46,7 @@ export default function SpedizioniResiPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light mb-8">
             <div className="space-y-4">
               <p>
-                Tutti gli ordini ricevuti su <strong>Isabel Pepe</strong> vengono elaborati con massima cura e spediti tramite il nostro partner logistico <strong>Packlink PRO</strong> e corriere espresso <strong>Poste Italiane / SDA</strong>.
+                Tutti gli ordini ricevuti su <strong>Isabel Pepe</strong> vengono elaborati con massima cura e spediti tramite corriere espresso <strong>Poste Italiane / SDA</strong>.
               </p>
               <p>
                 <strong>Spedizione Sempre Gratuita:</strong> Offriamo la spedizione espressa <strong>100% gratuita in tutta Italia</strong> per qualsiasi ordine, senza alcun importo o soglia minima di spesa.

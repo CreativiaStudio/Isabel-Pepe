@@ -1,16 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Send, Sparkles } from 'lucide-react';
 
 export default function ContactForm() {
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '', privacy: false });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!formData.privacy) return;
     setFormSubmitted(true);
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    setFormData({ name: '', email: '', subject: '', message: '', privacy: false });
   };
 
   return (
@@ -31,11 +33,11 @@ export default function ContactForm() {
           </div>
           <h3 className="font-serif text-xl text-gray-900 uppercase">Messaggio Inviato con Successo</h3>
           <p className="text-xs text-gray-600 font-light">
-            Grazie per averci contattato. Il nostro Concierge ti risponderà nel più breve tempo possibile.
+            Grazie per averci contattato. Il nostro Servizio Clienti ti risponderà nel più breve tempo possibile.
           </p>
           <button 
             onClick={() => setFormSubmitted(false)} 
-            className="mt-4 text-xs text-[#C0A09A] uppercase tracking-widest font-semibold underline"
+            className="mt-4 text-xs text-[#C0A09A] uppercase tracking-widest font-semibold underline cursor-pointer"
           >
             Invia un altro messaggio
           </button>
@@ -97,6 +99,25 @@ export default function ContactForm() {
               placeholder="Scrivi qui il tuo messaggio..."
               className="w-full bg-white border border-gray-200 px-4 py-3 text-xs outline-none focus:border-[#C0A09A] transition-colors resize-none"
             ></textarea>
+          </div>
+
+          {/* Consenso Privacy GDPR */}
+          <div className="flex items-start gap-2.5 pt-1">
+            <input
+              type="checkbox"
+              id="contact-gdpr-consent"
+              required
+              checked={formData.privacy}
+              onChange={(e) => setFormData({ ...formData, privacy: e.target.checked })}
+              className="mt-0.5 w-4 h-4 rounded-none border border-gray-300 text-[#C0A09A] accent-[#C0A09A] cursor-pointer shrink-0"
+            />
+            <label htmlFor="contact-gdpr-consent" className="text-xs text-gray-600 leading-relaxed font-light select-none cursor-pointer">
+              Accetto l'
+              <Link href="/privacy" target="_blank" className="text-gray-900 underline font-medium hover:text-[#C0A09A] transition-colors ml-1 mr-1">
+                Informativa sulla Privacy
+              </Link>
+              e acconsento al trattamento dei miei dati personali per la gestione della richiesta.
+            </label>
           </div>
 
           <div className="text-center pt-2">

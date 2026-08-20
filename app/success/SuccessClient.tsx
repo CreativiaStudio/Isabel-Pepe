@@ -103,7 +103,7 @@ export default function SuccessClient() {
               <ShieldCheck className="w-4 h-4 text-[#C0A09A] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-medium text-gray-900 block">Assistenza Diretta</span>
-                <span className="text-gray-500 text-[11px]">Supporto WhatsApp dedicato</span>
+                <span className="text-gray-500 text-[11px]">Supporto Clienti dedicato</span>
               </div>
             </div>
           </div>

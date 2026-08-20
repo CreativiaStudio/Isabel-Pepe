@@ -182,17 +182,14 @@ export default function GuidaTagliePage() {
           <HelpCircle size={36} className="text-[#C0A09A] mb-3" />
           <h3 className="font-serif text-2xl tracking-widest uppercase mb-2">Dubbi sulla Tua Taglia?</h3>
           <p className="text-xs text-gray-400 font-light max-w-lg mb-6">
-            Invia una foto dell'anello o chiedi un parere personalizzato al nostro Concierge via WhatsApp.
+            Scrivici indicando le tue misure o il modello che desideri: il nostro team di supporto è a tua completa disposizione.
           </p>
-          <a
-            href="https://wa.me/393280000000?text=Ciao!%20Vorrei%20aiuto%20per%20scegliere%20la%20taglia%20giusta%20di%20un%20anello."
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/assistenza-clienti"
             className="bg-[#C0A09A] hover:bg-white text-white hover:text-gray-900 text-xs font-semibold uppercase tracking-[0.2em] px-8 py-3.5 transition-all duration-300 flex items-center gap-2"
           >
-            <MessageCircle size={16} />
-            Supporto Taglie su WhatsApp
-          </a>
+            Contatta il Servizio Clienti
+          </Link>
         </div>
 
         {/* NAVIGAZIONE SHOP */}
