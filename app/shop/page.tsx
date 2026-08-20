@@ -6,9 +6,9 @@ import type { Metadata } from 'next';
 const categorySeo: Record<string, { title: string; desc: string; h1: string; intro: string }> = {
   Collane: {
     title: 'Collane Demi-Fine in Oro 18K',
-    desc: 'Scopri le collane demi-fine Isabel Pepe: punti luce, pendenti e catene in Argento 925 placcate Oro 18K (1.0µm) o Rodio con nano-protective E-coating.',
+    desc: 'Scopri le collane demi-fine Isabel Pepe: punti luce, pendenti e catene in Argento 925 con placcatura spessa in Oro 18K o Rodio.',
     h1: 'Collane & Pendenti',
-    intro: 'Punti luce e pendenti progettati per catturare ogni raggio di luce. Argento 925 rifinito in Oro 18K (1.0µm) o Rodio con E-Coating protettivo e cofanetto luxury incluso.',
+    intro: 'Punti luce e pendenti progettati per catturare ogni raggio di luce. Argento 925 rifinito in Oro 18K o Rodio e cofanetto luxury incluso.',
   },
   Orecchini: {
     title: 'Orecchini Demi-Fine in Oro 18K',
@@ -18,13 +18,13 @@ const categorySeo: Record<string, { title: string; desc: string; h1: string; int
   },
   Anelli: {
     title: 'Anelli Solitari & Pavé Demi-Fine',
-    desc: 'Scopri gli anelli demi-fine Isabel Pepe: solitari taglio brillante e fasce pavé in Argento 925 con doppio scudo protettivo e cofanetto di lusso.',
+    desc: 'Scopri gli anelli demi-fine Isabel Pepe: solitari taglio brillante e fasce pavé in Argento 925 con cofanetto di lusso.',
     h1: 'Anelli Solitari & Pavé',
     intro: 'Linee pure e scintillio eterno: creazioni nate per celebrare i momenti più speciali con l’eleganza del lusso accessibile e pietre VVS1 D-Color.',
   },
   Bracciali: {
     title: 'Bracciali Tennis & Rigidi Demi-Fine',
-    desc: 'Bracciali demi-fine Isabel Pepe con placcatura Oro 18K (1.0µm) ed E-Coating protettivo anti-ossidazione. Eleganza senza tempo per ogni giorno.',
+    desc: 'Bracciali demi-fine Isabel Pepe con placcatura spessa in Oro 18K e Rodio. Eleganza senza tempo per ogni giorno.',
     h1: 'Bracciali & Tennis',
     intro: 'Scintille al polso per ogni occasione: bracciali in Argento 925 con finiture nobili in Oro 18K o Rodio Puro e chiusure di sicurezza rinforzate.',
   },
@@ -54,7 +54,7 @@ export async function generateMetadata({
   return {
     title: 'Catalogo Gioielli Demi-Fine & Parure',
     description:
-      'Esplora il catalogo gioielli Demi-Fine Isabel Pepe: Argento 925, placcatura Oro 18K, pietre taglio brillante e cofanetto regalo luxury incluso.',
+      'Esplora il catalogo gioielli Demi-Fine Isabel Pepe: Argento 925, placcatura spessa Oro 18K e Rodio, pietre taglio brillante e cofanetto regalo luxury incluso.',
   };
 }
 
@@ -95,7 +95,7 @@ export default async function ShopPage({
             {activeSeo?.h1 || categoryFilter || 'Tutta la Collezione'}
           </h1>
           <p className="font-sans text-gray-500 text-xs sm:text-sm tracking-wide leading-relaxed mb-3">
-            {activeSeo?.intro || 'Creazioni demi-fine realizzate con Argento 925 Sterling, placcatura Oro 18K (1.0µm) o Rodio (0.1µm) e sigillo Nano-Protective E-Coating.'}
+            {activeSeo?.intro || 'Creazioni demi-fine realizzate con Argento 925 Sterling, placcatura spessa Oro 18K e Rodio.'}
           </p>
           <p className="font-sans text-gray-400 text-xs tracking-widest uppercase">
             {products?.length || 0} Gioielli Disponibili
