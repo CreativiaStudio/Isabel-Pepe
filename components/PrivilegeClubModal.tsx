@@ -334,7 +334,7 @@ export default function PrivilegeClubModal() {
                       Cura & Garanzia
                     </span>
                     <span className="font-sans text-[10px] text-gray-500 font-light block leading-tight">
-                      Assistenza a vita
+                      Supporto dedicato
                     </span>
                   </div>
                 </div>

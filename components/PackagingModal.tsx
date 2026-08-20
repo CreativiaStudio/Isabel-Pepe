@@ -111,7 +111,7 @@ export default function PackagingModal({ isOpen, onClose }: PackagingModalProps)
                 </h4>
               </div>
               <p className="font-sans text-xs text-gray-500 leading-relaxed">
-                Certificato gemmologico ufficiale GRA (per Moissanite) e scheda di garanzia a vita che ne attesta la qualità superiore.
+                Certificato gemmologico ufficiale GRA (per Moissanite) e scheda di garanzia ufficiale che ne attesta la qualità superiore.
               </p>
             </div>
 

@@ -436,7 +436,7 @@ export function generatePrivilegeWelcomeEmailHtml({
                   Servizio di Cura &amp; Pulizia Gratuita
                 </p>
                 <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
-                  Assistenza a vita e panno lucidante professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+                  Consigli dedicati e panno lucidante professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
                 </p>
               </td>
             </tr>
@@ -465,13 +465,13 @@ export function generatePrivilegeWelcomeEmailHtml({
     <tr>
       <td style="padding: 28px 36px 36px 36px; background-color: #FAF8F5; border-top: 1px solid #EADFD9; text-align: center;">
         <p style="margin: 0 0 6px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: #0D0D0D; font-weight: 600;">
-          Atelier Isabel Pepe
+          Isabel Pepe
         </p>
         <p style="margin: 0 0 14px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58;">
           Haute Joaillerie Italiana
         </p>
         <p style="margin: 0 0 12px 0; font-size: 11px; line-height: 1.6; color: #888888;">
-          Ricevi questa comunicazione perché hai confermato la tua iscrizione all'Atelier Privé Isabel Pepe con consenso al trattamento dati.
+          Ricevi questa comunicazione perché hai confermato la tua iscrizione a Isabel Pepe Privilege con consenso al trattamento dati.
         </p>
         <p style="margin: 0; font-size: 11px; color: #888888;">
           <a href="${privacyUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 8px;">Informativa Privacy</a>
@@ -499,26 +499,26 @@ export function generatePrivilegeWelcomeEmailText({
   const unsubscribeUrl = `${SITE_URL}/privacy#unsubscribe`;
 
   return `ISABEL PEPE — HAUTE JOAILLERIE ITALIANA
-L'ATELIER PRIVÉ
+ISABEL PEPE PRIVILEGE
 
-Benvenuta nella nostra cerchia più esclusiva
+Benvenuta in Isabel Pepe Privilege
 
 Gentile ${displayName},
-è un onore accoglierti nell'Atelier Privé Isabel Pepe.
+è un onore accoglierti in Isabel Pepe Privilege.
 
-La tua iscrizione ti apre le porte a un mondo dove l'eccellenza dell'alta gioielleria italiana si fonde con l'artigianalità senza tempo, la cura meticolosa delle pietre preziose e il design d'autore.
+La tua iscrizione ti apre le porte alle nostre creazioni d'alta gioielleria demi-fine: argento 925, placcatura oro 18K a spessore, pietre di pura luce e vantaggi dedicati.
 
 --------------------------------------------------
-IL TUO REGALO DI BENVENUTO ESCLUSIVO
+IL TUO DONO DI BENVENUTO ESCLUSIVO
 10% di Privilegio Riservato
 CODICE COUPON: ${couponCode}
 --------------------------------------------------
-Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto riservato ai soci.
+Inserisci questo codice al checkout sul tuo prossimo ordine per applicare immediatamente il 10% di sconto sul tuo primo gioiello.
 
-I PRIVILEGI DEL CLUB PRIVÉ:
-1. Accesso Anticipato 48h: Scopri in anteprima assoluta le nuove collezioni, le edizioni numerate e i pezzi unici prima della presentazione ufficiale.
-2. Vendite Private Stagionali: Inviti esclusivi agli appuntamenti di vendita privata e capsule collection riservate unicamente ai membri dell'Atelier.
-3. Servizio di Cura & Pulizia Gratuita: Assistenza a vita e trattamento di lucidatura professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+I VANTAGGI DI ISABEL PEPE PRIVILEGE:
+1. Creazioni & Selezioni Esclusive: Scopri in anteprima le nuove creazioni, le parure e i gioielli d'alta gamma selezionati per te.
+2. Doni & Inviti Riservati: Attenzioni dedicate, regali di compleanno e vantaggi pensati unicamente per i membri iscritti.
+3. Servizio di Cura & Pulizia Gratuita: Consigli dedicati e panno lucidante professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
 
 Esplora la Collezione:
 ${shopUrl}
@@ -526,7 +526,7 @@ ${shopUrl}
 Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione: info@isabelpepe.com
 
 --------------------------------------------------
-Atelier Isabel Pepe • Haute Joaillerie Italiana
+Isabel Pepe • Haute Joaillerie Italiana
 Informativa Privacy: ${privacyUrl}
 Disiscrizione: ${unsubscribeUrl}
 `;
