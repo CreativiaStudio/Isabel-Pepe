@@ -1,10 +1,14 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { VisitorIdentityRecord } from '@/types/analytics';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { searchParams } = new URL(req.url);
     const visitorId = searchParams.get('visitor_id') || searchParams.get('visitorId');
@@ -40,6 +44,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const body = await req.json();
     const visitorId = body.visitorId || body.visitor_id;

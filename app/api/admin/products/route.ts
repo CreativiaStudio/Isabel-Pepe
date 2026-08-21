@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
 import { revalidatePath } from 'next/cache';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
@@ -46,6 +47,9 @@ async function generateUniqueSlug(name: string, sku?: string, currentProductId?:
 
 // UPDATE (PUT) PRODUCT
 export async function PUT(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const body = await req.json();
     const {
@@ -122,6 +126,9 @@ export async function PUT(req: Request) {
 
 // CREATE (POST) PRODUCT
 export async function POST(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const body = await req.json();
     const {
@@ -219,6 +226,9 @@ export async function POST(req: Request) {
 
 // DELETE (DELETE) PRODUCT
 export async function DELETE(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get('id');

@@ -2,10 +2,14 @@ import { NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { parseDateRange, classifyPageType, getPageTitleFromPath } from '@/lib/analytics-query';
 import { TopPageMetric, TopProductMetric } from '@/types/analytics';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { searchParams } = new URL(req.url);
     const range = searchParams.get('range') || 'today';

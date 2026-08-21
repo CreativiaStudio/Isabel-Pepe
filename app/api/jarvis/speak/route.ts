@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 export async function POST(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { text } = await req.json();
 

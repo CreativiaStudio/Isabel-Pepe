@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { SearchConsoleData, SearchConsoleQueryRow, SearchConsolePageRow } from '@/types/analytics';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,6 +25,9 @@ const BASE_PAGES: Array<{ page: string; clicksMultiplier: number; impressionsMul
 ];
 
 export async function GET(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { searchParams } = new URL(req.url);
     const range = searchParams.get('range') || '7d';

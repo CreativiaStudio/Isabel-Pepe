@@ -2,11 +2,15 @@ import { NextResponse } from 'next/server';
 import { generateText } from 'ai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { supabaseAdmin } from '@/lib/supabase';
+import { verifyAdminAuth } from '@/lib/auth-guard';
 
 // GET: Fetch pending tasks from Action Engine
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { data: pendingTasks, error } = await supabaseAdmin
       .from('jarvis_tasks')
@@ -92,6 +96,9 @@ category deve essere marketing, crm o operations.`;
 
 // POST: Conversational chat with action detection and Multi-Agent Routing
 export async function POST(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
   try {
     const { message, history, isPremium = false } = await req.json();
 

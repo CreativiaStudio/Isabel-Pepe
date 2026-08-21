@@ -3,8 +3,7 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import DashboardClientWrapper from './DashboardClientWrapper';
 import { Package } from 'lucide-react';
-
-const ADMIN_EMAILS = ['sviluppo@creativiastudio.com', 'info@isabelpepe.com', 'mario@isabelpepe.com', 'mariopepe9@hotmail.it'];
+import { isAdminEmail } from '@/lib/auth-guard';
 
 export const revalidate = 0; // Evita la cache, mostra sempre i dati in tempo reale
 
@@ -12,7 +11,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
   // PROTEZIONE SERVER-SIDE ATTIVA: Accesso consentito solo agli amministratori autorizzati
   const supabaseAuth = await createClient();
   const { data: { user } } = await supabaseAuth.auth.getUser();
-  if (!user || !ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
+  if (!user || !isAdminEmail(user.email)) {
     redirect('/login?redirect=/admin');
   }
 
