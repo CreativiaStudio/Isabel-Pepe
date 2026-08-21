@@ -1,13 +1,13 @@
-# BRIEFING — 2026-08-20T08:05:10Z
+# BRIEFING — 2026-08-21T15:35:30Z
 
 ## Mission
-Oversee the implementation and victory audit of the Isabel Pepe Privilege Club ecosystem.
+Oversee the audit, repair, precision classification, and enhanced UX for the Isabel Pepe luxury product certificate ecosystem across all catalog products and pages.
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel
-- Orchestrator: 2a8f2a2a-59aa-4158-a679-5c1d4f933e76 (Gen 2 successor)
-- Victory Auditor: 98b9918c-05f0-406c-82a3-7dc5c50ada6d
+- Orchestrator: 0e59e6e4-9418-43f1-a396-503aefb6a2ea
+- Victory Auditor: 5d183924-2c37-4595-9b79-0db6cfea17a8
 
 ## 🔒 Key Constraints
 - No technical decisions — relay only
@@ -16,9 +16,9 @@ Oversee the implementation and victory audit of the Isabel Pepe Privilege Club e
 - Must maintain cron monitoring for progress and liveness
 
 ## User Context
-- **Last user request**: Implement the complete "Isabel Pepe Privilege Club" ecosystem (Footer & GDPR compliance, Resend welcome email with PRIVILEGE10 code, discreet luxury invitation popup, and Admin CRM filterable views + CSV export).
+- **Last user request**: Fix the product certificate ecosystem across the Isabel Pepe luxury e-commerce. Audit and repair all broken certificate image paths, ensure 100% accurate classification, and guarantee certificates are prominently visible and interactive on every single product page.
 - **Pending clarifications**: none
-- **Delivered results**: Complete Isabel Pepe Privilege Club ecosystem implemented, fully verified via independent victory audit with 100% pass rate.
+- **Delivered results**: Product Certificate Ecosystem completely overhauled and verified across all 41 products, components, and pages. Independent Victory Auditor confirmed VICTORY CONFIRMED with 100% pass rate.
 
 ## Project Status
 - **Phase**: complete
@@ -30,5 +30,6 @@ Oversee the implementation and victory audit of the Isabel Pepe Privilege Club e
 
 ## Artifact Index
 - c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\ORIGINAL_REQUEST.md — Authoritative record of user request
-- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator_2\handoff.md — Orchestrator completion report
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator_4\handoff.md — Orchestrator completion report
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\victory_auditor_3\handoff.md — Independent Victory Auditor report
 - c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel\handoff.md — Sentinel final handoff report

@@ -1,12 +1,30 @@
 'use client';
 
-import React, { useState } from 'react';
-import { ShieldCheck, Gift, Truck, Heart, X, Award, CheckCircle2, Lock, Gem, BookOpen, CreditCard, Layers } from 'lucide-react';
-
+import React, { useState, useEffect } from 'react';
+import { 
+  ShieldCheck, 
+  Gift, 
+  Truck, 
+  Heart, 
+  X, 
+  Award, 
+  CheckCircle2, 
+  Lock, 
+  Gem, 
+  BookOpen, 
+  CreditCard, 
+  Layers, 
+  Sparkles,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw
+} from 'lucide-react';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import PackagingModal from './PackagingModal';
+import { getProductCertificateInfo, ProductCertificateInfo, ProductInput } from '@/lib/certificates';
 
 interface ProductTrustBadgesProps {
-  product: {
+  product: ProductInput & {
     name: string;
     gemstone?: string;
     materials?: string;
@@ -14,65 +32,48 @@ interface ProductTrustBadgesProps {
     description?: string;
     color?: string;
     sku?: string;
+    category?: string;
   };
 }
 
 export default function ProductTrustBadges({ product }: ProductTrustBadgesProps) {
   const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const [isPackagingModalOpen, setIsPackagingModalOpen] = useState(false);
-  const [activeGraTab, setActiveGraTab] = useState<'report' | 'card' | 'cover' | 'brand'>('report');
 
-  const nameLower = product.name?.toLowerCase() || '';
-  const gemstoneLower = product.gemstone?.toLowerCase() || '';
-  const materialsLower = product.materials?.toLowerCase() || '';
-  const platingLower = product.plating?.toLowerCase() || '';
-  const descLower = product.description?.toLowerCase() || '';
-  const colorLower = product.color?.toLowerCase() || '';
-  const skuLower = product.sku?.toLowerCase() || '';
+  // Deterministic 4-tier certificate classification
+  const certInfo: ProductCertificateInfo = getProductCertificateInfo(product);
 
-  // 1. Gemstone classifications
-  const isPearl = Boolean(
-    gemstoneLower.includes('perl') || 
-    nameLower.includes('perl') || 
-    materialsLower.includes('perl') ||
-    platingLower.includes('perl')
+  const [activeTabId, setActiveTabId] = useState<string>(
+    certInfo.tabs[0]?.id || 'card'
   );
 
-  const isMoissanite = Boolean(
-    !isPearl && (
-      gemstoneLower.includes('moissanite') || 
-      gemstoneLower.includes('vvs1') || 
-      gemstoneLower.includes('d-color') ||
-      nameLower.includes('moissanite') ||
-      descLower.includes('moissanite') ||
-      (product.gemstone && product.gemstone !== '-' && !gemstoneLower.includes('zircon') && !gemstoneLower.includes('cristall'))
-    )
-  );
+  // Reset tab when product changes or modal opens
+  useEffect(() => {
+    if (certInfo.tabs[0]) {
+      setActiveTabId(certInfo.tabs[0].id);
+    }
+  }, [product.sku, certInfo.certificateType]);
 
-  // 2. Finish / Plating classifications (Analisi chirurgica dei campi del database)
-  const isGold = Boolean(
-    isPearl || // Tutte le creazioni in perla sono 100% in Oro 18K
-    platingLower.includes('oro') || 
-    platingLower.includes('18k') || 
-    platingLower.includes('gold') || 
-    platingLower.includes('giallo') ||
-    materialsLower.includes('oro') || 
-    materialsLower.includes('18k') || 
-    materialsLower.includes('gold') || 
-    nameLower.includes('oro') || 
-    nameLower.includes('gold') ||
-    skuLower.includes('gold') ||
-    colorLower.includes('oro') ||
-    colorLower.includes('giallo') ||
-    descLower.includes('oro 18k') ||
-    descLower.includes('oro giallo')
-  );
+  const currentTab = certInfo.tabs.find((t) => t.id === activeTabId) || certInfo.tabs[0];
 
-  const certImageSrc = isPearl
-    ? '/Brand/certificato_perle_oro18k.webp'
-    : isGold
-    ? '/Brand/certificato_moissanite_oro18k.webp'
-    : '/Brand/certificato_moissanite_rodio.webp';
+  const isMoissanite = certInfo.hasGraTabs;
+  const isGold = certInfo.certificateType === 'moissanite_gold' || certInfo.certificateType === 'pearl_gold';
+
+  const getTabIcon = (tabId: string) => {
+    switch (tabId) {
+      case 'report':
+        return <BookOpen size={13} className="shrink-0" />;
+      case 'card':
+        return <CreditCard size={13} className="shrink-0" />;
+      case 'cover':
+        return <Layers size={13} className="shrink-0" />;
+      case 'flatlay':
+        return <Sparkles size={13} className="shrink-0" />;
+      case 'brand':
+      default:
+        return <Award size={13} className="shrink-0" />;
+    }
+  };
 
   return (
     <>
@@ -163,15 +164,10 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
           </div>
           <div className="min-w-0">
             <span className="text-[9px] sm:text-[10px] uppercase tracking-widest text-[#C0A09A] font-semibold block truncate">
-              {isMoissanite ? "Doppia Certificazione Inclusa" : "Garanzia Ufficiale di Qualità"}
+              {certInfo.badgeTitle}
             </span>
             <p className="text-xs text-gray-800 font-medium leading-tight truncate">
-              {isPearl 
-                ? "Certificato Perle Naturali d'Acqua Dolce & Oro 18K" 
-                : isMoissanite 
-                ? `Libretto Gemmologico GRA + Card di Garanzia & Certificato ${isGold ? 'Oro 18K' : 'Rodio'}` 
-                : `Certificato di Autenticità & Metalli Nobili ${isGold ? 'Oro 18K' : 'Rodio'}`
-              }
+              {certInfo.badgeSubtitle}
             </p>
           </div>
         </div>
@@ -179,7 +175,9 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
         <button
           type="button"
           onClick={() => {
-            setActiveGraTab('report');
+            if (certInfo.tabs[0]) {
+              setActiveTabId(certInfo.tabs[0].id);
+            }
             setIsCertModalOpen(true);
           }}
           className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-white hover:bg-gray-900 text-gray-900 hover:text-white border border-[#C0A09A]/50 hover:border-gray-900 rounded-full text-[10px] sm:text-[11px] uppercase tracking-wider font-semibold transition-all duration-300 shadow-sm shrink-0 cursor-pointer"
@@ -194,14 +192,14 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
         onClose={() => setIsPackagingModalOpen(false)} 
       />
 
-      {/* MODAL POPUP PROFESSIONALE (VIEWPORT SAFE & TITOLO 100% VISIBILE) */}
+      {/* MODAL POPUP CERTIFICATO AD ALTA RISOLUZIONE & MULTI-TAB */}
       {isCertModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-start sm:items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto pt-8 sm:pt-6 pb-6"
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 md:p-6 bg-black/80 backdrop-blur-md animate-fadeIn overflow-y-auto"
           onClick={() => setIsCertModalOpen(false)}
         >
           <div 
-            className="relative bg-white rounded-2xl max-w-2xl w-full max-h-[84vh] flex flex-col p-4 sm:p-6 shadow-2xl border border-gray-100 overflow-hidden my-auto"
+            className="relative bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] flex flex-col p-4 sm:p-6 shadow-2xl border border-gray-100 overflow-hidden my-auto"
             onClick={(e) => e.stopPropagation()}
             onContextMenu={(e) => e.preventDefault()}
           >
@@ -217,105 +215,125 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             {/* Header Modal */}
             <div className="text-center mb-3 pr-8 pl-8 pt-1 shrink-0">
               <span className="text-[10px] uppercase tracking-[0.25em] text-[#C0A09A] font-semibold block mb-0.5">
-                {isMoissanite ? "Certificazione Gemmologica & Garanzia di Lusso" : "Documento Ufficiale Isabel Pepe"}
+                {certInfo.modalCategory}
               </span>
-              <h3 className="font-serif text-base sm:text-lg text-gray-900 tracking-wide font-medium leading-tight">
-                {isPearl 
-                  ? "Certificato Ufficiale Perle & Oro 18K" 
-                  : isMoissanite 
-                  ? `Certificato Ufficiale GRA & Garanzia ${isGold ? 'Oro 18K' : 'Rodio Puro'}` 
-                  : `Certificato di Autenticità & Garanzia ${isGold ? 'Oro 18K' : 'Rodio Puro'}`
-                }
+              <h3 className="font-serif text-base sm:text-xl text-gray-900 tracking-wide font-medium leading-tight">
+                {certInfo.modalTitle}
               </h3>
             </div>
 
-            {/* Tabs di Navigazione Permanente (Solo Moissanite) */}
-            {isMoissanite && (
-              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mb-3 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto">
-                <button
-                  type="button"
-                  onClick={() => setActiveGraTab('report')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
-                    activeGraTab === 'report' 
-                      ? 'bg-gray-900 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
-                  }`}
-                >
-                  <BookOpen size={12} />
-                  <span>1. Libretto GRA</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveGraTab('card')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
-                    activeGraTab === 'card' 
-                      ? 'bg-gray-900 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
-                  }`}
-                >
-                  <CreditCard size={12} />
-                  <span>2. Card GRA</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveGraTab('cover')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
-                    activeGraTab === 'cover' 
-                      ? 'bg-gray-900 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
-                  }`}
-                >
-                  <Layers size={12} />
-                  <span>3. Copertina GRA</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setActiveGraTab('brand')}
-                  className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
-                    activeGraTab === 'brand' 
-                      ? 'bg-gray-900 text-white shadow-sm' 
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
-                  }`}
-                >
-                  <Award size={12} />
-                  <span>4. Certificato Isabel Pepe</span>
-                </button>
+            {/* Tabs di Navigazione Multi-Certificato Reattivi */}
+            {certInfo.tabs.length > 1 && (
+              <div className="flex items-center justify-center gap-1 sm:gap-1.5 mb-3 p-1 bg-[#FAF8F5] rounded-xl border border-[#F0E6E1] shrink-0 overflow-x-auto scrollbar-none">
+                {certInfo.tabs.map((tab) => {
+                  const isActive = tab.id === activeTabId;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => setActiveTabId(tab.id)}
+                      className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg text-[10px] sm:text-[11px] font-medium transition-all cursor-pointer whitespace-nowrap ${
+                        isActive 
+                          ? 'bg-gray-900 text-white shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-white/80'
+                      }`}
+                    >
+                      {getTabIcon(tab.id)}
+                      <span>{tab.label}</span>
+                      {tab.badge && (
+                        <span className={`text-[8px] px-1.5 py-0.2 rounded font-mono ${
+                          isActive ? 'bg-white/20 text-white' : 'bg-gray-200 text-gray-700'
+                        }`}>
+                          {tab.badge}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
 
             {/* Contenuto Scorrevole */}
             <div className="flex-1 overflow-y-auto space-y-3 pr-1">
               
-              {/* Immagine Documento Raddrizzata con Protezione Anti-Download */}
+              {/* Immagine Documento con Zoom Interattivo e Protezione Anti-Download */}
               <div 
-                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex items-center justify-center p-2 min-h-[180px]"
+                className="relative rounded-xl overflow-hidden shadow-sm border border-[#F0E6E1] bg-[#FAF8F5] select-none flex flex-col items-center justify-center p-2 min-h-[220px]"
                 onContextMenu={(e) => e.preventDefault()}
               >
-                {/* Invisible protection shield */}
-                <div 
-                  className="absolute inset-0 z-20 bg-transparent select-none cursor-default"
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
-                />
+                {/* Visualizzatore con Zoom / Pan / Pinch */}
+                <TransformWrapper
+                  initialScale={1}
+                  minScale={1}
+                  maxScale={3}
+                  doubleClick={{ disabled: false, mode: 'toggle', step: 0.8 }}
+                  wheel={{ disabled: false, step: 0.2 }}
+                  pinch={{ disabled: false }}
+                >
+                  {({ zoomIn, zoomOut, resetTransform }) => (
+                    <>
+                      {/* Zoom Controls Bar */}
+                      <div className="w-full flex items-center justify-between px-2 py-1 mb-1 border-b border-[#F0E6E1]/60 text-[10px] text-gray-500">
+                        <span className="flex items-center gap-1">
+                          <Sparkles size={11} className="text-[#C0A09A]" />
+                          <span>Doppio click o pizzica per ingrandire</span>
+                        </span>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => zoomIn()}
+                            className="p-1 hover:bg-white rounded text-gray-700 transition"
+                            title="Ingrandisci"
+                            aria-label="Zoom in"
+                          >
+                            <ZoomIn size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => zoomOut()}
+                            className="p-1 hover:bg-white rounded text-gray-700 transition"
+                            title="Riduci"
+                            aria-label="Zoom out"
+                          >
+                            <ZoomOut size={14} />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => resetTransform()}
+                            className="p-1 hover:bg-white rounded text-gray-700 transition"
+                            title="Ripristina zoom"
+                            aria-label="Reset zoom"
+                          >
+                            <RotateCcw size={13} />
+                          </button>
+                        </div>
+                      </div>
 
-                <img
-                  src={
-                    isMoissanite
-                      ? activeGraTab === 'report'
-                        ? '/Brand/gra_report_interno_privacy.webp'
-                        : activeGraTab === 'card'
-                        ? '/Brand/gra_card_privacy.webp'
-                        : activeGraTab === 'cover'
-                        ? '/Brand/gra_libretto_esterno.webp'
-                        : certImageSrc
-                      : certImageSrc
-                  }
-                  alt={isMoissanite ? "Documentazione Ufficiale GRA Moissanite" : "Certificato di Autenticità Isabel Pepe"}
-                  className="w-full h-auto max-h-[230px] sm:max-h-[270px] object-contain pointer-events-none select-none user-select-none mx-auto rounded-lg shadow-sm"
-                  draggable={false}
-                  onContextMenu={(e) => e.preventDefault()}
-                  onDragStart={(e) => e.preventDefault()}
-                />
+                      <TransformComponent
+                        wrapperClass="w-full flex items-center justify-center overflow-hidden"
+                        contentClass="w-full flex items-center justify-center"
+                      >
+                        <div className="relative group flex items-center justify-center">
+                          <img
+                            src={currentTab.imageSrc}
+                            alt={currentTab.alt}
+                            className="w-full h-auto max-h-[250px] sm:max-h-[300px] object-contain pointer-events-auto select-none user-select-none mx-auto rounded-lg shadow-sm"
+                            draggable={false}
+                            onContextMenu={(e) => e.preventDefault()}
+                            onDragStart={(e) => e.preventDefault()}
+                          />
+                        </div>
+                      </TransformComponent>
+                    </>
+                  )}
+                </TransformWrapper>
+
+                {/* Didascalia del Documento Corrente */}
+                {currentTab.description && (
+                  <p className="text-[10px] sm:text-[11px] text-gray-500 text-center mt-2 px-2 italic">
+                    {currentTab.description}
+                  </p>
+                )}
               </div>
 
               {/* Box Informativo Seriale Univoco & Privacy (Solo Moissanite) */}
@@ -334,72 +352,15 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
 
               {/* Specifiche Garanzia in punti chiave */}
               <div className="bg-[#FAF8F5] rounded-xl p-3.5 border border-[#F0E6E1]/80 space-y-2 text-[11px] sm:text-xs text-gray-600 font-light select-none">
-                {isMoissanite ? (
-                  <>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">1. Libretto Ufficiale GRA: </strong>
-                        Moissanite Grading Report con Grado Colore D, Purezza VVS1 e Taglio Excellent.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">2. Card Rigida di Garanzia GRA: </strong>
-                        Tessera magnetica PVC per la registrazione e verifica online della gemma.
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">3. Certificato Ufficiale Isabel Pepe: </strong>
-                        Attesta la fusione in 100% Argento 925 Nichel-Free, placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a Specchio'} e Nano-Sigillo E-Coating.
-                      </span>
-                    </div>
-                  </>
-                ) : isPearl ? (
-                  <>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">Perle d'Acqua Dolce Coltivate: </strong>
-                        Selezionate a mano per lucentezza organica e purezza (100% naturali).
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">Metallo Nobile Certificato: </strong>
-                        Argento Sterling 925 Nichel-Free con punzone legale S925 e sigillo laser "IP".
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">Placcatura Oro 18K &amp; E-Coating: </strong>
-                        Spessore luxury da 1.0 Micron con scudo molecolare protettivo anti-ossidazione.
-                      </span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">Argento Sterling 925: </strong>
-                        100% anallergico e nichel-free, punzonato con marchio legale S925 e "IP".
-                      </span>
-                    </div>
-                    <div className="flex items-start gap-2">
-                      <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
-                      <span>
-                        <strong className="text-gray-900 font-medium">Doppio Scudo Protettivo: </strong>
-                        Placcatura {isGold ? 'Oro 18K (1.0 Micron)' : 'Rodio Puro a Specchio'} + Nano-Sigillo Molecolare E-Coating.
-                      </span>
-                    </div>
-                  </>
-                )}
+                {certInfo.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 size={15} className="text-[#C0A09A] shrink-0 mt-0.5" />
+                    <span>
+                      <strong className="text-gray-900 font-medium">{feature.title}: </strong>
+                      {feature.text}
+                    </span>
+                  </div>
+                ))}
               </div>
 
             </div>
@@ -408,7 +369,7 @@ export default function ProductTrustBadges({ product }: ProductTrustBadgesProps)
             <div className="mt-2.5 flex items-center justify-between gap-3 pt-2 border-t border-gray-100 shrink-0">
               <div className="flex items-center gap-1.5 text-[10px] text-gray-400 font-light select-none">
                 <Lock size={12} className="text-[#C0A09A]" />
-                <span>Documenti Ufficiali Protetti da Copyright</span>
+                <span>Documenti Ufficiali Protetti da Copyright Isabel Pepe</span>
               </div>
 
               <button
