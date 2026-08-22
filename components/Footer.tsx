@@ -491,7 +491,7 @@ export default function Footer() {
 
         {/* FOOTER BOTTOM: DATI SOCIETARI & COPYRIGHT */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#E5DCD6] uppercase font-normal text-center md:text-left">
-          <p>© {new Date().getFullYear()} ISABEL PEPE. TUTTI I DIRITTI RISERVATI.</p>
+          <p>© {new Date().getFullYear()} ISABEL PEPE • P.IVA 02100840683 • TUTTI I DIRITTI RISERVATI</p>
           <p className="normal-case tracking-normal text-[#E5DCD6] text-xs text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal">
             Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-semibold text-white tracking-wider">Creativia Studio</span>
           </p>
