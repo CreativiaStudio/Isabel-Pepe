@@ -33,7 +33,9 @@ export default function TerminiCondizioniPage() {
             </p>
             <div className="bg-[#FAF8F5] p-5 rounded-lg border border-[#F0E6E1] text-xs text-gray-800 space-y-1 font-mono my-4">
               <p><strong>Ditta Individuale:</strong> Creativia Digital Studio di Mario Pepe</p>
-              <p><strong>P.IVA:</strong> 02100840683</p>
+              <p><strong>P.IVA:</strong> 06399670659</p>
+              <p><strong>C.F.:</strong> PPEMRA83L15F205G</p>
+              <p><strong>Sede Legale:</strong> Via Casa Gallo di Giovi Santo Stefano 23, 84133 Salerno (SA) - Italia</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
               <p><strong>Email Assistenza:</strong> assistenza@isabelpepe.com</p>
               <p><strong>Email Resi & Recesso:</strong> resi@isabelpepe.com</p>

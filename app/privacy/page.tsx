@@ -33,8 +33,9 @@ export default function PrivacyPage() {
             </p>
             <div className="bg-[#FAF8F5] p-5 rounded-lg border border-[#F0E6E1] text-xs text-gray-800 space-y-1 font-mono my-4">
               <p><strong>Ragione Sociale:</strong> Creativia Digital Studio di Mario Pepe</p>
-              <p><strong>P.IVA:</strong> 02100840683</p>
-              <p><strong>Sede Legale:</strong> Italia</p>
+              <p><strong>P.IVA:</strong> 06399670659</p>
+              <p><strong>C.F.:</strong> PPEMRA83L15F205G</p>
+              <p><strong>Sede Legale:</strong> Via Casa Gallo di Giovi Santo Stefano 23, 84133 Salerno (SA) - Italia</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
               <p><strong>Email di Contatto:</strong> info@isabelpepe.com</p>
             </div>
