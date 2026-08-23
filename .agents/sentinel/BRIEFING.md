@@ -1,27 +1,28 @@
-# BRIEFING — 2026-08-23T16:07:11Z
+# BRIEFING — 2026-08-23T19:48:48Z
 
 ## Mission
-Coordinate implementation of the strategic, luxury-focused SEO & Generative Engine Optimization (GEO) overhaul for Isabel Pepe.
+Stabilize and fix the product image upload system across Isabel Pepe Admin panel.
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel
-- Orchestrator: 0b56785a-5f9a-49cd-95b7-f71cefeaa1cd
-- Victory Auditor: [auditor conversation ID, or to be spawned on victory claim]
+- Orchestrator: 8d4d5be6-662d-47bb-83e3-d6b037516da5
+- Victory Auditor: to be spawned on victory claim
 
 ## 🔒 Key Constraints
 - No technical decisions — relay only
 - Victory Audit is MANDATORY before reporting completion
-- Must verify via independent auditor (teamwork_preview_victory_auditor) on completion
+- Route to teamwork_preview_orchestrator (General path)
 
 ## User Context
-- **Last user request**: Execute strategic SEO & GEO overhaul (multi-res favicons, Schema.org Knowledge Graph, 4 gifting/guide landing pages, metadata overhaul, dynamic sitemap & Search Console submission).
+- **Last user request**: Fix image upload JSON errors, 20MB support, WebP client compression, Sharp fallback, 5-slot persistence.
 - **Pending clarifications**: none
-- **Delivered results**: none yet
+- **Delivered results**: none
 
 ## Project Status
 - **Phase**: in progress
-- **Route**: General -> teamwork_preview_orchestrator
+- **Cron 1 Task**: b3f9712c-1a4f-432f-aa00-40ad27624df7/task-11
+- **Cron 2 Task**: b3f9712c-1a4f-432f-aa00-40ad27624df7/task-13
 
 ## Victory Audit Status
 - **Triggered**: no
@@ -29,5 +30,5 @@ Coordinate implementation of the strategic, luxury-focused SEO & Generative Engi
 - **Retry count**: 0
 
 ## Artifact Index
-- .agents/ORIGINAL_REQUEST.md — Authoritative record of user request
-- .agents/sentinel/BRIEFING.md — Persistent sentinel memory
+- .agents/ORIGINAL_REQUEST.md — Verbatim user request
+- .agents/sentinel/BRIEFING.md — Sentinel persistent briefing

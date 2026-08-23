@@ -1,100 +1,85 @@
-# Project: Isabel Pepe Luxury Customer Support & Concierge Inbox Ecosystem
+# Project: Isabel Pepe Admin Upload System Stabilization & 5-Slot Gallery Architecture
 
 ## Architecture
-- **Framework**: Next.js 16 (App Router) + React 19 + TypeScript + Tailwind CSS
-- **Database**: Supabase PostgreSQL (`support_messages` table, RLS, indexes)
-- **Email Delivery**: Resend REST API (`lib/email.ts`) with luxury HTML templates
-- **Auth & Security**: 3-tier admin auth (`verifyAdminAuth`, `proxy.ts`, `isAdminEmail`), honeypots, `isBotUserAgent`, IP rate limiting
-- **Admin Dashboard**: SSR prefetching (`app/admin/page.tsx`) + Client tab routing (`DashboardClientWrapper.tsx`, `AdminSidebar.tsx`, `MessagesTable.tsx`, `actions_messages.ts`)
-- **Public Contact UI**: `components/ContactForm.tsx` (`app/assistenza-clienti/page.tsx`)
+The Isabel Pepe image ingestion and catalog persistence architecture is organized into four core layers:
+1. **Client Processing Layer (`ProductForm.tsx`, `MediaLibraryModal.tsx`)**:
+   - High-performance browser image pre-processing with Canvas WebP compression (max 2000px, 85% quality) supporting JPEG, PNG, WebP, AVIF, and HEIC/HEIF photos up to 20MB.
+   - Instant local blob previews with slot spinners.
+   - Safe response parsing with explicit content-type checking (`application/json`) and friendly error translation to prevent `Unexpected token '<'` syntax crashes.
+   - 2-Tier upload resilience: primary REST `POST /api/upload` with automatic fallback to Server Action `uploadProductImageAction`.
+   - Luxury error banner with 1-click slot retry.
+2. **Server Upload & Storage Pipeline (`lib/r2.ts`, `app/api/upload/route.ts`, `app/admin/actions.ts`)**:
+   - `app/api/upload/route.ts`: Node.js runtime endpoint enforcing 20MB file limits, input sanitization, and guaranteed JSON error responses (`application/json`) for all HTTP status codes (400, 413, 500).
+   - `lib/r2.ts`: Cloudflare R2 S3 SDK integration with Sharp optimization (`.rotate()`, 2000px max, WebP 85%), dynamic MIME/extension resolution, and seamless raw buffer fallback if Sharp fails.
+   - `app/admin/actions.ts`: Next.js 16 Server Actions providing `uploadProductImageAction` (fallback upload) and modernized `updateProductImage` using R2 storage.
+3. **Database & Persistence Layer (`app/admin/actions.ts`, `app/api/admin/products/route.ts`, Supabase PostgreSQL `products`)**:
+   - 5-Slot gallery schema contract: `products.gallery` as a 5-element `TEXT[]` array `[slot1, slot2, slot3, slot4, slot5]`.
+   - Deterministic column derivations: `image_secondary = gallery[0]`, `image_primary = gallery[1] || gallery[0]`.
+   - Non-destructive updates: untouched slots on existing products (e.g. `Set Isabel Rose (A145)`) remain strictly preserved during metadata or single-slot edits.
+4. **E2E Quality Assurance Layer (`tests/` & test runner scripts)**:
+   - 4-Tier requirement-driven opaque-box and integration test suite validating payload limits, Sharp fallbacks, response parser resilience, 5-slot persistence, and full production build (`npm run build`).
 
 ## Feature Inventory
-| # | Feature | Description | Milestone | Source | Status |
-|---|---------|-------------|-----------|--------|--------|
-| 1 | Database Schema | `support_messages` table with RLS, indexes, and status constraints | M1 | ORIGINAL_REQUEST §R1 | DONE |
-| 2 | Ingestion API & Bot Trap | `POST /api/contact` with validation, honeypot, rate limiting, and DB insert | M2 | ORIGINAL_REQUEST §R1, §R4 | DONE |
-| 3 | Admin Alert Email | Instant high-priority notification email to Mario & Dev team via Resend | M2 | ORIGINAL_REQUEST §R1 | DONE |
-| 4 | Luxury Contact Form UI | Interactive form in `components/ContactForm.tsx` with loading, error, and success states | M3 | ORIGINAL_REQUEST §R1 | DONE |
-| 5 | Admin Concierge Inbox UI | `/admin?tab=messages` with sidebar badge, filters, search, viewer, status updates | M4 | ORIGINAL_REQUEST §R2 | DONE |
-| 6 | One-Click Direct Reply Engine | Direct customer reply composer with luxury templates, `sendSupportReplyEmail`, and API route | M5 | ORIGINAL_REQUEST §R3 | DONE |
-| 7 | End-to-End Verification & Build | Full E2E test pass (Tiers 1-5, 59 tests), `npm run build` Turbopack 0-error check, and git push | M6 | ORIGINAL_REQUEST §Acceptance Criteria | DONE |
+| # | Feature | Description | Milestone | Source |
+|---|---------|-------------|-----------|--------|
+| 1 | Safe JSON Response Parsing | Replace unsafe `res.json()` with `Content-Type` header verification and safe error extraction to eliminate `Unexpected token '<'`. | M2 | ORIGINAL_REQUEST §R1 |
+| 2 | Route Handler Size Limit & JSON Error Guarantee | Enforce 20MB file limit (HTTP 413) and wrap `app/api/upload/route.ts` with guaranteed JSON responses (`application/json`) for 400, 413, 500. | M1 | ORIGINAL_REQUEST §R1 |
+| 3 | Upgraded Client-Side WebP Compression | Canvas-based image resizer in `ProductForm.tsx` & `MediaLibraryModal.tsx` (max 2000px, 85% WebP) for JPEG, PNG, WebP, HEIC/HEIF. | M2 | ORIGINAL_REQUEST §R2 |
+| 4 | Instant Blob Previews & Slot Retry | Display instant blob preview with spinner during upload, with luxury error banner and 1-click retry button on failure. | M2 | ORIGINAL_REQUEST §R2 |
+| 5 | Sharp Optimization with Auto-Rotate & Fallback | Auto-orient EXIF metadata with `.rotate()`, optimize to WebP 85%, and fall back cleanly to raw buffer with proper MIME/extension in `lib/r2.ts`. | M1 | ORIGINAL_REQUEST §R3 |
+| 6 | Server Action Upload Fallback Pipeline | Export `uploadProductImageAction` in `actions.ts` as a seamless fallback if REST `/api/upload` fails. | M1 | ORIGINAL_REQUEST §R3 |
+| 7 | Modernized Quick Thumbnail Upload in Admin Table | Refactor `updateProductImage` in `actions.ts` to upload to R2 and update both column and `products.gallery`. | M1 | ORIGINAL_REQUEST §R4 |
+| 8 | 5-Slot Gallery Synchronization & Non-Destructive Editing | Ensure slot1-slot5 mapping to `gallery`, `image_primary`, `image_secondary` preserves untouched slots (e.g. `Set Isabel Rose (A145)`). | M3 | ORIGINAL_REQUEST §R4 |
+| 9 | Multi-Slot Preview & Persistence Verification | Verify all 5 slots preview, upload, and persist on both `addProduct` and `updateFullProduct`. | M3 | ORIGINAL_REQUEST §R4 |
+| 10 | E2E Testing Suite (Tiers 1-4) | Comprehensive test harness validating uploads, fallbacks, 5-slot consistency, error states, and production build. | E2E-TEST | ORIGINAL_REQUEST Acceptance Criteria |
+| 11 | Production Build Verification | Verify `npm run build` succeeds with 0 TypeScript/Turbopack errors. | M4 | ORIGINAL_REQUEST Acceptance Criteria |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| 1 | M1: Database Schema & Supabase Setup | Execute SQL migration for `support_messages` table, indexes, and RLS policies | none | DONE |
-| 2 | M2: Contact Ingestion API & Email Alert | Create `POST /api/contact` with spam traps, rate limiter, DB insert, and `sendSupportAdminNotificationEmail` | M1 | DONE |
-| 3 | M3: Luxury Contact Form Frontend | Update `components/ContactForm.tsx` with API integration, validation UX, honeypot, loading/success states | M2 | DONE |
-| 4 | M4: Admin Concierge Inbox Dashboard | Create `app/admin/actions_messages.ts`, `app/admin/MessagesTable.tsx`, update `AdminSidebar.tsx` and `page.tsx` | M1 | DONE |
-| 5 | M5: Direct Reply Engine & Luxury Templates | Implement `sendSupportReplyEmail` in `lib/email.ts`, `POST /api/admin/messages/reply`, quick-reply templates | M4 | DONE |
-| 6 | M6: E2E Testing, Build & Git Push | Execute E2E test suites (Tiers 1-5), verify `npm run build`, commit & push to `origin/main` | M1, M2, M3, M4, M5 | DONE |
+| M1 | Server Upload & Storage Pipeline Hardening | `lib/r2.ts`, `app/api/upload/route.ts`, `app/admin/actions.ts: uploadProductImageAction, updateProductImage` | none | DONE |
+| E2E | E2E Testing Suite Creation | Requirement-driven test suite (Tiers 1-4) published to `TEST_READY.md` (49/49 passing) | none | DONE |
+| M2 | Client-Side Pre-Processing & Safe Parsing | `ProductForm.tsx`, `MediaLibraryModal.tsx`, `compressImageClient`, `safeParseUploadResponse`, 2-tier fallback | M1 | DONE |
+| M3 | 5-Slot Gallery State & Non-Destructive Persistence | `ProductForm.tsx`, `actions.ts`, `app/api/admin/products/route.ts`, slot preservation for `Set Isabel Rose (A145)` | M1, M2 | PLANNED |
+| M4 | Final E2E Test Pass, Adversarial Hardening & Build Verification | Pass 100% of E2E tests, execute Tier 5 adversarial checks, and verify `npm run build` | M1, M2, M3, E2E | PLANNED |
 
 ## Interface Contracts
 
-### 1. Database Table: `public.support_messages`
-```sql
-CREATE TABLE IF NOT EXISTS public.support_messages (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    customer_name TEXT NOT NULL,
-    customer_email TEXT NOT NULL,
-    subject TEXT NOT NULL,
-    message TEXT NOT NULL,
-    status TEXT NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'pending', 'replied', 'closed')),
-    admin_reply TEXT,
-    replied_at TIMESTAMPTZ,
-    replied_by TEXT,
-    ip_address TEXT,
-    user_agent TEXT,
-    metadata JSONB DEFAULT '{}'::jsonb
-);
-```
+### 1. REST Endpoint: `POST /api/upload`
+- **Request**: `multipart/form-data`
+  - `file`: `File` (Binary payload, max 20MB)
+  - `folder`: `string` (`'products'`)
+  - `customName`: `string` (Slugified identifier)
+- **Response**: `application/json`
+  - HTTP 200: `{ "success": true, "url": "https://pub-69fc98b4654c4a76b9ce99bd374126e4.r2.dev/products/..." }`
+  - HTTP 400: `{ "error": "Nessun file fornito o file vuoto." }`
+  - HTTP 413: `{ "error": "La dimensione del file supera il limite massimo di 20MB." }`
+  - HTTP 500: `{ "error": "Errore durante il caricamento su Cloudflare R2: [Dettaglio]" }`
 
-### 2. Contact Ingestion: `POST /api/contact`
-- **Request Body**:
-  ```json
-  {
-    "name": "Maria Rossi",
-    "email": "maria@example.com",
-    "subject": "Consiglio Misura Anello",
-    "message": "Vorrei un consiglio sulla misura dell'anello Solitaire...",
-    "privacy": true,
-    "website_hp": ""
-  }
-  ```
-- **Response**:
-  - `200 OK`: `{ "success": true, "message": "Messaggio inviato con successo", "ticket_id": "uuid" }`
-  - `400 Bad Request`: `{ "error": "Campi obbligatori mancanti o email non valida" }`
-  - `429 Too Many Requests`: `{ "error": "Troppe richieste. Riprova tra qualche minuto." }`
+### 2. Server Action: `uploadProductImageAction`
+- **Signature**: `export async function uploadProductImageAction(formData: FormData): Promise<{ success: boolean; url?: string; error?: string }>`
+- **Behavior**: Accepts `file`, `folder`, `customName` in `FormData`, uploads to R2 via `uploadToR2`, returns structured JSON object.
 
-### 3. Admin Reply: `POST /api/admin/messages/reply`
-- **Request Headers**: `Authorization: Bearer <token>` or admin cookie session
-- **Request Body**:
-  ```json
-  {
-    "message_id": "uuid",
-    "reply_text": "Gentile Maria, grazie per aver contattato Isabel Pepe...",
-    "subject": "Re: Consiglio Misura Anello"
-  }
-  ```
-- **Response**:
-  - `200 OK`: `{ "success": true, "message": "Risposta inviata con successo", "replied_at": "timestamp" }`
-  - `401 Unauthorized`: `{ "error": "Accesso non autorizzato" }`
-  - `404 Not Found`: `{ "error": "Messaggio non trovato" }`
+### 3. Server Action: `updateProductImage`
+- **Signature**: `export async function updateProductImage(productId: string, file: File, type: 'primary' | 'secondary'): Promise<{ success: boolean; url?: string; error?: string }>`
+- **Behavior**: Uploads `file` to R2, updates `image_primary` or `image_secondary`, and synchronizes corresponding index in `products.gallery` (`gallery[1]` for primary, `gallery[0]` for secondary).
 
-### 4. Admin Server Actions: `app/admin/actions_messages.ts`
-- `updateMessageStatus(id: string, status: 'unread' | 'pending' | 'replied' | 'closed')`
-- `deleteMessage(id: string)`
+### 4. Client Safe Response Parser: `safeParseUploadResponse`
+- **Signature**: `async function safeParseUploadResponse(res: Response): Promise<{ success: boolean; url?: string; error?: string }>`
+- **Behavior**: Inspects `res.headers.get('content-type')`, parses JSON if available, or extracts human-readable error from `res.text()` with HTTP status code mapping (413 -> "File troppo grande", 500 -> "Errore server R2", 502/504 -> "Timeout gateway").
+
+### 5. Supabase 5-Slot Gallery Contract
+- `products.gallery`: `TEXT[]` with 5 elements `[slot1, slot2, slot3, slot4, slot5]`.
+- `image_secondary`: `gallery[0] || null` (Slot 1 On-Model 2:3).
+- `image_primary`: `gallery[1] || gallery[0] || null` (Slot 2 Still Life 1:1).
 
 ## Code Layout
-- `lib/email.ts` — Resend email templates (`sendSupportAdminNotificationEmail`, `sendSupportReplyEmail`)
-- `app/api/contact/route.ts` — Public contact ingestion endpoint with rate limiting & bot traps
-- `app/api/admin/messages/reply/route.ts` — Admin reply endpoint protected by `verifyAdminAuth`
-- `app/admin/actions_messages.ts` — Server actions for message status & deletion
-- `app/admin/MessagesTable.tsx` — Admin Concierge Inbox UI with filter, search, detail viewer, quick replies
-- `app/admin/AdminSidebar.tsx` — Navigation item with dynamic unread counter badge
-- `app/admin/page.tsx` — SSR prefetching of `support_messages`
-- `app/admin/DashboardClientWrapper.tsx` — Tab rendering for `activeTab === 'messages'`
-- `components/ContactForm.tsx` — Public customer contact form component
-- `scripts/test_e2e_concierge.ts` — E2E test runner for customer support ecosystem
+- `app/admin/ProductForm.tsx` — Admin product creation and editing form with 5 image slots
+- `app/admin/MediaLibraryModal.tsx` — Cloudflare R2 media browser modal with direct upload
+- `app/admin/ProductTable.tsx` — Product catalog management table
+- `app/admin/actions.ts` — Server Actions for catalog mutations, uploads, and Stripe sync
+- `app/api/upload/route.ts` — REST API endpoint for Cloudflare R2 image uploads
+- `app/api/admin/products/route.ts` — REST API routes for product CRUD operations
+- `lib/r2.ts` — Cloudflare R2 S3 SDK client wrapper with Sharp image optimization
+- `lib/supabase.ts` — Supabase database client
+- `tests/` — Opaque-box E2E test suite and runner scripts

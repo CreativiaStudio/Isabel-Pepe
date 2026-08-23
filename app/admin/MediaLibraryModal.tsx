@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { getMediaLibrary } from './actions';
-import { X, Search, Image as ImageIcon, RotateCcw, Download, Upload, Loader2, Check } from 'lucide-react';
+import { getMediaLibrary, uploadProductImageAction } from './actions';
+import { X, Search, Image as ImageIcon, RotateCcw, Download, Upload, Loader2, AlertCircle } from 'lucide-react';
 
 interface MediaFile {
   key: string;
@@ -19,20 +19,120 @@ interface Props {
   initialSearch?: string;
 }
 
+export interface SafeUploadResult {
+  success: boolean;
+  url?: string;
+  error?: string;
+}
+
+async function safeParseUploadResponse(res: Response): Promise<SafeUploadResult> {
+  try {
+    const contentType = res.headers.get('content-type') || '';
+
+    if (contentType.includes('application/json')) {
+      let data: any;
+      try {
+        data = await res.json();
+      } catch {
+        return {
+          success: false,
+          error: `Risposta JSON non valida dal server (HTTP ${res.status}).`,
+        };
+      }
+
+      if (!res.ok || data.error) {
+        return {
+          success: false,
+          error: data.error || `Errore HTTP ${res.status}: Impossibile completare il caricamento.`,
+        };
+      }
+
+      if (!data.url) {
+        return {
+          success: false,
+          error: 'Risposta del server incompleta (URL immagine mancante).',
+        };
+      }
+
+      return { success: true, url: data.url };
+    }
+
+    const rawText = await res.text().catch(() => '');
+
+    if (res.status === 413) {
+      return {
+        success: false,
+        error: 'File troppo grande per il server (massimo 20MB consentiti).',
+      };
+    }
+    if (res.status === 502 || res.status === 504) {
+      return {
+        success: false,
+        error: 'Gateway timeout: riprova tra qualche secondo.',
+      };
+    }
+    if (res.status >= 500) {
+      return {
+        success: false,
+        error: `Errore server Cloudflare R2 (HTTP ${res.status}).`,
+      };
+    }
+    if (res.status === 400) {
+      return {
+        success: false,
+        error: 'Richiesta non valida: verifica il file selezionato.',
+      };
+    }
+
+    const cleanText = rawText.replace(/<[^>]*>?/gm, '').trim();
+    return {
+      success: false,
+      error: cleanText.slice(0, 150) || `Errore imprevisto durante il caricamento (Status ${res.status}).`,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Errore imprevisto durante l\'elaborazione della risposta.',
+    };
+  }
+}
+
 async function compressImageClient(file: File): Promise<File> {
-  if (file.size < 1024 * 1024 || !file.type.startsWith('image/')) {
+  const isSvg = file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+  const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+  const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|heic|heif|bmp|tiff)$/i.test(file.name);
+
+  if (!isImage || isSvg || isGif) {
     return file;
   }
+
   return new Promise((resolve) => {
+    let objectUrl: string | null = null;
+    try {
+      objectUrl = URL.createObjectURL(file);
+    } catch {
+      return resolve(file);
+    }
+
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      img.src = e.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1800;
+
+    const cleanup = () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+        objectUrl = null;
+      }
+    };
+
+    img.onload = () => {
+      try {
+        let width = img.naturalWidth || img.width;
+        let height = img.naturalHeight || img.height;
+        const maxDim = 2000;
+
+        if (width === 0 || height === 0) {
+          cleanup();
+          return resolve(file);
+        }
 
         if (width > maxDim || height > maxDim) {
           if (width > height) {
@@ -44,16 +144,26 @@ async function compressImageClient(file: File): Promise<File> {
           }
         }
 
+        const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return resolve(file);
 
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          cleanup();
+          return resolve(file);
+        }
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
+
         canvas.toBlob(
           (blob) => {
-            if (blob) {
-              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+            cleanup();
+            if (blob && blob.size > 0) {
+              const baseName = file.name.replace(/\.[^/.]+$/, '');
+              const compressedFile = new File([blob], `${baseName}.webp`, {
                 type: 'image/webp',
               });
               resolve(compressedFile);
@@ -64,11 +174,19 @@ async function compressImageClient(file: File): Promise<File> {
           'image/webp',
           0.85
         );
-      };
-      img.onerror = () => resolve(file);
+      } catch (canvasErr) {
+        cleanup();
+        console.warn('[compressImageClient] Canvas compression exception, falling back to raw file:', canvasErr);
+        resolve(file);
+      }
     };
-    reader.onerror = () => resolve(file);
-    reader.readAsDataURL(file);
+
+    img.onerror = () => {
+      cleanup();
+      resolve(file);
+    };
+
+    img.src = objectUrl;
   });
 }
 
@@ -76,13 +194,14 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
   const [media, setMedia] = useState<MediaFile[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [search, setSearch] = useState(initialSearch);
-  const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (isOpen) {
       setSearch(initialSearch);
+      setUploadError(null);
       loadMedia();
     }
   }, [isOpen, initialSearch]);
@@ -129,6 +248,8 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
     if (!file) return;
 
     setUploading(true);
+    setUploadError(null);
+
     try {
       const compressedFile = await compressImageClient(file);
       const formData = new FormData();
@@ -136,23 +257,55 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
       formData.append('folder', 'products');
       formData.append('customName', `isabel-pepe-media-${Date.now()}`);
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      let uploadedUrl: string | undefined;
+      let errorMsg: string | undefined;
 
-      const data = await res.json();
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || 'Errore durante il caricamento');
+      // Tier 1: REST POST /api/upload
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const parsed = await safeParseUploadResponse(res);
+        if (parsed.success && parsed.url) {
+          uploadedUrl = parsed.url;
+        } else {
+          errorMsg = parsed.error;
+          console.warn('[MediaLibraryModal] REST upload failed, trying Server Action fallback:', errorMsg);
+        }
+      } catch (fetchErr: any) {
+        errorMsg = fetchErr.message;
+        console.warn('[MediaLibraryModal] REST fetch exception, trying Server Action fallback:', fetchErr);
+      }
+
+      // Tier 2: Server Action Fallback
+      if (!uploadedUrl) {
+        try {
+          const actionRes = await uploadProductImageAction(formData);
+          if (actionRes.success && actionRes.url) {
+            uploadedUrl = actionRes.url;
+            errorMsg = undefined;
+          } else {
+            errorMsg = actionRes.error || errorMsg || 'Errore durante il caricamento fallback su Cloudflare R2.';
+          }
+        } catch (actionErr: any) {
+          console.error('[MediaLibraryModal] Server Action fallback failed:', actionErr);
+          errorMsg = actionErr.message || errorMsg || 'Impossibile completare il caricamento.';
+        }
+      }
+
+      if (!uploadedUrl) {
+        throw new Error(errorMsg || 'Errore durante il caricamento');
       }
 
       // Reload media library and automatically select the newly uploaded image
       await loadMedia();
-      onSelect(data.url);
+      onSelect(uploadedUrl);
       onClose();
     } catch (err: any) {
       console.error("Modal upload error:", err);
-      alert(`Errore caricamento: ${err.message}`);
+      setUploadError(err.message || 'Errore durante il caricamento immagine.');
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -250,6 +403,23 @@ export function MediaLibraryModal({ isOpen, onClose, onSelect, initialSearch = '
             </button>
           </div>
         </div>
+
+        {/* Upload Error Banner */}
+        {uploadError && (
+          <div className="bg-red-50 border-b border-red-100 px-6 py-2.5 text-xs text-red-700 flex items-center justify-between shrink-0 animate-in fade-in duration-200">
+            <div className="flex items-center gap-2">
+              <AlertCircle size={14} className="text-red-500 shrink-0" />
+              <span>{uploadError}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setUploadError(null)}
+              className="text-red-400 hover:text-red-600 p-1"
+            >
+              <X size={14} />
+            </button>
+          </div>
+        )}
 
         {/* Toolbar */}
         <div className="p-4 border-b flex flex-wrap justify-between items-center gap-3 bg-white shrink-0">

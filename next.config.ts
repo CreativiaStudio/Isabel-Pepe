@@ -20,6 +20,7 @@ try {
 }
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['sharp'],
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb', // Aumentato da 1MB a 50MB per consentire caricamenti multipli

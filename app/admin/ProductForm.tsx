@@ -2,24 +2,126 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { addProduct, updateFullProduct } from './actions';
-import { Plus, Loader2, Save, X, Image as ImageIcon, Trash2, CheckCircle2 } from 'lucide-react';
+import { addProduct, updateFullProduct, uploadProductImageAction } from './actions';
+import { Plus, Loader2, Save, X, Image as ImageIcon, Trash2, CheckCircle2, RotateCcw, AlertCircle } from 'lucide-react';
 import { MediaLibraryModal } from './MediaLibraryModal';
 
+export interface SafeUploadResult {
+  success: boolean;
+  url?: string;
+  error?: string;
+}
+
+async function safeParseUploadResponse(res: Response): Promise<SafeUploadResult> {
+  try {
+    const contentType = res.headers.get('content-type') || '';
+
+    // 1. JSON Response
+    if (contentType.includes('application/json')) {
+      let data: any;
+      try {
+        data = await res.json();
+      } catch {
+        return {
+          success: false,
+          error: `Risposta JSON non valida dal server (HTTP ${res.status}).`,
+        };
+      }
+
+      if (!res.ok || data.error) {
+        return {
+          success: false,
+          error: data.error || `Errore HTTP ${res.status}: Impossibile completare il caricamento.`,
+        };
+      }
+
+      if (!data.url) {
+        return {
+          success: false,
+          error: 'Risposta del server incompleta (URL immagine mancante).',
+        };
+      }
+
+      return { success: true, url: data.url };
+    }
+
+    // 2. Non-JSON Response (HTML error page from Next.js, Cloudflare, Nginx)
+    const rawText = await res.text().catch(() => '');
+
+    if (res.status === 413) {
+      return {
+        success: false,
+        error: 'File troppo grande per il server (massimo 20MB consentiti).',
+      };
+    }
+    if (res.status === 502 || res.status === 504) {
+      return {
+        success: false,
+        error: 'Gateway timeout: riprova tra qualche secondo.',
+      };
+    }
+    if (res.status >= 500) {
+      return {
+        success: false,
+        error: `Errore server Cloudflare R2 (HTTP ${res.status}).`,
+      };
+    }
+    if (res.status === 400) {
+      return {
+        success: false,
+        error: 'Richiesta non valida: verifica il file selezionato.',
+      };
+    }
+
+    const cleanText = rawText.replace(/<[^>]*>?/gm, '').trim();
+    return {
+      success: false,
+      error: cleanText.slice(0, 150) || `Errore imprevisto durante il caricamento (Status ${res.status}).`,
+    };
+  } catch (err: unknown) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Errore imprevisto durante l\'elaborazione della risposta.',
+    };
+  }
+}
+
 async function compressImageClient(file: File): Promise<File> {
-  if (file.size < 1024 * 1024 || !file.type.startsWith('image/')) {
+  const isSvg = file.type === 'image/svg+xml' || file.name.toLowerCase().endsWith('.svg');
+  const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif');
+  const isImage = file.type.startsWith('image/') || /\.(jpe?g|png|webp|avif|heic|heif|bmp|tiff)$/i.test(file.name);
+
+  if (!isImage || isSvg || isGif) {
     return file;
   }
+
   return new Promise((resolve) => {
+    let objectUrl: string | null = null;
+    try {
+      objectUrl = URL.createObjectURL(file);
+    } catch {
+      return resolve(file);
+    }
+
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      img.src = e.target?.result as string;
-      img.onload = () => {
-        const canvas = document.createElement('canvas');
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1800;
+
+    const cleanup = () => {
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+        objectUrl = null;
+      }
+    };
+
+    img.onload = () => {
+      try {
+        let width = img.naturalWidth || img.width;
+        let height = img.naturalHeight || img.height;
+        const maxDim = 2000;
+
+        if (width === 0 || height === 0) {
+          cleanup();
+          return resolve(file);
+        }
 
         if (width > maxDim || height > maxDim) {
           if (width > height) {
@@ -31,16 +133,26 @@ async function compressImageClient(file: File): Promise<File> {
           }
         }
 
+        const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return resolve(file);
 
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          cleanup();
+          return resolve(file);
+        }
+
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
+
         canvas.toBlob(
           (blob) => {
-            if (blob) {
-              const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, "") + ".webp", {
+            cleanup();
+            if (blob && blob.size > 0) {
+              const baseName = file.name.replace(/\.[^/.]+$/, '');
+              const compressedFile = new File([blob], `${baseName}.webp`, {
                 type: 'image/webp',
               });
               resolve(compressedFile);
@@ -51,11 +163,20 @@ async function compressImageClient(file: File): Promise<File> {
           'image/webp',
           0.85
         );
-      };
-      img.onerror = () => resolve(file);
+      } catch (canvasErr) {
+        cleanup();
+        console.warn('[compressImageClient] Canvas compression exception, falling back to raw file:', canvasErr);
+        resolve(file);
+      }
     };
-    reader.onerror = () => resolve(file);
-    reader.readAsDataURL(file);
+
+    img.onerror = () => {
+      cleanup();
+      // On decode error (e.g. browser lacks native decoder for HEIC), fallback to raw file for server-side Sharp/R2 handling
+      resolve(file);
+    };
+
+    img.src = objectUrl;
   });
 }
 
@@ -68,6 +189,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
   const [slotUrls, setSlotUrls] = useState<Record<string, string>>({});
   const [uploadingSlots, setUploadingSlots] = useState<Record<string, boolean>>({});
   const [clearedSlots, setClearedSlots] = useState<Record<string, boolean>>({});
+  const [slotErrors, setSlotErrors] = useState<Record<string, string | undefined>>({});
+  const [pendingFiles, setPendingFiles] = useState<Record<string, File | undefined>>({});
   const [message, setMessage] = useState('');
   const [category, setCategory] = useState('Collane');
   const [previews, setPreviews] = useState<{ [key: string]: string }>({});
@@ -82,6 +205,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       setPreviews({});
       setClearedSlots({});
       setUploadingSlots({});
+      setSlotErrors({});
+      setPendingFiles({});
 
       const initialSlotUrls: Record<string, string> = {};
       const gallery = Array.isArray(initialData.gallery) ? initialData.gallery : [];
@@ -101,19 +226,19 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       setPreviews({});
       setClearedSlots({});
       setUploadingSlots({});
+      setSlotErrors({});
+      setPendingFiles({});
       setSlotUrls({});
     }
   }, [initialData]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, slotKey: string) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const executeSlotUpload = async (file: File, slotKey: string) => {
     // Show preview immediately
     const localUrl = URL.createObjectURL(file);
     setPreviews(prev => ({ ...prev, [slotKey]: localUrl }));
     setClearedSlots(prev => ({ ...prev, [slotKey]: false }));
     setUploadingSlots(prev => ({ ...prev, [slotKey]: true }));
+    setSlotErrors(prev => ({ ...prev, [slotKey]: undefined }));
     setMessage('');
 
     try {
@@ -122,25 +247,81 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
       formData.append('file', compressedFile);
       formData.append('folder', 'products');
 
-      const customName = `isabel-pepe-${(productName || initialData?.name || 'gioiello').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${slotKey}-${Date.now()}`;
+      const cleanName = (productName || initialData?.name || 'gioiello')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-');
+      const customName = `isabel-pepe-${cleanName}-${slotKey}-${Date.now()}`;
       formData.append('customName', customName);
 
-      const res = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
+      let uploadedUrl: string | undefined;
+      let uploadError: string | undefined;
 
-      const data = await res.json();
-      if (!res.ok || data.error) {
-        throw new Error(data.error || 'Errore nel caricamento R2');
+      // Tier 1: REST POST /api/upload
+      try {
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const parsed = await safeParseUploadResponse(res);
+        if (parsed.success && parsed.url) {
+          uploadedUrl = parsed.url;
+        } else {
+          uploadError = parsed.error;
+          console.warn(`[ProductForm] Tier-1 REST upload failed for ${slotKey}, attempting Tier-2 Server Action fallback:`, uploadError);
+        }
+      } catch (fetchErr: any) {
+        uploadError = fetchErr.message;
+        console.warn(`[ProductForm] Tier-1 fetch network exception for ${slotKey}, attempting Tier-2 fallback:`, fetchErr);
       }
 
-      setSlotUrls(prev => ({ ...prev, [slotKey]: data.url }));
+      // Tier 2: Server Action Fallback
+      if (!uploadedUrl) {
+        try {
+          const actionRes = await uploadProductImageAction(formData);
+          if (actionRes.success && actionRes.url) {
+            uploadedUrl = actionRes.url;
+            uploadError = undefined;
+          } else {
+            uploadError = actionRes.error || uploadError || 'Errore durante il caricamento fallback su Cloudflare R2.';
+          }
+        } catch (actionErr: any) {
+          console.error(`[ProductForm] Tier-2 Server Action fallback failed for ${slotKey}:`, actionErr);
+          uploadError = actionErr.message || uploadError || 'Tutti i tentativi di caricamento sono falliti.';
+        }
+      }
+
+      if (uploadedUrl) {
+        setSlotUrls(prev => ({ ...prev, [slotKey]: uploadedUrl! }));
+        setSlotErrors(prev => ({ ...prev, [slotKey]: undefined }));
+        setPendingFiles(prev => ({ ...prev, [slotKey]: undefined }));
+      } else {
+        setSlotErrors(prev => ({ ...prev, [slotKey]: uploadError || 'Caricamento non riuscito' }));
+        setPendingFiles(prev => ({ ...prev, [slotKey]: file }));
+        setMessage(`❌ Errore caricamento foto (${slotKey}): ${uploadError}`);
+      }
     } catch (err: any) {
-      console.error('Upload error:', err);
+      console.error(`[ProductForm] Slot ${slotKey} processing error:`, err);
+      setSlotErrors(prev => ({ ...prev, [slotKey]: err.message || 'Errore imprevisto' }));
+      setPendingFiles(prev => ({ ...prev, [slotKey]: file }));
       setMessage(`❌ Errore caricamento foto (${slotKey}): ${err.message}`);
     } finally {
       setUploadingSlots(prev => ({ ...prev, [slotKey]: false }));
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>, slotKey: string) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    await executeSlotUpload(file, slotKey);
+    // Reset file input value so re-selecting same file triggers change
+    e.target.value = '';
+  };
+
+  const handleRetrySlot = async (slotKey: string) => {
+    const file = pendingFiles[slotKey];
+    if (file) {
+      await executeSlotUpload(file, slotKey);
     }
   };
 
@@ -148,6 +329,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
     setClearedSlots(prev => ({ ...prev, [slotKey]: true }));
     setPreviews(prev => ({ ...prev, [slotKey]: '' }));
     setSlotUrls(prev => ({ ...prev, [slotKey]: '' }));
+    setSlotErrors(prev => ({ ...prev, [slotKey]: undefined }));
+    setPendingFiles(prev => ({ ...prev, [slotKey]: undefined }));
   };
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -213,6 +396,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         setSlotUrls({});
         setPreviews({});
         setClearedSlots({});
+        setSlotErrors({});
+        setPendingFiles({});
       }
     } catch (err: any) {
       console.warn('API save warning, trying server action fallback...', err);
@@ -237,6 +422,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
           setSlotUrls({});
           setPreviews({});
           setClearedSlots({});
+          setSlotErrors({});
+          setPendingFiles({});
         }
       } catch (fallbackErr: any) {
         console.error('Save failed:', fallbackErr);
@@ -398,6 +585,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                   const slotName = `slot${slotNum}`;
                   const isCleared = !!clearedSlots[slotName];
                   const isUploading = !!uploadingSlots[slotName];
+                  const slotError = slotErrors[slotName];
+                  const hasPendingRetry = !!pendingFiles[slotName];
                   const currentUrl = isCleared ? '' : (slotUrls[slotName] || '');
                   const currentPreview = isCleared ? '' : (previews[slotName] || currentUrl);
                   
@@ -409,7 +598,14 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                   if (slotNum === 5) labelTitle = "5: Foto Extra 2 (facoltativo)";
 
                   return (
-                    <div key={slotNum} className="p-3 border border-gray-100 bg-white rounded-lg flex items-center gap-3 shadow-sm hover:border-gray-300 transition-colors">
+                    <div 
+                      key={slotNum} 
+                      className={`p-3 border rounded-lg flex items-center gap-3 shadow-sm transition-colors ${
+                        slotError 
+                          ? 'border-red-200 bg-red-50/20' 
+                          : 'border-gray-100 bg-white hover:border-gray-300'
+                      }`}
+                    >
                       {/* Preview Area */}
                       <div className="relative group shrink-0 w-14 h-14 bg-gray-50 border border-gray-200 rounded-md flex items-center justify-center cursor-pointer">
                         {isUploading ? (
@@ -458,13 +654,14 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                         />
                         
                         {/* Buttons Row */}
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                           <label 
                             htmlFor={`file_input_${slotName}`}
                             className={`cursor-pointer ${isUploading ? 'opacity-50 pointer-events-none' : 'hover:bg-gray-200'} bg-gray-100 text-gray-700 text-[11px] px-2.5 py-1 rounded border border-gray-200 font-medium transition flex items-center gap-1 select-none`}
                           >
                             {isUploading ? <Loader2 size={11} className="animate-spin" /> : '+ Foto'}
                           </label>
+
                           <button 
                             type="button"
                             disabled={isUploading}
@@ -476,13 +673,29 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
                           >
                             <ImageIcon size={12} /> Sfoglia
                           </button>
+
+                          {/* 1-Click Retry Button */}
+                          {slotError && hasPendingRetry && !isUploading && (
+                            <button
+                              type="button"
+                              onClick={() => handleRetrySlot(slotName)}
+                              className="bg-red-50 hover:bg-red-100 text-red-700 text-[11px] px-2.5 py-1 rounded border border-red-200 font-medium transition flex items-center gap-1 shrink-0 shadow-sm animate-in fade-in duration-200"
+                              title="Riprova caricamento foto fallita"
+                            >
+                              <RotateCcw size={11} /> Riprova
+                            </button>
+                          )}
                         </div>
 
                         {/* Status Label */}
                         <div className="text-[11px] text-gray-500 mt-1 truncate">
                           {isUploading ? (
                             <span className="text-amber-600 font-medium flex items-center gap-1">
-                              <Loader2 size={11} className="animate-spin inline" /> Caricamento su R2...
+                              <Loader2 size={11} className="animate-spin inline shrink-0" /> Caricamento su R2...
+                            </span>
+                          ) : slotError ? (
+                            <span className="text-red-600 font-medium flex items-center gap-1 truncate" title={slotError}>
+                              <AlertCircle size={11} className="inline text-red-500 shrink-0" /> {slotError}
                             </span>
                           ) : currentUrl ? (
                             <span className="text-emerald-700 font-medium truncate flex items-center gap-1" title={currentUrl}>
@@ -533,6 +746,8 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
             setSlotUrls(prev => ({ ...prev, [mediaModalSlot]: url }));
             setPreviews(prev => ({ ...prev, [mediaModalSlot]: url }));
             setClearedSlots(prev => ({ ...prev, [mediaModalSlot]: false }));
+            setSlotErrors(prev => ({ ...prev, [mediaModalSlot]: undefined }));
+            setPendingFiles(prev => ({ ...prev, [mediaModalSlot]: undefined }));
             setMediaModalSlot(null);
           }
         }} 

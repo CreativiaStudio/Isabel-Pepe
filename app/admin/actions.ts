@@ -3,8 +3,16 @@
 import { supabaseAdmin } from '@/lib/supabase';
 import { stripe } from '@/lib/stripe';
 import { revalidatePath } from 'next/cache';
-import { uploadToR2, renameR2Object, getR2Client, getR2Config } from '@/lib/r2';
-import { ListObjectsV2Command } from '@aws-sdk/client-s3';
+import { uploadToR2, getR2Client, getR2Config } from '@/lib/r2';
+import { ListObjectsV2Command, type _Object } from '@aws-sdk/client-s3';
+
+function safeRevalidatePath(path: string) {
+  try {
+    revalidatePath(path);
+  } catch {
+    // Gracefully handle invocations outside Next.js request context (e.g. tests)
+  }
+}
 
 function slugify(text: string) {
   return text
@@ -169,14 +177,15 @@ export async function addProduct(formData: FormData) {
 
     if (dbError) throw new Error('Errore salvataggio DB: ' + dbError.message);
 
-    revalidatePath('/admin');
-    revalidatePath('/shop');
-    revalidatePath('/');
+    safeRevalidatePath('/admin');
+    safeRevalidatePath('/shop');
+    safeRevalidatePath('/');
     return { success: true, product: data };
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error);
-    return { error: error.message };
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return { error: errorMsg };
   }
 }
 
@@ -185,12 +194,13 @@ export async function updateProductField(id: string, field: string, value: strin
   try {
     const { error } = await supabaseAdmin.from('products').update({ [field]: value }).eq('id', id);
     if (error) throw new Error(error.message);
-    revalidatePath('/admin');
-    revalidatePath('/shop');
-    revalidatePath('/');
+    safeRevalidatePath('/admin');
+    safeRevalidatePath('/shop');
+    safeRevalidatePath('/');
     return { success: true };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return { error: errorMsg };
   }
 }
 
@@ -212,7 +222,7 @@ export async function updateFullProduct(id: string, formData: FormData) {
 
     const productSlug = await generateUniqueSlug(name, sku, id);
 
-    const updateData: any = {
+    const updateData: Record<string, unknown> = {
       name, slug: productSlug, sku, description, materials, plating, gemstone, carats, sizes, price, discount_price, stock, category
     };
 
@@ -225,7 +235,7 @@ export async function updateFullProduct(id: string, formData: FormData) {
     ];
 
     const { data: existingData } = await supabaseAdmin.from('products').select('gallery, image_primary, image_secondary').eq('id', id).single();
-    let newGalleryUrls: string[] = Array.isArray(existingData?.gallery) ? [...existingData.gallery] : [];
+    const newGalleryUrls: string[] = Array.isArray(existingData?.gallery) ? [...existingData.gallery] : [];
     
     // Se la galleria era vuota o incompleta, migriamo i vecchi campi nel nuovo sistema a 5 slot
     if (newGalleryUrls.length < 2) {
@@ -275,19 +285,20 @@ export async function updateFullProduct(id: string, formData: FormData) {
 
     updateData.gallery = newGalleryUrls;
     updateData.image_secondary = newGalleryUrls[0] || null;
-    updateData.image_primary = newGalleryUrls[1] || null;
+    updateData.image_primary = newGalleryUrls[1] || newGalleryUrls[0] || null;
 
     const { error } = await supabaseAdmin.from('products').update(updateData).eq('id', id);
 
     if (error) throw new Error(error.message);
 
-    revalidatePath('/admin');
-    revalidatePath('/shop');
-    revalidatePath('/');
-    revalidatePath(`/prodotto/${productSlug}`);
+    safeRevalidatePath('/admin');
+    safeRevalidatePath('/shop');
+    safeRevalidatePath('/');
+    safeRevalidatePath(`/prodotto/${productSlug}`);
     return { success: true };
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return { error: errorMsg };
   }
 }
 
@@ -296,36 +307,167 @@ export async function deleteProduct(id: string) {
     const { error } = await supabaseAdmin.from('products').delete().eq('id', id);
     if (error) throw new Error(error.message);
 
-    revalidatePath('/admin');
-    revalidatePath('/shop');
-    revalidatePath('/');
+    safeRevalidatePath('/admin');
+    safeRevalidatePath('/shop');
+    safeRevalidatePath('/');
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('deleteProduct error:', error);
-    return { error: error.message };
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return { error: errorMsg };
   }
 }
 
-export async function updateProductImage(id: string, file: File, type: 'primary' | 'secondary') {
+/**
+ * Server Action fallback for image uploads to Cloudflare R2.
+ * Serves as Tier-2 upload fallback when /api/upload fails.
+ */
+export async function uploadProductImageAction(
+  formData: FormData
+): Promise<{ success: boolean; url?: string; error?: string }> {
   try {
-    if (!file || file.size === 0) return { error: 'Nessun file selezionato' };
-    
-    const ext = file.name.split('.').pop();
-    const fileName = `public/${Date.now()}_${type}_update.${ext}`;
-    
-    const { data, error } = await supabaseAdmin.storage.from('product-images').upload(fileName, file);
-    if (error) throw new Error(error.message);
-    
-    const url = supabaseAdmin.storage.from('product-images').getPublicUrl(data.path).data.publicUrl;
-    
-    const field = type === 'primary' ? 'image_primary' : 'image_secondary';
-    const { error: dbError } = await supabaseAdmin.from('products').update({ [field]: url }).eq('id', id);
-    if (dbError) throw new Error(dbError.message);
-    
-    revalidatePath('/admin');
-    return { success: true, url };
-  } catch (error: any) {
-    return { error: error.message };
+    if (!formData || !(formData instanceof FormData)) {
+      return { success: false, error: 'Dati del modulo non validi o mancanti.' };
+    }
+
+    const file = formData.get('file') as File | null;
+    const folder = (formData.get('folder') as string) || 'products';
+    const customName = (formData.get('customName') as string) || undefined;
+
+    if (!file || typeof file !== 'object' || !('size' in file) || file.size === 0) {
+      return { success: false, error: 'Nessun file fornito o file vuoto.' };
+    }
+
+    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+    if (file.size > MAX_FILE_SIZE) {
+      return { success: false, error: 'La dimensione del file supera il limite massimo di 20MB.' };
+    }
+
+    const safeFolder = folder
+      .replace(/\.\./g, '')
+      .replace(/^\/+|\/+$/g, '')
+      .trim() || 'products';
+
+    const safeCustomName = customName
+      ? customName.trim().replace(/[^a-zA-Z0-9_-]/g, '-')
+      : undefined;
+
+    const publicUrl = await uploadToR2(file, safeFolder, safeCustomName);
+
+    return { success: true, url: publicUrl };
+  } catch (error: unknown) {
+    console.error('Errore in uploadProductImageAction:', error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: errorMsg || 'Errore durante il caricamento su Cloudflare R2',
+    };
+  }
+}
+
+/**
+ * Server Action for quick thumbnail image replacement in ProductTable.
+ * Uploads to Cloudflare R2 and synchronizes image column AND products.gallery 5-slot array.
+ */
+export async function updateProductImage(
+  productId: string,
+  file: File,
+  type: 'primary' | 'secondary'
+): Promise<{ success: boolean; url?: string; error?: string }> {
+  try {
+    if (!productId || typeof productId !== 'string' || !productId.trim()) {
+      return { success: false, error: 'ID prodotto obbligatorio.' };
+    }
+
+    if (!file || typeof file !== 'object' || !('size' in file) || file.size === 0) {
+      return { success: false, error: 'Nessun file selezionato o file vuoto.' };
+    }
+
+    const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB
+    if (file.size > MAX_FILE_SIZE) {
+      return { success: false, error: 'La dimensione del file supera il limite massimo di 20MB.' };
+    }
+
+    if (type !== 'primary' && type !== 'secondary') {
+      return { success: false, error: 'Tipo immagine non valido (consentiti: primary, secondary).' };
+    }
+
+    const targetId = productId.trim();
+
+    // 1. Fetch current product record
+    const { data: product, error: fetchError } = await supabaseAdmin
+      .from('products')
+      .select('id, name, slug, gallery, image_primary, image_secondary')
+      .eq('id', targetId)
+      .single();
+
+    if (fetchError || !product) {
+      return {
+        success: false,
+        error: `Prodotto non trovato: ${fetchError?.message || 'ID non esistente'}`,
+      };
+    }
+
+    // 2. Upload new image to Cloudflare R2
+    const productSlug = product.slug || slugify(product.name || 'gioiello');
+    const timestamp = Date.now();
+    const customName = `isabel-pepe-${productSlug}-${type}-${timestamp}`;
+    const publicUrl = await uploadToR2(file, 'products', customName);
+
+    // 3. Normalize existing gallery array to exactly 5 elements
+    const galleryUrls: string[] = Array.isArray(product.gallery) ? [...product.gallery] : [];
+    if (galleryUrls.length < 2) {
+      galleryUrls[0] = product.image_secondary || '';
+      galleryUrls[1] = product.image_primary || '';
+    }
+    while (galleryUrls.length < 5) {
+      galleryUrls.push('');
+    }
+
+    // 4. Update the corresponding slot and columns
+    const updatePayload: Record<string, unknown> = {};
+
+    if (type === 'secondary') {
+      // Slot 1 (index 0) = On-Model 2:3
+      galleryUrls[0] = publicUrl;
+      updatePayload.image_secondary = publicUrl;
+      if (!galleryUrls[1] && !product.image_primary) {
+        updatePayload.image_primary = publicUrl;
+      }
+    } else {
+      // Slot 2 (index 1) = Studio Still Life 1:1
+      galleryUrls[1] = publicUrl;
+      updatePayload.image_primary = publicUrl;
+    }
+
+    updatePayload.gallery = galleryUrls;
+
+    // 5. Execute atomic update in Supabase
+    const { error: dbError } = await supabaseAdmin
+      .from('products')
+      .update(updatePayload)
+      .eq('id', targetId);
+
+    if (dbError) {
+      throw new Error(`Errore salvataggio database: ${dbError.message}`);
+    }
+
+    // 6. Comprehensive cache revalidation
+    safeRevalidatePath('/admin');
+    safeRevalidatePath('/shop');
+    safeRevalidatePath('/');
+    if (product.slug) {
+      safeRevalidatePath(`/prodotto/${product.slug}`);
+    }
+
+    return { success: true, url: publicUrl };
+  } catch (error: unknown) {
+    console.error('Errore in updateProductImage:', error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: errorMsg || "Errore durante l'aggiornamento dell'immagine del prodotto",
+    };
   }
 }
 
@@ -351,7 +493,7 @@ export async function seedSampleProducts() {
       is_active: true
     });
   }
-  revalidatePath('/admin');
+  safeRevalidatePath('/admin');
   return { success: true };
 }
 
@@ -363,7 +505,7 @@ export async function getMediaLibrary() {
 
     let continuationToken: string | undefined = undefined;
     let isTruncated = true;
-    const allContents: any[] = [];
+    const allContents: _Object[] = [];
 
     // Loop through all pages of objects in R2
     while (isTruncated) {
@@ -412,7 +554,7 @@ export async function getMediaLibrary() {
 
     return mediaFiles;
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("Errore nel fetch della Media Library da R2:", error);
     throw error;
   }
