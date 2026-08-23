@@ -251,3 +251,49 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: err.message || 'Errore interno del server' }, { status: 500 });
   }
 }
+
+// PATCH (PARTIAL UPDATE) PRODUCT FIELD
+export async function PATCH(req: Request) {
+  const auth = await verifyAdminAuth(req);
+  if (!auth.authorized) return auth.response;
+
+  try {
+    const body = await req.json();
+    const { id, field, value, ...rest } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID prodotto obbligatorio' }, { status: 400 });
+    }
+
+    const updatePayload: Record<string, any> = {};
+    if (field !== undefined) {
+      updatePayload[field] = value;
+    } else {
+      Object.assign(updatePayload, rest);
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from('products')
+      .update(updatePayload)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('PATCH product error:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    revalidatePath('/admin');
+    revalidatePath('/shop');
+    revalidatePath('/');
+    if (data?.slug) {
+      revalidatePath(`/prodotto/${data.slug}`);
+    }
+
+    return NextResponse.json({ success: true, product: data });
+  } catch (err: any) {
+    console.error('API Products PATCH Error:', err);
+    return NextResponse.json({ error: err.message || 'Errore interno del server' }, { status: 500 });
+  }
+}

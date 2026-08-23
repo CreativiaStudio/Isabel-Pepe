@@ -35,11 +35,29 @@ export default function ProductTable({ products = [], onEdit, onAddNew }: { prod
 
   async function handleSaveField(id: string, field: string) {
     const val = field === 'price' || field === 'stock' ? Number(editValue) : editValue;
+    const previousList = [...productList];
     setProductList(prev => prev.map(p => p.id === id ? { ...p, [field]: val } : p));
     setEditingId(null);
     setEditField(null);
-    await updateProductField(id, field, val);
-    router.refresh();
+
+    try {
+      const res = await updateProductField(id, field, val);
+      if (res?.error) throw new Error(res.error);
+    } catch (err) {
+      try {
+        const patchRes = await fetch('/api/admin/products', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, field, value: val }),
+        });
+        if (!patchRes.ok) throw new Error('Errore salvataggio');
+      } catch (fErr: any) {
+        setProductList(previousList);
+        alert(`❌ Errore salvataggio: ${fErr.message || 'Impossibile salvare il campo'}`);
+      }
+    } finally {
+      router.refresh();
+    }
   }
 
   function startEditing(id: string, field: string, currentValue: any) {
@@ -88,11 +106,41 @@ export default function ProductTable({ products = [], onEdit, onAddNew }: { prod
   }
 
   async function handleToggleVisibility(id: string, currentStatus: boolean) {
+    const nextStatus = !currentStatus;
+    const previousList = [...productList];
     setTogglingId(id);
-    setProductList(prev => prev.map(p => p.id === id ? { ...p, is_active: !currentStatus } : p));
-    await updateProductField(id, 'is_active', !currentStatus);
-    setTogglingId(null);
-    router.refresh();
+    
+    // Aggiornamento ottimistico immediato nella UI
+    setProductList(prev => prev.map(p => p.id === id ? { ...p, is_active: nextStatus } : p));
+
+    try {
+      // 1. Prova tramite Server Action
+      const res = await updateProductField(id, 'is_active', nextStatus);
+      if (res?.error) {
+        throw new Error(res.error);
+      }
+    } catch (err: any) {
+      console.warn('Server Action toggle warning, attempting REST PATCH fallback...', err);
+      // 2. Fallback istantaneo a REST API PATCH
+      try {
+        const patchRes = await fetch('/api/admin/products', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, field: 'is_active', value: nextStatus }),
+        });
+        if (!patchRes.ok) {
+          const errJson = await patchRes.json().catch(() => ({}));
+          throw new Error(errJson.error || 'Impossibile aggiornare lo stato del prodotto');
+        }
+      } catch (fallbackErr: any) {
+        console.error('All update mechanisms failed:', fallbackErr);
+        setProductList(previousList);
+        alert(`❌ Errore aggiornamento visibilità: ${fallbackErr.message || 'Riprova tra poco'}`);
+      }
+    } finally {
+      setTogglingId(null);
+      router.refresh();
+    }
   }
 
   function openImagePopup(id: string, type: 'primary' | 'secondary') {
