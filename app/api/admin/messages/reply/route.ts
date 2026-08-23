@@ -81,6 +81,17 @@ export async function POST(req: Request | NextRequest) {
 
     if (!emailResult.success) {
       console.warn('⚠️ Warning: Email dispatch error during reply:', emailResult.error);
+      const errMsg =
+        emailResult.error?.message ||
+        (typeof emailResult.error === 'string' ? emailResult.error : 'Errore del server di posta (quota Resend raggiunta)');
+      return NextResponse.json(
+        {
+          success: false,
+          error: `Invio email non riuscito: ${errMsg}`,
+          details: emailResult.error,
+        },
+        { status: 422 }
+      );
     }
 
     // 5. Update Database Record to 'replied'
