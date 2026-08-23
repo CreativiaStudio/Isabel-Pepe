@@ -7,7 +7,12 @@ import { uploadToR2, renameR2Object, getR2Client, getR2Config } from '@/lib/r2';
 import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 
 function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
 }
 
 async function generateUniqueSlug(name: string, sku?: string, currentProductId?: string): Promise<string> {
@@ -38,7 +43,7 @@ async function generateUniqueSlug(name: string, sku?: string, currentProductId?:
 
   // Se anche quello esiste, aggiungiamo un contatore univoco (-1, -2, ...)
   let counter = 1;
-  while (true) {
+  while (counter < 1000) {
     const candidate = `${baseSlug}-${counter}`;
     let cQuery = supabaseAdmin.from('products').select('id').eq('slug', candidate);
     if (currentProductId) cQuery = cQuery.neq('id', currentProductId);
@@ -48,24 +53,32 @@ async function generateUniqueSlug(name: string, sku?: string, currentProductId?:
     }
     counter++;
   }
+  return `${baseSlug}-${Date.now()}`;
 }
 
 export async function addProduct(formData: FormData) {
   try {
-    const name = formData.get('name') as string;
-    const sku = formData.get('sku') as string;
-    const description = formData.get('description') as string;
-    const materials = formData.get('materials') as string || 'Argento 925 nichel free';
-    const plating = formData.get('plating') as string;
-    const gemstone = formData.get('gemstone') as string;
-    const carats = formData.get('carats') as string;
+    const name = (formData.get('name') as string)?.trim();
+    const sku = (formData.get('sku') as string)?.trim() || null;
+    const description = (formData.get('description') as string) || '';
+    const materials = (formData.get('materials') as string) || 'Argento 925 nichel free';
+    const plating = (formData.get('plating') as string) || '';
+    const gemstone = (formData.get('gemstone') as string) || '';
+    const carats = (formData.get('carats') as string) || '';
     const sizes = formData.getAll('sizes'); // Array delle taglie per anelli
     
-    const price = parseFloat(formData.get('price') as string);
+    const rawPrice = formData.get('price') as string;
+    const parsedPrice = parseFloat(String(rawPrice || 0).replace(',', '.')) || 0;
+    
     const discountPriceStr = formData.get('discount_price') as string;
-    const discount_price = discountPriceStr ? parseFloat(discountPriceStr) : null;
-    const stock = parseInt(formData.get('stock') as string);
-    const category = formData.get('category') as string;
+    const rawDiscount = discountPriceStr ? parseFloat(String(discountPriceStr).replace(',', '.')) : null;
+    const parsedDiscount = (rawDiscount !== null && !isNaN(rawDiscount) && rawDiscount > 0 && rawDiscount < parsedPrice)
+      ? rawDiscount
+      : null;
+      
+    const rawStock = formData.get('stock') as string;
+    const stock = parseInt(String(rawStock ?? 10)) >= 0 ? parseInt(String(rawStock ?? 10)) : 0;
+    const category = (formData.get('category') as string) || 'Collane';
     
     const slotFiles = [
       formData.get('slot1') as File,
@@ -85,7 +98,7 @@ export async function addProduct(formData: FormData) {
       formData.get('slot5_url') as string
     ];
 
-    const productSlug = await generateUniqueSlug(name, sku);
+    const productSlug = await generateUniqueSlug(name, sku || undefined);
 
     const timestamp = Date.now();
 
@@ -106,24 +119,33 @@ export async function addProduct(formData: FormData) {
       }
     }
 
-    const primaryUrl = galleryUrls[1] || null;
+    const primaryUrl = galleryUrls[1] || galleryUrls[0] || null;
     const secondaryUrl = galleryUrls[0] || null;
+    const validHttpsImage = typeof primaryUrl === 'string' && primaryUrl.startsWith('https://') ? [primaryUrl] : [];
 
-    // 3. Crea il prodotto e il prezzo in Stripe
-    const stripeProduct = await stripe.products.create({
-      name,
-      description: description || undefined,
-      images: primaryUrl ? [primaryUrl] : [],
-    });
+    // 3. Crea il prodotto e il prezzo in Stripe in modo resiliente
+    let stripeProductId = null;
+    let stripePriceId = null;
+    try {
+      const stripeProduct = await stripe.products.create({
+        name,
+        description: description || undefined,
+        images: validHttpsImage,
+      });
+      stripeProductId = stripeProduct.id;
 
-    const stripePrice = await stripe.prices.create({
-      product: stripeProduct.id,
-      unit_amount: Math.round(price * 100),
-      currency: 'eur',
-    });
+      const stripePrice = await stripe.prices.create({
+        product: stripeProduct.id,
+        unit_amount: Math.round(parsedPrice * 100),
+        currency: 'eur'
+      });
+      stripePriceId = stripePrice.id;
+    } catch (stripeErr) {
+      console.warn('Stripe error on addProduct (non-blocking):', stripeErr);
+    }
 
     // 4. Salva tutto nel database Supabase
-    const { error: dbError } = await supabaseAdmin.from('products').insert({
+    const { data, error: dbError } = await supabaseAdmin.from('products').insert({
       name,
       slug: productSlug,
       sku,
@@ -132,25 +154,25 @@ export async function addProduct(formData: FormData) {
       plating,
       gemstone,
       carats,
-      sizes,
-      price,
-      discount_price,
+      sizes: Array.isArray(sizes) ? sizes.map(String).filter(Boolean) : [],
+      price: parsedPrice,
+      discount_price: parsedDiscount,
       stock,
       category,
       image_primary: primaryUrl,
       image_secondary: secondaryUrl,
       gallery: galleryUrls,
-      stripe_product_id: stripeProduct.id,
-      stripe_price_id: stripePrice.id,
+      stripe_product_id: stripeProductId,
+      stripe_price_id: stripePriceId,
       is_active: true
-    });
+    }).select().single();
 
     if (dbError) throw new Error('Errore salvataggio DB: ' + dbError.message);
 
     revalidatePath('/admin');
     revalidatePath('/shop');
     revalidatePath('/');
-    return { success: true };
+    return { success: true, product: data };
     
   } catch (error: any) {
     console.error(error);

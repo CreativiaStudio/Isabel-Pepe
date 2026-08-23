@@ -5,7 +5,12 @@ import { revalidatePath } from 'next/cache';
 import { verifyAdminAuth } from '@/lib/auth-guard';
 
 function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)+/g, '');
 }
 
 async function generateUniqueSlug(name: string, sku?: string, currentProductId?: string): Promise<string> {
@@ -33,7 +38,7 @@ async function generateUniqueSlug(name: string, sku?: string, currentProductId?:
   }
 
   let counter = 1;
-  while (true) {
+  while (counter < 1000) {
     const candidate = `${baseSlug}-${counter}`;
     let cQuery = supabaseAdmin.from('products').select('id').eq('slug', candidate);
     if (currentProductId) cQuery = cQuery.neq('id', currentProductId);
@@ -43,6 +48,7 @@ async function generateUniqueSlug(name: string, sku?: string, currentProductId?:
     }
     counter++;
   }
+  return `${baseSlug}-${Date.now()}`;
 }
 
 // UPDATE (PUT) PRODUCT
@@ -75,6 +81,15 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'ID e Nome del gioiello sono obbligatori' }, { status: 400 });
     }
 
+    const parsedPrice = parseFloat(String(price || 0).replace(',', '.')) || 0;
+    const rawDiscount = discount_price !== null && discount_price !== undefined && discount_price !== ''
+      ? parseFloat(String(discount_price).replace(',', '.'))
+      : null;
+    const parsedDiscount = (rawDiscount !== null && !isNaN(rawDiscount) && rawDiscount > 0 && rawDiscount < parsedPrice)
+      ? rawDiscount
+      : null;
+    const parsedStock = parseInt(String(stock ?? 10)) >= 0 ? parseInt(String(stock ?? 10)) : 0;
+
     const productSlug = await generateUniqueSlug(name, sku, id);
 
     // Assicurati che gallery abbia 5 slot
@@ -90,10 +105,10 @@ export async function PUT(req: Request) {
       plating: plating || '',
       gemstone: gemstone || '',
       carats: carats || '',
-      sizes: Array.isArray(sizes) ? sizes : [],
-      price: parseFloat(price) || 0,
-      discount_price: discount_price ? parseFloat(discount_price) : null,
-      stock: parseInt(stock) >= 0 ? parseInt(stock) : 0,
+      sizes: Array.isArray(sizes) ? sizes.map(String).filter(Boolean) : [],
+      price: parsedPrice,
+      discount_price: parsedDiscount,
+      stock: parsedStock,
       category: category || 'Collane',
       gallery: safeGallery,
       image_secondary: safeGallery[0] || image_secondary || null,
@@ -147,9 +162,18 @@ export async function POST(req: Request) {
       gallery,
     } = body;
 
-    if (!name || !price) {
+    if (!name || price === undefined || price === null || price === '') {
       return NextResponse.json({ error: 'Nome e Prezzo sono obbligatori' }, { status: 400 });
     }
+
+    const parsedPrice = parseFloat(String(price).replace(',', '.')) || 0;
+    const rawDiscount = discount_price !== null && discount_price !== undefined && discount_price !== ''
+      ? parseFloat(String(discount_price).replace(',', '.'))
+      : null;
+    const parsedDiscount = (rawDiscount !== null && !isNaN(rawDiscount) && rawDiscount > 0 && rawDiscount < parsedPrice)
+      ? rawDiscount
+      : null;
+    const parsedStock = parseInt(String(stock ?? 10)) >= 0 ? parseInt(String(stock ?? 10)) : 0;
 
     const productSlug = await generateUniqueSlug(name, sku);
 
@@ -157,41 +181,42 @@ export async function POST(req: Request) {
     while (safeGallery.length < 5) safeGallery.push("");
 
     const primaryUrl = safeGallery[1] || safeGallery[0] || null;
+    const validHttpsImage = typeof primaryUrl === 'string' && primaryUrl.startsWith('https://') ? [primaryUrl] : [];
 
-    // Crea prodotto e prezzo in Stripe
+    // Crea prodotto e prezzo in Stripe in modo resiliente
     let stripeProductId = null;
     let stripePriceId = null;
     try {
       const stripeProduct = await stripe.products.create({
-        name,
+        name: name.trim(),
         description: description || undefined,
-        images: primaryUrl ? [primaryUrl] : [],
+        images: validHttpsImage,
       });
       stripeProductId = stripeProduct.id;
 
       const stripePrice = await stripe.prices.create({
         product: stripeProduct.id,
-        unit_amount: Math.round(parseFloat(price) * 100),
+        unit_amount: Math.round(parsedPrice * 100),
         currency: 'eur',
       });
       stripePriceId = stripePrice.id;
     } catch (stripeErr) {
-      console.error('Stripe Product Creation Warning:', stripeErr);
+      console.warn('Stripe Product Creation Warning (non-blocking):', stripeErr);
     }
 
     const insertPayload = {
       name: name.trim(),
       slug: productSlug,
-      sku: sku ? sku.trim() : null,
+      sku: sku ? String(sku).trim() : null,
       description: description || '',
       materials: materials || 'Argento 925 nichel free',
       plating: plating || '',
       gemstone: gemstone || '',
       carats: carats || '',
-      sizes: Array.isArray(sizes) ? sizes : [],
-      price: parseFloat(price) || 0,
-      discount_price: discount_price ? parseFloat(discount_price) : null,
-      stock: parseInt(stock) >= 0 ? parseInt(stock) : 0,
+      sizes: Array.isArray(sizes) ? sizes.map(String).filter(Boolean) : [],
+      price: parsedPrice,
+      discount_price: parsedDiscount,
+      stock: parsedStock,
       category: category || 'Collane',
       gallery: safeGallery,
       image_secondary: safeGallery[0] || null,

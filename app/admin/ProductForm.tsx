@@ -198,12 +198,37 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
         body: JSON.stringify(payload),
       });
 
-      const result = await res.json();
+      const result = await res.json().catch(() => ({}));
       
       if (!res.ok || result.error) {
-        setMessage(`❌ Errore: ${result.error || 'Salvataggio non riuscito'}`);
-      } else {
-        setMessage(isEditing ? '✅ Prodotto aggiornato con successo!' : '✅ Prodotto aggiunto con successo!');
+        throw new Error(result.error || 'Salvataggio non riuscito');
+      }
+
+      setMessage(isEditing ? '✅ Prodotto aggiornato con successo!' : '✅ Prodotto aggiunto con successo al catalogo!');
+      router.refresh();
+      if (!isEditing) {
+        (e.target as HTMLFormElement).reset();
+        setProductName('');
+        setProductSku('');
+        setSlotUrls({});
+        setPreviews({});
+        setClearedSlots({});
+      }
+    } catch (err: any) {
+      console.warn('API save warning, trying server action fallback...', err);
+      try {
+        let actionRes;
+        if (isEditing && initialData?.id) {
+          actionRes = await updateFullProduct(initialData.id, formData);
+        } else {
+          actionRes = await addProduct(formData);
+        }
+
+        if (actionRes?.error) {
+          throw new Error(actionRes.error);
+        }
+
+        setMessage(isEditing ? '✅ Prodotto aggiornato con successo!' : '✅ Prodotto aggiunto con successo al catalogo!');
         router.refresh();
         if (!isEditing) {
           (e.target as HTMLFormElement).reset();
@@ -213,10 +238,10 @@ export default function ProductForm({ initialData, onCancel }: { initialData?: a
           setPreviews({});
           setClearedSlots({});
         }
+      } catch (fallbackErr: any) {
+        console.error('Save failed:', fallbackErr);
+        setMessage(`❌ Errore durante il salvataggio: ${fallbackErr.message || err.message}`);
       }
-    } catch (err: any) {
-      console.error(err);
-      setMessage(`❌ Errore di connessione: ${err.message}`);
     } finally {
       setLoading(false);
     }
