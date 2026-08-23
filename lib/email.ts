@@ -183,11 +183,33 @@ export async function sendOrderConfirmationEmail({
 </body>
 </html>`;
 
-  return sendEmail({
+  const customerSendPromise = sendEmail({
     to: customerEmail,
     subject: `✨ Ordine Confermato #${shortOrderId} — Isabel Pepe Atelier`,
     html,
   });
+
+  // Notifica immediata ad Admin per evasione rapida
+  sendEmail({
+    to: ['info@isabelpepe.com', 'sviluppo@creativiastudio.com'],
+    subject: `🚨 [NUOVO ORDINE] #${shortOrderId} — €${amountTotal.toFixed(2)} da ${customerName || customerEmail}`,
+    html: `
+      <div style="font-family: sans-serif; padding: 20px; color: #1a1a1a;">
+        <h2 style="color: #8A5E58;">🎉 Nuovo Ordine Ricevuto su Isabel Pepe!</h2>
+        <p><strong>ID Ordine:</strong> #${shortOrderId}</p>
+        <p><strong>Cliente:</strong> ${customerName} (<a href="mailto:${customerEmail}">${customerEmail}</a>)</p>
+        <p><strong>Totale Incassato:</strong> €${amountTotal.toFixed(2)}</p>
+        <p><strong>Indirizzo Spedizione:</strong> ${formattedAddress || 'Indirizzo in checkout'}</p>
+        <p style="margin-top: 20px;">
+          <a href="${SITE_URL}/admin?tab=orders" style="background: #1a1a1a; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+            Apri Pannello Ordini &rarr;
+          </a>
+        </p>
+      </div>
+    `,
+  }).catch((err) => console.warn('Admin new order notification warning:', err));
+
+  return customerSendPromise;
 }
 
 // 2. EMAIL NOTIFICA SPEDIZIONE & CODICE TRACKING CORRIERE
