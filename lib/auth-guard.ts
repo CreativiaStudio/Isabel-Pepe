@@ -56,11 +56,15 @@ export async function verifyAdminAuth(req?: Request | NextRequest): Promise<Admi
     }
 
     // 2. Check Supabase SSR session cookie
-    const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
+    try {
+      const supabase = await createClient();
+      const { data: { user }, error } = await supabase.auth.getUser();
 
-    if (!error && user && isAdminEmail(user.email)) {
-      return { authorized: true, user };
+      if (!error && user && isAdminEmail(user.email)) {
+        return { authorized: true, user };
+      }
+    } catch {
+      // Ignore cookie store errors outside Next.js request scope (e.g. standalone test scripts)
     }
 
     return {

@@ -1,80 +1,89 @@
-# BRIEFING — 2026-08-21T16:10:35Z
+# BRIEFING — 2026-08-23T15:38:35Z
 
 ## Mission
-Orchestrate Phase 1 of Isabel Pepe Pre-Launch (Cybersecurity & SEO Foundations): R1-R4 implementation and comprehensive verification.
+Orchestrate the complete Customer Support & Concierge Inbox ecosystem for Isabel Pepe luxury e-commerce (R1 to R4: Supabase table, contact form ingestion, admin inbox tab, Resend 1-click reply engine, spam/GDPR/auth protection, verification, and git push).
 
 ## 🔒 My Identity
 - Archetype: orchestrator
 - Roles: orchestrator, user_liaison, human_reporter, successor
-- Working directory: c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/orchestrator
+- Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator
 - Original parent: parent
-- Original parent conversation ID: 2a5a15d5-b861-4703-8df9-495106142b2d
+- Original parent conversation ID: 43505069-50e3-4050-8c93-e4859c5c090a
 
 ## 🔒 My Workflow
-- **Pattern**: Project Pattern (SWE / Security & SEO)
-- **Scope document**: c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/PROJECT.md
-1. **Decompose**: Survey codebase across R1-R4, define milestones, assign worker/review/challenge/audit loops.
+- **Pattern**: Project Orchestrator
+- **Scope document**: c:\Users\mario\Progetti Antigravity\isabel-pepe\PROJECT.md
+1. **Decompose**: Survey codebase via 3 parallel Explorers, define PROJECT.md with Feature Inventory, Milestones, and Interface Contracts.
 2. **Dispatch & Execute**:
-   - Step 1: Survey codebase via Explorers (R1, R2, R3, R4) [DONE]
-   - Step 2: Dispatch Worker to implement R1-R4 changes cleanly according to requirements [DONE]
-   - Step 3: Dispatch Reviewers (2) + Challengers (2) + Forensic Auditor (1) [RUNNING]
-   - Step 4: Gating and verification against all acceptance criteria [IN_PROGRESS]
-3. **On failure**:
-   - Retry / Replace / Redistribute / Redesign
-4. **Succession**:
-   - Self-succeed at 16 spawns if needed.
+   - Implementation Track: Milestone Sub-orchestrators / Worker-Reviewer-Challenger-Auditor loops.
+   - E2E Testing Track: Requirement-driven testing suite with TEST_READY.md.
+3. **On failure**: Retry -> Replace -> Skip -> Redistribute -> Redesign.
+4. **Succession**: Self-succeed at 16 spawns.
 - **Work items**:
-  1. Survey & Architecture Mapping [done]
-  2. Implementation of R1, R2, R3, R4 [done]
-  3. Verification & Auditing (Reviews, Adversarial Tests, Builds) [in-progress]
-- **Current phase**: 3
-- **Current focus**: Multi-agent gate verification
+  1. Survey & Codebase Exploration [done]
+  2. Project Architecture & Milestone Decomposition [done]
+  3. M1: Database Schema & Supabase Setup [done]
+  4. E2E Testing Track Design [done]
+  5. M2: Contact Ingestion API & Alert Email [done]
+  6. M3: Luxury Contact Form Frontend [done]
+  7. M4: Admin Concierge Inbox Dashboard [done]
+  8. M5: Direct Reply Engine & Luxury Templates [done]
+  9. M6: E2E Acceptance, Build & Git Push [in-progress]
+- **Current phase**: 2 (Iteration 2 Remediation & Final Acceptance)
+- **Current focus**: Dispatching `worker_fix_1` to fix security guard on test auth header and consecutive dots email validation.
 
 ## 🔒 Key Constraints
 - NEVER write, modify, or create source code files directly.
-- NEVER run build/test commands directly.
-- NEVER investigate code directly — delegate to Explorers/Workers/Reviewers/Challengers/Auditors.
-- Only edit .md files in .agents/.
-- Strict AND gate criteria: build/tests pass, 2 APPROVE reviews, 2 challenger passes, 1 CLEAN audit.
-- Always include ORIGINAL_REQUEST.md path in dispatches.
+- NEVER run build/test commands yourself — require workers to do so.
+- NEVER investigate or explore problem at code level — dispatch Explorers for technical investigation.
+- Maintain persistent progress in progress.md with timestamps.
+- Never reuse a subagent after it has delivered its handoff.
+- Forensic Auditor has hard veto power.
 
 ## Current Parent
-- Conversation ID: 2a5a15d5-b861-4703-8df9-495106142b2d
-- Updated: 2026-08-21T15:58:12Z
+- Conversation ID: 43505069-50e3-4050-8c93-e4859c5c090a
+- Updated: 2026-08-23T15:15:00Z
 
 ## Key Decisions Made
-- Survey completed by Explorers 1, 2, 3.
-- Implementation completed by Worker 1.
-- Dispatched 2 Reviewers, 2 Challengers, 1 Forensic Auditor for gate verification.
+- All milestones M1-M5 built. Auditor rated CLEAN, Reviewer 1 & Challengers 1-2 APPROVED.
+- Reviewer 2 identified 2 edge cases (test auth header environment guard, email regex consecutive dots, test assertion trimming).
+- Spawning `worker_fix_1` for targeted remediation.
 
 ## Team Roster
 | Agent | Type | Work Item | Status | Conv ID |
 |-------|------|-----------|--------|---------|
-| explorer_1 | teamwork_preview_explorer | R1 Survey (Checkout Price Validation) | completed | f38636a2-03f5-4d9b-89f4-885d59f56c1a |
-| explorer_2 | teamwork_preview_explorer | R2 Survey (Admin & AI API Security Guard) | completed | c25bcb93-bb1b-4480-bdc4-959fe51794bd |
-| explorer_3 | teamwork_preview_explorer | R3 & R4 Survey (Headers & SEO Sitemap/Robots) | completed | 90e8f1b6-2a24-43b7-8b42-0b89bb7170d9 |
-| worker_1 | teamwork_preview_worker | Implementation of R1, R2, R3, R4 | completed | 2c90b482-ad47-4b07-a8ce-3a587bfc87b9 |
-| reviewer_1 | teamwork_preview_reviewer | Review of R1 & R2 | running | 3ff5c134-2b54-4cd0-8893-0f5e10494b59 |
-| reviewer_2 | teamwork_preview_reviewer | Review of R3 & R4 | running | 353191fe-a7ed-4724-b9d2-b499d3acff4a |
-| challenger_1 | teamwork_preview_challenger | Adversarial testing R1 | running | 261d898f-e971-4e2f-95ea-73bea6a56dbe |
-| challenger_2 | teamwork_preview_challenger | Adversarial testing R2-R4 | running | f44ea25e-dec6-468a-a0a8-80819c74520c |
-| auditor_1 | teamwork_preview_auditor | Forensic Integrity Audit | running | ec83f55f-52d4-4ae7-913a-2693380cb4fb |
+| explorer_survey_1 | teamwork_preview_explorer | Contact Form & Supabase Schema | completed | 400945e8-24b1-4a4d-bcc3-cffb864a09ad |
+| explorer_survey_2 | teamwork_preview_explorer | Admin Dashboard Architecture | completed | 40c6f04e-a41c-49c2-bcfa-e1014b1d1b4e |
+| explorer_survey_3 | teamwork_preview_explorer | Email, Auth & Security Infrastructure | completed | 992ea391-b9b6-4433-ad38-b7e5edcb2b61 |
+| test_writer_1 | teamwork_preview_test_writer | E2E Testing Track & TEST_READY.md | completed | 7c5ab1ba-588b-41bf-90af-405ea16b4464 |
+| worker_m1 | teamwork_preview_worker | M1 Database Schema & Supabase Setup | completed | 61d49817-abf8-4cbb-aab7-4554f494d424 |
+| worker_m2 | teamwork_preview_worker | M2 Contact API & Admin Email Alert | completed | a38ac067-67d4-4cdc-8693-4267f0ba34bb |
+| worker_m3 | teamwork_preview_worker | M3 Luxury Contact Form Frontend | completed | cd39d967-5394-4439-8576-b5c34634a803 |
+| worker_m4_m5 | teamwork_preview_worker | M4 & M5 Admin Concierge Inbox & Reply Engine | completed | 5fc06353-55f1-420b-8abb-f7b233db6d71 |
+| reviewer_1 | teamwork_preview_reviewer | Code & Functional Verification | completed (APPROVE) | 8d5e5002-dda0-43eb-9683-745d922c6cdb |
+| reviewer_2 | teamwork_preview_reviewer | Architecture & UX Verification | completed (REQ_CHANGES) | 38159b43-041f-460c-b509-3082a63356fe |
+| challenger_1 | teamwork_preview_challenger | Adversarial Security Stress Testing | completed (APPROVE) | 84a5f132-fe68-4ec9-95c4-6e6a6dead7d2 |
+| challenger_2 | teamwork_preview_challenger | Adversarial Data & Concurrency Testing | completed (APPROVE) | 8e57a236-8691-4415-8bb7-e1858ab163ae |
+| auditor_1 | teamwork_preview_auditor | Forensic Integrity Audit | completed (CLEAN) | 74b1cea0-ef97-4337-b946-0ad9c9eb5a4b |
+| worker_fix_1 | teamwork_preview_worker | Iteration 2 Remediation & Final Push | running | pending_dispatch |
 
 ## Succession Status
 - Succession required: no
-- Spawn count: 9 / 16
-- Pending subagents: 3ff5c134-2b54-4cd0-8893-0f5e10494b59, 353191fe-a7ed-4724-b9d2-b499d3acff4a, 261d898f-e971-4e2f-95ea-73bea6a56dbe, f44ea25e-dec6-468a-a0a8-80819c74520c, ec83f55f-52d4-4ae7-913a-2693380cb4fb
+- Spawn count: 13 / 16
+- Pending subagents: none
 - Predecessor: none
 - Successor: not yet spawned
 
 ## Active Timers
-- Heartbeat cron: not started
+- Heartbeat cron: c33f5840-5cf7-4fab-92ea-2fa142f22f46/task-13
 - Safety timer: none
 
 ## Artifact Index
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/ORIGINAL_REQUEST.md — User Requirements
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/PROJECT.md — Architecture & Milestones
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/orchestrator/progress.md — Progress tracker
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/orchestrator/plan.md — Step-by-step plan
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/orchestrator/GATE_STATUS.md — Gate verdicts
-- c:/Users/mario/Progetti Antigravity/isabel-pepe/.agents/worker_1/handoff.md — Worker 1 Report
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\ORIGINAL_REQUEST.md — Authoritative User Request
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\PROJECT.md — Master Project Specification
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\TEST_INFRA.md — E2E Test Strategy & Framework
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\TEST_READY.md — E2E Test Inventory & Verification Guide
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator\GATE_STATUS.md — Milestone M6 Gate Status
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator\DISPATCH.md — Orchestrator Dispatch Log
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator\progress.md — Liveness heartbeat & progress
+- c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\orchestrator\plan.md — Orchestration Plan

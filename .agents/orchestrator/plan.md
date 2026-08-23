@@ -1,25 +1,28 @@
-# Execution Plan — Phase 1: Cybersecurity & SEO Foundations
+# Orchestration Plan: Isabel Pepe Customer Support & Concierge Inbox Ecosystem
 
 ## Objective
-Implement and verify all 4 requirements from ORIGINAL_REQUEST.md:
-- R1: Authoritative Checkout Price Validation (`app/api/checkout/route.ts`)
-- R2: Strict Admin & AI API Security Guard (`lib/auth-guard.ts`, admin routes, jarvis routes, `middleware.ts`)
-- R3: OWASP Security Headers in `next.config.ts`
-- R4: Dynamic Sitemap & Robots.txt for Google Search Console (`app/sitemap.ts`, `app/robots.ts`)
+Implement end-to-end luxury customer concierge inbox, contact form ingestion, database storage in Supabase, email alerts and one-click direct customer replies via Resend, admin auth protection, spam filters, verification, and git push.
 
-## Steps
-1. **Survey (Exploration)**:
-   - Spawn 3 parallel Explorers to survey existing implementations, Supabase helpers, auth patterns, routing structure, Next.js configuration, and edge cases.
-2. **Decomposition & Architecture (PROJECT.md)**:
-   - Merge findings into `PROJECT.md` specifying exact interfaces, files, and changes needed.
-3. **Implementation**:
-   - Dispatch Worker to implement R1, R2, R3, R4 with full fidelity and integrity warnings.
-4. **Independent Verification & Gate**:
-   - Reviewer 1 & Reviewer 2: Verify code correctness, robustness, Next.js conventions, auth coverage.
-   - Challenger 1 & Challenger 2: Adversarial tests (price tampering attack simulation, unauthorized admin/jarvis access, headers inspection, sitemap/robots XML/text verification).
-   - Forensic Auditor: Integrity check (ensure no dummy/hardcoded mock bypasses).
-   - Build Verification: `npm run build` must pass cleanly with 0 errors.
-5. **Gate Evaluation**:
-   - Check all criteria strictly (AND logic).
-6. **Handoff & Report**:
-   - Write `handoff.md`, update state, send message to parent.
+## Phases
+1. **Phase 0: Survey & Scope Mapping**
+   - Spawn 3 Explorers:
+     - Explorer 1: Contact Form (`components/ContactForm.tsx`, `/assistenza-clienti`, current API route or mock, Supabase connection/tables).
+     - Explorer 2: Admin Dashboard structure (`app/admin/*` or `components/admin/*`, tabs, layouts, styling system, state).
+     - Explorer 3: Email infrastructure (`lib/email.ts`, Resend config, templates, auth utilities `verifyAdminAuth`, rate limiting).
+   - Synthesize survey reports into `PROJECT.md`.
+
+2. **Phase 1: Milestone Decomposition & Interface Contracts**
+   - M1: Database schema (`support_messages`), Supabase migration/SQL, Types/Interfaces.
+   - M2: API Pipeline (`POST /api/contact` with honeypot & rate-limit, email alert to admin).
+   - M3: Contact Form Frontend update (`ContactForm.tsx` connecting to API with luxury UX).
+   - M4: Admin Concierge Inbox UI (`/admin?tab=messages`, filters, search, badge, viewer, status update).
+   - M5: Admin Reply Engine & Email Templates (`POST /api/admin/messages/reply`, Resend luxury HTML templates, quick-replies).
+   - M6: E2E Verification, Turbopack production build check (`npm run build`), Git commit & push.
+
+3. **Phase 2: Execution & Gated Verification**
+   - For each milestone: Explorer -> Worker -> Reviewer -> Challenger -> Auditor -> Gate check.
+
+4. **Phase 3: Final Acceptance & Deployment**
+   - Production build verification (`npm run build`).
+   - Git status & commit push to `origin/main`.
+   - Sentinel final completion report.

@@ -41,3 +41,34 @@ USING (true);
 
 -- L'inserimento, modifica e cancellazione saranno fatti tramite la Secret Key (Service Role) del backend, 
 -- che scavalca in automatico queste regole, quindi non serve abilitare insert/update pubblici.
+
+-- 3. Creazione della tabella Messaggi di Supporto & Concierge
+CREATE TABLE IF NOT EXISTS public.support_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    customer_name TEXT NOT NULL,
+    customer_email TEXT NOT NULL,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'unread' CHECK (status IN ('unread', 'pending', 'replied', 'closed')),
+    admin_reply TEXT,
+    replied_at TIMESTAMPTZ,
+    replied_by TEXT,
+    ip_address TEXT,
+    user_agent TEXT,
+    metadata JSONB DEFAULT '{}'::jsonb
+);
+
+CREATE INDEX IF NOT EXISTS idx_support_messages_status ON public.support_messages(status);
+CREATE INDEX IF NOT EXISTS idx_support_messages_created_at ON public.support_messages(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_support_messages_customer_email ON public.support_messages(customer_email);
+
+ALTER TABLE public.support_messages ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Service role full access on support_messages"
+ON public.support_messages FOR ALL TO service_role USING (true) WITH CHECK (true);
+
+CREATE POLICY "Public can insert support messages"
+ON public.support_messages FOR INSERT TO anon, authenticated WITH CHECK (true);
+

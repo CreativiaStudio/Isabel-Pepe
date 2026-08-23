@@ -1,27 +1,28 @@
-# Orchestrator Progress
+# Progress Tracker
 
-Last visited: 2026-08-21T16:03:30Z
-
-## Iteration Status
-Current iteration: 1 / 32
+Last visited: 2026-08-23T15:40:05Z
 
 ## Current Status
-- [x] Initialized orchestration environment and briefing
-- [x] Survey codebase and dependencies across R1-R4 (Explorers 1, 2, 3 reports received)
-- [x] Create detailed PROJECT.md with architecture, feature inventory, and interface contracts
-- [ ] Dispatch Worker to implement R1 (Authoritative Checkout Validation)
-- [ ] Dispatch Worker to implement R2 (Admin & AI API Security Guard & Middleware)
-- [ ] Dispatch Worker to implement R3 (OWASP Security Headers in next.config.ts)
-- [ ] Dispatch Worker to implement R4 (Dynamic Sitemap & Robots.txt)
-- [ ] Verification Loop: Build & Typecheck (npm run build)
-- [ ] Verification Loop: Independent Reviews (2 Reviewers)
-- [ ] Verification Loop: Empirical Adversarial Verification (2 Challengers)
-- [ ] Verification Loop: Forensic Audit (1 Auditor)
-- [ ] Final Synthesis & Parent Reporting
+- [x] Phase 0: Survey codebase with 3 parallel Explorers (Complete)
+- [x] Phase 1: Create PROJECT.md and decompose into milestones (Complete)
+- [x] E2E Testing Track: Design test infra & Tiers 1-4 test suite (`TEST_READY.md` published, 43 tests authored)
+- [x] M1: Database Schema & Supabase Setup (`support_messages` live with indexes & RLS)
+- [x] M2: Contact Ingestion API & Email Alert (`POST /api/contact`, `sendSupportAdminNotificationEmail`, bot/rate-limiting)
+- [x] M3: Luxury Contact Form Frontend (`components/ContactForm.tsx`)
+- [x] M4: Admin Concierge Inbox Dashboard (`/admin?tab=messages`, `MessagesTable.tsx`, `actions_messages.ts`)
+- [x] M5: Direct Reply Engine & Luxury Templates (`POST /api/admin/messages/reply`, `sendSupportReplyEmail`)
+- [ ] M6: Final Verification & Remediation (Iteration 2):
+  - [x] Reviewer 1: APPROVE
+  - [x] Challenger 1: APPROVE (28/28 tests passed)
+  - [x] Challenger 2: APPROVE (16/16 tests passed)
+  - [x] Auditor 1: CLEAN (0 integrity violations)
+  - [ ] Remediation Worker: Apply security test-header guard, email regex consecutive dots, test assertion fix (running)
+  - [ ] Re-run full E2E test suite (100% 43/43 pass) & Turbopack build
+  - [ ] Git commit and push to `origin/main`
+- [ ] Deliver completion report to Sentinel
 
-## Milestone Execution Matrix
-| Milestone | Description | Status | Agent | Verdict |
-|-----------|-------------|--------|-------|---------|
-| Survey | Survey all 4 requirement areas & codebase | DONE | Explorers 1-3 | Complete |
-| M1-M4 | Implementation of R1, R2, R3, R4 | IN_PROGRESS | Worker | Dispatched |
-| Gate | Multi-agent gate verification | PLANNED | Reviewers, Challengers, Auditor | Pending |
+## Iteration Status
+Current iteration: 2 / 32
+
+## Active Subagents
+- `worker_fix_1` (b8f88e76-0ebd-49ca-8d3a-3ef6aab1033b): Remediation Worker for Reviewer 2 findings

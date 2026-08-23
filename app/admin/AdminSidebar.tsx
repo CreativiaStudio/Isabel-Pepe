@@ -13,16 +13,19 @@ import {
   BarChart3,
   Crown,
   Sparkles,
+  MessageSquareQuote,
 } from 'lucide-react';
 
 interface AdminSidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  unreadMessagesCount?: number;
 }
 
-export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
+export default function AdminSidebar({ activeTab, setActiveTab, unreadMessagesCount = 0 }: AdminSidebarProps) {
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'messages', label: 'Messaggi & Concierge', icon: MessageSquareQuote, badge: unreadMessagesCount, highlight: unreadMessagesCount > 0 },
     { id: 'privilege_club', label: 'Privilege Club', icon: Crown, highlight: true },
     { id: 'analytics', label: 'Analytics & Traffico', icon: BarChart3 },
     { id: 'jarvis', label: 'Jarvis AI', icon: Bot },
@@ -61,9 +64,18 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
                 <Icon className={`w-4 h-4 ${isActive ? 'text-white' : item.highlight ? 'text-[#C0A09A]' : 'text-gray-400'}`} />
                 <span>{item.label}</span>
               </div>
-              {item.highlight && !isActive && (
-                <span className="w-2 h-2 rounded-full bg-[#C0A09A]" />
-              )}
+              <div className="flex items-center gap-1.5">
+                {item.badge !== undefined && item.badge > 0 && (
+                  <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full transition-colors ${
+                    isActive ? 'bg-[#C0A09A] text-white' : 'bg-[#8A5E58] text-white'
+                  }`}>
+                    {item.badge}
+                  </span>
+                )}
+                {item.highlight && !isActive && !item.badge && (
+                  <span className="w-2 h-2 rounded-full bg-[#C0A09A]" />
+                )}
+              </div>
             </button>
           );
         })}

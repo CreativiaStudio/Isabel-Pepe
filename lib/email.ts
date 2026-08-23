@@ -590,3 +590,529 @@ export async function sendPrivilegeWelcomeEmail(
     return { success: false, error: error?.message || error };
   }
 }
+
+// 4. EMAIL NOTIFICA ADMIN - NUOVO MESSAGGIO CONCIERGE / ASSISTENZA
+export interface SupportAdminNotificationParams {
+  ticketId?: string;
+  customerName: string;
+  customerEmail: string;
+  subject: string;
+  message: string;
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  createdAt?: string;
+}
+
+export function generateSupportAdminNotificationEmailHtml({
+  ticketId,
+  customerName,
+  customerEmail,
+  subject,
+  message,
+  ipAddress,
+  userAgent,
+  createdAt,
+}: SupportAdminNotificationParams): string {
+  const shortTicketId = ticketId ? ticketId.substring(0, 8).toUpperCase() : 'N/D';
+  const adminInboxUrl = `${SITE_URL}/admin?tab=messages`;
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleString('it-IT', { timeZone: 'Europe/Rome' })
+    : new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' });
+
+  // Escape HTML in user content to prevent rendering issues or injection in email clients
+  const escapeHtml = (str: string) =>
+    (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  const safeName = escapeHtml(customerName);
+  const safeEmail = escapeHtml(customerEmail);
+  const safeSubject = escapeHtml(subject);
+  const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
+  const safeIp = escapeHtml(ipAddress || 'Sconosciuto');
+
+  return `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Nuovo Messaggio Concierge — Isabel Pepe</title>
+</head>
+<body style="margin: 0; padding: 40px 15px; background-color: #FAF8F6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1A1A1A; -webkit-font-smoothing: antialiased;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 620px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #EADFD9; border-radius: 4px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04); overflow: hidden;">
+    
+    <!-- Top Decorative Rose Gold Gradient -->
+    <tr>
+      <td style="height: 4px; background: linear-gradient(90deg, #8A5E58 0%, #C0A09A 50%, #8A5E58 100%);"></td>
+    </tr>
+
+    <!-- Header Section -->
+    <tr>
+      <td style="padding: 36px 32px 20px 32px; text-align: center; background-color: #FFFFFF;">
+        <p style="margin: 0 0 8px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.35em; color: #8A5E58; font-weight: 700;">
+          CONCIERGE &amp; ASSISTENZA CLIENTI
+        </p>
+        <h1 style="margin: 0 0 12px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 30px; letter-spacing: 0.25em; text-transform: uppercase; color: #C0A09A; font-weight: 700;">
+          ISABEL PEPE
+        </h1>
+        <div style="height: 1px; width: 60px; background-color: #C0A09A; margin: 0 auto 20px auto;"></div>
+        
+        <div style="display: inline-block; background-color: #FAF2EF; border: 1px solid #EADFD9; padding: 6px 16px; border-radius: 20px; margin-bottom: 10px;">
+          <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #8A5E58; font-weight: 600;">
+            🔔 Nuovo Ticket #${shortTicketId}
+          </span>
+        </div>
+      </td>
+    </tr>
+
+    <!-- Main Content Body -->
+    <tr>
+      <td style="padding: 10px 32px 32px 32px;">
+        <h2 style="margin: 0 0 18px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 20px; color: #1A1A1A; font-weight: 600; text-align: center;">
+          Nuova Richiesta da ${safeName}
+        </h2>
+        <p style="margin: 0 0 24px 0; font-size: 13px; line-height: 1.6; color: #555555; text-align: center;">
+          È arrivato un nuovo messaggio dal modulo di contatto del sito web. Rispondi rapidamente dalla dashboard admin per garantire un'esperienza cliente d'eccellenza.
+        </p>
+
+        <!-- Customer & Ticket Detail Box -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FAF7F5; border: 1px solid #EADFD9; border-radius: 4px; margin-bottom: 24px;">
+          <tr>
+            <td style="padding: 18px 20px;">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td width="30%" style="padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A5E58; font-weight: bold;">
+                    Cliente:
+                  </td>
+                  <td width="70%" style="padding: 6px 0; font-size: 13px; color: #1A1A1A; font-weight: 600;">
+                    ${safeName}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A5E58; font-weight: bold;">
+                    Email:
+                  </td>
+                  <td style="padding: 6px 0; font-size: 13px; color: #1A1A1A;">
+                    <a href="mailto:${safeEmail}" style="color: #8A5E58; text-decoration: underline; font-weight: 500;">${safeEmail}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A5E58; font-weight: bold;">
+                    Oggetto:
+                  </td>
+                  <td style="padding: 6px 0; font-size: 13px; color: #1A1A1A; font-weight: 600;">
+                    ${safeSubject}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A5E58; font-weight: bold;">
+                    Data / Ora:
+                  </td>
+                  <td style="padding: 6px 0; font-size: 12px; color: #666666;">
+                    ${formattedDate}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 6px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #8A5E58; font-weight: bold;">
+                    Indirizzo IP:
+                  </td>
+                  <td style="padding: 6px 0; font-size: 12px; color: #777777; font-family: monospace;">
+                    ${safeIp}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Message Body Container -->
+        <div style="margin-bottom: 28px;">
+          <p style="margin: 0 0 8px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58; font-weight: 700;">
+            Messaggio del Cliente:
+          </p>
+          <div style="background-color: #FFFFFF; border-left: 3px solid #C0A09A; border-top: 1px solid #F0EAE6; border-right: 1px solid #F0EAE6; border-bottom: 1px solid #F0EAE6; padding: 18px 20px; border-radius: 0 4px 4px 0; font-size: 14px; line-height: 1.7; color: #222222;">
+            ${safeMessage}
+          </div>
+        </div>
+
+        <!-- Luxury Action CTA Button -->
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 28px auto;">
+          <tr>
+            <td align="center" style="border-radius: 2px; background-color: #1A1A1A;">
+              <a href="${adminInboxUrl}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.22em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+                Apri Concierge Inbox &amp; Rispondi &rarr;
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin: 0; font-size: 11px; text-align: center; color: #888888; font-style: italic;">
+          Suggerimento: puoi rispondere direttamente dal pannello admin con modelli luxury preimpostati in 1 click.
+        </p>
+      </td>
+    </tr>
+
+    <!-- Footer Section -->
+    <tr>
+      <td style="padding: 24px 32px 30px 32px; background-color: #FAF8F6; border-top: 1px solid #EADFD9; text-align: center;">
+        <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #1A1A1A; font-weight: 600;">
+          Isabel Pepe • Atelier Concierge System
+        </p>
+        <p style="margin: 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: #8A5E58;">
+          Notifica Interna ad Alta Priorità
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</body>
+</html>`;
+}
+
+export function generateSupportAdminNotificationEmailText({
+  ticketId,
+  customerName,
+  customerEmail,
+  subject,
+  message,
+  ipAddress,
+  createdAt,
+}: SupportAdminNotificationParams): string {
+  const shortTicketId = ticketId ? ticketId.substring(0, 8).toUpperCase() : 'N/D';
+  const adminInboxUrl = `${SITE_URL}/admin?tab=messages`;
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleString('it-IT', { timeZone: 'Europe/Rome' })
+    : new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' });
+
+  return `ISABEL PEPE — CONCIERGE & ASSISTENZA CLIENTI
+NUOVO MESSAGGIO RICEVUTO [Ticket #${shortTicketId}]
+--------------------------------------------------
+
+DETTAGLI CLIENTE:
+- Nome: ${customerName}
+- Email: ${customerEmail}
+- Oggetto: ${subject}
+- Data / Ora: ${formattedDate}
+- Indirizzo IP: ${ipAddress || 'Sconosciuto'}
+
+MESSAGGIO:
+--------------------------------------------------
+${message}
+--------------------------------------------------
+
+Per rispondere direttamente con i template luxury:
+${adminInboxUrl}
+
+Isabel Pepe • Notifica Interna ad Alta Priorità
+`;
+}
+
+export async function sendSupportAdminNotificationEmail(
+  params: SupportAdminNotificationParams
+): Promise<{ success: boolean; id?: string; data?: any; error?: any }> {
+  try {
+    const { customerName, customerEmail, subject, message } = params;
+
+    if (!customerName || !customerEmail || !subject || !message) {
+      console.error('❌ Errore invio email notifica admin: parametri obbligatori mancanti', params);
+      return { success: false, error: 'Parametri obbligatori mancanti' };
+    }
+
+    const emailSubject = `🛎️ [CONCIERGE] Nuovo Messaggio da ${customerName.trim()} — ${subject.trim()}`;
+    const html = generateSupportAdminNotificationEmailHtml(params);
+    const text = generateSupportAdminNotificationEmailText(params);
+
+    const recipients = ['info@isabelpepe.com', 'sviluppo@creativiastudio.com'];
+
+    return await sendEmail({
+      to: recipients,
+      subject: emailSubject,
+      html,
+      text,
+    });
+  } catch (error: any) {
+    console.error('❌ Eccezione durante sendSupportAdminNotificationEmail:', error);
+    return { success: false, error: error?.message || error };
+  }
+}
+
+// 5. EMAIL RISPOSTA CONCIERGE DIRETTA AL CLIENTE (ONE-CLICK DIRECT REPLY)
+export interface SupportReplyEmailParams {
+  customerEmail: string;
+  customerName: string;
+  originalSubject: string;
+  originalMessage?: string;
+  replyText: string;
+  ticketId?: string;
+  subject?: string;
+}
+
+export function generateSupportReplyEmailHtml({
+  customerName,
+  originalSubject,
+  originalMessage,
+  replyText,
+  ticketId,
+}: {
+  customerName: string;
+  originalSubject: string;
+  originalMessage?: string;
+  replyText: string;
+  ticketId?: string;
+}): string {
+  const shortTicketId = ticketId ? ticketId.substring(0, 8).toUpperCase() : '';
+  const shopUrl = `${SITE_URL}/shop`;
+  const contactUrl = `${SITE_URL}/assistenza-clienti`;
+  const privacyUrl = `${SITE_URL}/privacy`;
+
+  const escapeHtml = (str: string) =>
+    (str || '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  const safeName = escapeHtml(customerName?.trim() || 'Gentile Cliente');
+  const safeSubject = escapeHtml(originalSubject || 'Richiesta Concierge');
+  const safeReply = escapeHtml(replyText).replace(/\n/g, '<br/>');
+  const safeOriginalMsg = originalMessage ? escapeHtml(originalMessage).replace(/\n/g, '<br/>') : '';
+
+  return `<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Risposta da Isabel Pepe Concierge</title>
+</head>
+<body style="margin: 0; padding: 40px 15px; background-color: #FAF8F6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1A1A1A; -webkit-font-smoothing: antialiased;">
+  <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #EADFD9; border-radius: 4px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04); overflow: hidden;">
+    
+    <!-- Top Decorative Rose Gold Bar -->
+    <tr>
+      <td style="height: 4px; background: linear-gradient(90deg, #8A5E58 0%, #C0A09A 50%, #8A5E58 100%);"></td>
+    </tr>
+
+    <!-- Header Section -->
+    <tr>
+      <td style="padding: 42px 36px 20px 36px; text-align: center; background-color: #FFFFFF;">
+        <p style="margin: 0 0 8px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.35em; color: #8A5E58; font-weight: 700;">
+          ATELIER CONCIERGE &amp; PRIVATE SERVICE
+        </p>
+        <h1 style="margin: 0 0 12px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 30px; letter-spacing: 0.25em; text-transform: uppercase; color: #C0A09A; font-weight: 700;">
+          ISABEL PEPE
+        </h1>
+        <div style="height: 1px; width: 60px; background-color: #C0A09A; margin: 0 auto 20px auto;"></div>
+        
+        ${shortTicketId ? `
+        <div style="display: inline-block; background-color: #FAF4F2; border: 1px solid #EADFD9; padding: 5px 14px; border-radius: 20px; margin-bottom: 8px;">
+          <span style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #8A5E58; font-weight: 600;">
+            Rif. Richiesta #${shortTicketId}
+          </span>
+        </div>
+        ` : ''}
+      </td>
+    </tr>
+
+    <!-- Main Message Content -->
+    <tr>
+      <td style="padding: 10px 36px 32px 36px;">
+        <p style="margin: 0 0 20px 0; font-size: 15px; color: #1A1A1A; font-weight: 600;">
+          Gentile ${safeName},
+        </p>
+        
+        <!-- Reply Message Body -->
+        <div style="font-size: 14px; line-height: 1.8; color: #333333; margin-bottom: 28px;">
+          ${safeReply}
+        </div>
+
+        <!-- Signature -->
+        <div style="margin-bottom: 32px; padding-top: 16px; border-top: 1px solid #F2ECE9;">
+          <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, Georgia, serif; font-size: 15px; font-weight: 600; color: #1A1A1A;">
+            Elena &amp; Mario Pepe
+          </p>
+          <p style="margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: #8A5E58;">
+            Isabel Pepe Atelier Concierge
+          </p>
+        </div>
+
+        <!-- Original Message Quote Box -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FAF7F5; border-left: 3px solid #C0A09A; border-top: 1px solid #EADFD9; border-right: 1px solid #EADFD9; border-bottom: 1px solid #EADFD9; border-radius: 0 4px 4px 0; margin-bottom: 32px;">
+          <tr>
+            <td style="padding: 18px 20px;">
+              <p style="margin: 0 0 6px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58; font-weight: bold;">
+                La tua richiesta originale:
+              </p>
+              <p style="margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: #1A1A1A;">
+                ${safeSubject}
+              </p>
+              ${safeOriginalMsg ? `
+              <div style="font-size: 12px; line-height: 1.6; color: #666666; font-style: italic;">
+                "${safeOriginalMsg}"
+              </div>
+              ` : ''}
+            </td>
+          </tr>
+        </table>
+
+        <!-- Luxury Packaging & Guarantee Badges -->
+        <div style="background-color: #FFFFFF; border: 1px solid #F0EAE6; border-radius: 4px; padding: 20px; margin-bottom: 30px; text-align: left;">
+          <p style="margin: 0 0 14px 0; text-align: center; font-size: 10px; text-transform: uppercase; letter-spacing: 0.25em; color: #8A5E58; font-weight: 700;">
+            Le Garanzie dell'Atelier Isabel Pepe
+          </p>
+          <table width="100%" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+              <td width="33%" style="padding: 6px; text-align: center; vertical-align: top;">
+                <p style="margin: 0 0 4px 0; font-size: 16px;">🎁</p>
+                <p style="margin: 0 0 2px 0; font-size: 11px; font-weight: 600; color: #1A1A1A;">Cofanetto Luxury</p>
+                <p style="margin: 0; font-size: 10px; color: #777777; line-height: 1.4;">Incluso in omaggio con panno lucidante</p>
+              </td>
+              <td width="33%" style="padding: 6px; text-align: center; vertical-align: top; border-left: 1px solid #F0EAE6; border-right: 1px solid #F0EAE6;">
+                <p style="margin: 0 0 4px 0; font-size: 16px;">📜</p>
+                <p style="margin: 0 0 2px 0; font-size: 11px; font-weight: 600; color: #1A1A1A;">Garanzia Ufficiale</p>
+                <p style="margin: 0; font-size: 10px; color: #777777; line-height: 1.4;">24 mesi e certificato di autenticità</p>
+              </td>
+              <td width="33%" style="padding: 6px; text-align: center; vertical-align: top;">
+                <p style="margin: 0 0 4px 0; font-size: 16px;">🚚</p>
+                <p style="margin: 0 0 2px 0; font-size: 11px; font-weight: 600; color: #1A1A1A;">Reso &amp; Cambio Facile</p>
+                <p style="margin: 0; font-size: 10px; color: #777777; line-height: 1.4;">14 giorni con corriere espresso</p>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- CTA Button -->
+        <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 24px auto;">
+          <tr>
+            <td align="center" style="border-radius: 2px; background-color: #1A1A1A;">
+              <a href="${shopUrl}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+                Visita l'Atelier Online &rarr;
+              </a>
+            </td>
+          </tr>
+        </table>
+
+        <p style="margin: 0; font-size: 11px; text-align: center; color: #888888; line-height: 1.5;">
+          Per qualsiasi ulteriore informazione o consiglio, puoi rispondere direttamente a questa email.
+        </p>
+      </td>
+    </tr>
+
+    <!-- Footer Section -->
+    <tr>
+      <td style="padding: 24px 36px 30px 36px; background-color: #FAF8F6; border-top: 1px solid #EADFD9; text-align: center;">
+        <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; color: #1A1A1A; font-weight: 600;">
+          Isabel Pepe
+        </p>
+        <p style="margin: 0 0 10px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 0.2em; color: #8A5E58;">
+          Haute Joaillerie Demi-Fine Italiana
+        </p>
+        <p style="margin: 0; font-size: 11px; color: #888888;">
+          <a href="${contactUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 6px;">Assistenza Clienti</a>
+          •
+          <a href="${privacyUrl}" target="_blank" style="color: #8A5E58; text-decoration: underline; margin: 0 6px;">Informativa Privacy</a>
+        </p>
+      </td>
+    </tr>
+
+  </table>
+</body>
+</html>`;
+}
+
+export function generateSupportReplyEmailText({
+  customerName,
+  originalSubject,
+  originalMessage,
+  replyText,
+  ticketId,
+}: {
+  customerName: string;
+  originalSubject: string;
+  originalMessage?: string;
+  replyText: string;
+  ticketId?: string;
+}): string {
+  const shortTicketId = ticketId ? ticketId.substring(0, 8).toUpperCase() : '';
+  const shopUrl = `${SITE_URL}/shop`;
+
+  return `ISABEL PEPE — ATELIER CONCIERGE & PRIVATE SERVICE
+${shortTicketId ? `[Riferimento Ticket #${shortTicketId}]\n` : ''}--------------------------------------------------
+
+Gentile ${customerName || 'Cliente'},
+
+${replyText}
+
+--
+Elena & Mario Pepe
+Isabel Pepe Atelier Concierge
+Email: info@isabelpepe.com
+
+--------------------------------------------------
+LA TUA RICHIESTA ORIGINALE:
+Oggetto: ${originalSubject}
+${originalMessage ? `Messaggio: ${originalMessage}\n` : ''}--------------------------------------------------
+
+GARANZIE ISABEL PEPE:
+- Cofanetto Luxury Regalo & Panno Lucidante inclusi
+- Garanzia Legale 24 mesi e Certificato Ufficiale
+- Reso e cambio facile entro 14 giorni
+
+Visita la collezione: ${shopUrl}
+
+Isabel Pepe • Haute Joaillerie Demi-Fine Italiana
+`;
+}
+
+export async function sendSupportReplyEmail(
+  params: SupportReplyEmailParams
+): Promise<{ success: boolean; id?: string; data?: any; error?: any }> {
+  try {
+    const {
+      customerEmail,
+      customerName,
+      originalSubject,
+      originalMessage,
+      replyText,
+      ticketId,
+      subject,
+    } = params;
+
+    if (!customerEmail || !replyText) {
+      console.error('❌ Errore invio email risposta concierge: email o testo mancante', params);
+      return { success: false, error: 'Email cliente o testo risposta mancante' };
+    }
+
+    const emailSubject = subject || (originalSubject && originalSubject.startsWith('Re:') ? originalSubject : `Re: ${originalSubject || 'Richiesta Isabel Pepe Concierge'}`);
+    const html = generateSupportReplyEmailHtml({
+      customerName,
+      originalSubject,
+      originalMessage,
+      replyText,
+      ticketId,
+    });
+    const text = generateSupportReplyEmailText({
+      customerName,
+      originalSubject,
+      originalMessage,
+      replyText,
+      ticketId,
+    });
+
+    return await sendEmail({
+      to: customerEmail.trim(),
+      subject: emailSubject,
+      html,
+      text,
+    });
+  } catch (error: any) {
+    console.error('❌ Eccezione durante sendSupportReplyEmail:', error);
+    return { success: false, error: error?.message || error };
+  }
+}
+

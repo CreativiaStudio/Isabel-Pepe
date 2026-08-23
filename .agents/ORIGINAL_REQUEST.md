@@ -1,42 +1,48 @@
 # Original User Request
 
-## 2026-08-21T15:57:58Z
+## 2026-08-23T15:14:31Z
 
-Execute Phase 1 of the Isabel Pepe Pre-Launch Master Checklist (Cybersecurity & SEO Foundations):
+Implement a complete, high-end Customer Support & Concierge Inbox ecosystem for the Isabel Pepe luxury e-commerce. Enable customer inquiries from the website to flow directly into a new, dedicated Admin Inbox (`/admin?tab=messages`), log all tickets in Supabase, notify the team via email, and allow Mario to read inquiries and send luxury, branded email replies directly from the Admin dashboard in 1 click via Resend.
 
 Working directory: c:/Users/mario/Progetti Antigravity/isabel-pepe
 Integrity mode: development
 
 ## Requirements
 
-### R1. Authoritative Checkout Price Validation (Shield against Price Tampering)
-- In `app/api/checkout/route.ts`, extract all product IDs from the incoming cart payload.
-- Query the Supabase `products` table (`id`, `name`, `price`, `discount_price`, `stock`, `is_active`) using `supabaseAdmin`.
-- For each item in the cart, compute the unit price exclusively from `product.discount_price > 0 ? product.discount_price : product.price` found in Supabase. Strictly ignore and discard any `price` sent in the request body.
-- If an item is not found or not active in the database, return a clear 400 error.
-- Recompute the overall `totalAmount` for `abandoned_carts` strictly from database prices.
+### R1. Contact Form Pipeline & Database Ingestion
+- Ensure/Create a Supabase table `support_messages` (with columns: `id` uuid default gen_random_uuid(), `created_at` timestamptz default now(), `updated_at` timestamptz default now(), `customer_name` text not null, `customer_email` text not null, `subject` text not null, `message` text not null, `status` text default 'unread', `admin_reply` text, `replied_at` timestamptz, `replied_by` text, `ip_address` text, `user_agent` text, `metadata` jsonb default '{}'::jsonb). Use `supabase-server` or direct SQL script via `execute_supabase_sql` if needed or Supabase client.
+- Create `POST /api/contact` API route that validates inputs, inserts records into `support_messages`, and sends an instant high-priority admin alert email via Resend (`info@isabelpepe.com` and `sviluppo@creativiastudio.com`).
+- Connect `components/ContactForm.tsx` (`/assistenza-clienti`) to `POST /api/contact` with loading spinner, error feedback, and luxury success state.
 
-### R2. Strict Admin & AI API Security Guard
-- Create `lib/auth-guard.ts` with `verifyAdminAuth()` checking that the incoming request has a valid Supabase session belonging to an authorized admin email (`sviluppo@creativiastudio.com`, `info@isabelpepe.com`, `mario@isabelpepe.com`, `mariopepe9@hotmail.it`).
-- Apply this guard across `app/api/admin/products/route.ts`, `app/api/admin/identity/route.ts`, `app/api/admin/verify-certificates/route.ts`, `app/api/admin/analytics/*` (`funnel`, `geo`, `pages`, `sources`, `stream`, `summary`, `timeseries`), and `app/api/jarvis/*` (`route.ts`, `execute/route.ts`, `speak/route.ts`).
-- Create/update root `middleware.ts` to enforce Supabase session handling and block unauthenticated access to `/admin` and `/api/admin/*`.
+### R2. Admin Concierge Inbox Dashboard (`/admin?tab=messages` or integrated in `/admin`)
+- Create a dedicated "Messaggi & Concierge" tab in `/admin` with:
+  - Unread message counters & real-time badge.
+  - Filter by status (*Tutti, Non Letti, In Attesa, Risposti, Chiusi*).
+  - Search by customer name, email, or subject.
+  - High-end message viewer showing customer info, original message, timestamp, and status tag.
+  - Ability to toggle status or delete message.
 
-### R3. OWASP Security Headers in `next.config.ts`
-- Configure the `headers()` async function in `next.config.ts` applying:
-  - `X-DNS-Prefetch-Control: on`
-  - `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`
-  - `X-Frame-Options: SAMEORIGIN`
-  - `X-Content-Type-Options: nosniff`
-  - `Referrer-Policy: origin-when-cross-origin`
-  - `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+### R3. One-Click Direct Reply Engine via Resend
+- In the message detail view in `/admin`, provide a reply composer with:
+  - Pre-filled customer email & subject (`Re: [Oggetto originale]`).
+  - Rich luxury email template in `lib/email.ts` (`sendSupportReplyEmail`).
+  - Quick-reply luxury templates (*Consiglio Misura/Taglia, Informazioni Spedizione/Tracking, Richiesta Reso/Cambio, Assistenza Generale*).
+  - "Invia Risposta al Cliente" button calling `POST /api/admin/messages/reply` (protected with `verifyAdminAuth`).
+  - On send: delivers email to customer from `Isabel Pepe Concierge <info@isabelpepe.com>`, saves reply in `support_messages`, and sets status to `replied`.
 
-### R4. Dynamic Sitemap & Robots.txt for Google Search Console
-- Create `app/sitemap.ts` fetching all active products (`is_active = true`) from Supabase and combining with all static pages (`/`, `/shop`, `/chi-siamo`, `/impegno-animali`, `/cura-gioielli`, `/assistenza-clienti`, `/garanzia`, `/guida-taglie`, `/spedizioni-resi`, `/termini-condizioni`, `/privacy`, `/cookie-policy`) with changeFrequency and priority.
-- Create `app/robots.ts` allowing indexing of public pages, disallowing `/admin`, `/api`, `/account`, and referencing `https://www.isabelpepe.com/sitemap.xml`.
+### R4. Security, Spam Protection & GDPR Compliance
+- Add honeypot field and rate-limiting check on `POST /api/contact` to block spam bots.
+- Protect all `/api/admin/messages/*` endpoints with `verifyAdminAuth`.
 
 ## Acceptance Criteria
-- [ ] An adversarial test confirms that sending arbitrary prices to `POST /api/checkout` results in a Stripe checkout session with authentic DB prices.
-- [ ] Unauthenticated requests to `/api/admin/products`, `/api/admin/analytics/summary`, and `/api/jarvis` return 401 Unauthorized.
-- [ ] `next.config.ts` headers are active and valid.
-- [ ] `app/sitemap.ts` and `app/robots.ts` build cleanly and generate valid responses.
-- [ ] `npm run build` succeeds with 0 TypeScript and Turbopack errors.
+
+### Form Submission & Ingestion
+- [ ] Submitting the contact form on `/assistenza-clienti` inserts a record in `support_messages` with status `unread`.
+- [ ] Admin receives an instant notification email containing customer details and message content.
+- [ ] Submissions with invalid email or empty fields are rejected with clean user feedback.
+
+### Admin Inbox & Reply System
+- [ ] New messages appear instantly in the Admin Inbox with the "Non Letto" status tag.
+- [ ] Clicking a message opens the details and allows Mario to type a response or pick a quick template.
+- [ ] Clicking "Invia Risposta" sends a branded HTML email to the customer's inbox and updates the message status to "Risposto" with timestamp and reply preview.
+- [ ] Production build passes cleanly with 0 TypeScript/Turbopack errors and is pushed to `origin/main`.

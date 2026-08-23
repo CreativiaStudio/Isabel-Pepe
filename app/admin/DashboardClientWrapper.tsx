@@ -14,6 +14,7 @@ import ConsentTable from './ConsentTable';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import JarvisDashboard from './JarvisDashboard';
 import NewsletterTable from './NewsletterTable';
+import MessagesTable from './MessagesTable';
 
 interface DashboardClientWrapperProps {
   products: any[];
@@ -25,6 +26,7 @@ interface DashboardClientWrapperProps {
   dailyAnalytics?: any[];
   identities?: any[];
   newsletterSubscribers?: any[];
+  supportMessages?: any[];
   stats?: any;
   initialEditId?: string;
 }
@@ -39,6 +41,7 @@ export default function DashboardClientWrapper({
   dailyAnalytics = [],
   identities = [],
   newsletterSubscribers = [],
+  supportMessages = [],
   stats,
   initialEditId,
 }: DashboardClientWrapperProps) {
@@ -47,6 +50,8 @@ export default function DashboardClientWrapper({
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [editingProduct, setEditingProduct] = useState<any | null>(null);
+
+  const unreadMessagesCount = (supportMessages || []).filter((m: any) => m.status === 'unread').length;
 
   // Sync tab with URL on mount
   useEffect(() => {
@@ -80,13 +85,21 @@ export default function DashboardClientWrapper({
   return (
     <>
       {/* Sidebar fissa a sinistra */}
-      <AdminSidebar activeTab={activeTab} setActiveTab={handleTabChange} />
+      <AdminSidebar
+        activeTab={activeTab}
+        setActiveTab={handleTabChange}
+        unreadMessagesCount={unreadMessagesCount}
+      />
 
       {/* Contenuto Principale Dinamico */}
       <div className="flex-1 overflow-y-auto h-screen bg-[#FAFAFA]">
         <div className="p-8 max-w-7xl mx-auto">
           {activeTab === 'dashboard' && (
             <DashboardHome products={products} orders={orders} onNavigate={handleTabChange} />
+          )}
+
+          {activeTab === 'messages' && (
+            <MessagesTable messages={supportMessages || []} />
           )}
 
           {activeTab === 'privilege_club' && (
