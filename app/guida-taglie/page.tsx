@@ -4,13 +4,18 @@ import type { Metadata } from 'next';
 import { Ruler, Sparkles, HelpCircle, CheckCircle2, MessageCircle } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Guida alle Taglie Anelli",
+  title: "Guida alle Taglie Anelli — Come Misurare il Tuo Dito con Precisione",
   description:
-    "Trova la misura perfetta per il tuo anello Isabel Pepe. Consulta la tabella millimetrica comparativa IT/US e segui i consigli dei nostri esperti.",
+    "Trova la misura ideale per il tuo anello o per un regalo a sorpresa. Tabella di conversione millimetrica IT/US e consigli pratici dei maestri orafi Isabel Pepe.",
   openGraph: {
-    title: "Guida alle Taglie Anelli | Isabel Pepe",
+    title: "Guida alle Taglie Anelli | Isabel Pepe Atelier",
     description:
-      "Trova la misura perfetta per il tuo anello Isabel Pepe. Consulta la tabella millimetrica comparativa IT/US e segui i consigli dei nostri esperti.",
+      "Non rischiare di sbagliare misura. Segui la guida millimetrica comparativa IT/US e scopri come misurare il dito con precisione assoluta per il tuo anello.",
+  },
+  twitter: {
+    title: "Guida alle Taglie Anelli Isabel Pepe",
+    description:
+      "Tabella comparativa IT/US e metodi veloci per calcolare la misura del tuo anello o per fare un regalo perfetto.",
   },
 };
 

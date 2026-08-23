@@ -4,13 +4,18 @@ import type { Metadata } from 'next';
 import { Truck, RotateCcw, ShieldCheck, Clock, PackageCheck, MapPin, ChevronRight } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Spedizioni e Resi",
+  title: "Spedizione Express Gratuita 48h & Reso Facile 14 Giorni",
   description:
-    "Spedizioni express 48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
+    "Spedizione express gratuita in tutta Italia senza minimo d'ordine con Poste/SDA. Consegna in 48h in packaging assicurato e reso facile garantito entro 14 giorni.",
   openGraph: {
-    title: "Spedizioni e Resi | Isabel Pepe",
+    title: "Spedizione Express Gratuita & Reso Garantito | Isabel Pepe",
     description:
-      "Spedizioni express 48h sempre gratuite in tutta Italia con corriere espresso (senza minimo di spesa). Reso facile entro 14 giorni garantito.",
+      "Ricevi il tuo cofanetto di lusso in 48 ore con spedizione express sempre gratuita in tutta Italia. Acquista senza pensieri con reso facile entro 14 giorni.",
+  },
+  twitter: {
+    title: "Spedizioni Express Gratuite 48h e Resi Semplici | Isabel Pepe",
+    description:
+      "Consegne rapide e tracciate con Poste Italiane/SDA. Reso facile e senza rischi entro 14 giorni.",
   },
 };
 

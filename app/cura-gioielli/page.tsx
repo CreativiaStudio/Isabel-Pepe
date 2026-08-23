@@ -4,13 +4,18 @@ import type { Metadata } from 'next';
 import { Sparkles, ShieldCheck, Gem, Gift, Droplets, Sun, Feather } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Cura dei Gioielli Demi-Fine",
+  title: "Guida alla Cura dei Gioielli Demi-Fine & Manutenzione Oro 18K",
   description:
-    "Scopri come preservare i tuoi gioielli Isabel Pepe: guida alla manutenzione della placcatura Oro 18K (1.0µm), Rodio, E-Coating e panno incluso.",
+    "I segreti per mantenere la brillantezza dei tuoi gioielli nel tempo: consigli per pulire l'Argento 925, preservare l'Oro 18K e l'E-Coating con il panno incluso.",
   openGraph: {
-    title: "Cura dei Gioielli Demi-Fine | Isabel Pepe",
+    title: "Come Prendersi Cura dei Gioielli Demi-Fine | Isabel Pepe",
     description:
-      "Scopri come preservare i tuoi gioielli Isabel Pepe: guida alla manutenzione della placcatura Oro 18K (1.0µm), Rodio, E-Coating e panno incluso.",
+      "Consigli pratici e preziosi per custodire la lucentezza dell'Oro 18K e dell'Argento 925. Scopri come far risplendere le tue creazioni ogni giorno.",
+  },
+  twitter: {
+    title: "Guida alla Cura dei Gioielli Demi-Fine Isabel Pepe",
+    description:
+      "Manutenzione, pulizia con microfibra e consigli per preservare la placcatura in Oro 18K e il trattamento E-Coating.",
   },
 };
 

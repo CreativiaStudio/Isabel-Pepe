@@ -6,13 +6,18 @@ import ContactForm from '@/components/ContactForm';
 import FaqSection from '@/components/FaqSection';
 
 export const metadata: Metadata = {
-  title: 'Assistenza Clienti & Supporto',
+  title: 'Servizio Concierge & Assistenza Clienti Isabel Pepe',
   description:
-    'Hai bisogno di supporto? Contatta il Servizio Clienti Isabel Pepe via email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
+    'Contatta il Concierge Isabel Pepe per consulenza personalizzata sui gioielli, consigli taglia, packaging regalo, ordini e assistenza post-vendita dedicata.',
   openGraph: {
-    title: 'Assistenza Clienti & Supporto | Isabel Pepe',
+    title: 'Concierge & Assistenza Clienti Dedicata | Isabel Pepe',
     description:
-      'Hai bisogno di supporto? Contatta il Servizio Clienti Isabel Pepe via email per informazioni su ordini, taglie, spedizioni e garanzia 24 mesi.',
+      'Il team Isabel Pepe è a tua disposizione per guidarti nella scelta del regalo ideale o assisterti con ordini, spedizioni e garanzie. Risposte in 24 ore.',
+  },
+  twitter: {
+    title: 'Servizio Concierge & Assistenza Clienti | Isabel Pepe',
+    description:
+      'Consulenza personalizzata su gioielli, consigli regalo e supporto ordini da parte del nostro team concierge.',
   },
 };
 

@@ -5,34 +5,34 @@ import type { Metadata } from 'next';
 
 const categorySeo: Record<string, { title: string; desc: string; h1: string; intro: string }> = {
   Collane: {
-    title: 'Collane Demi-Fine in Oro 18K',
-    desc: 'Scopri le collane demi-fine Isabel Pepe: punti luce, pendenti e catene in Argento 925 con placcatura spessa in Oro 18K o Rodio.',
-    h1: 'Collane & Pendenti',
+    title: 'Collane Punto Luce & Pendenti Demi-Fine in Oro 18K',
+    desc: 'Collane girocollo e punti luce di scintillio puro in Argento 925 placcato Oro 18K. L\'idea regalo ideale per illuminare il decolleté con grazia e raffinatezza.',
+    h1: 'Collane & Pendenti di Luce',
     intro: 'Punti luce e pendenti progettati per catturare ogni raggio di luce. Argento 925 rifinito in Oro 18K o Rodio e cofanetto luxury incluso.',
   },
   Orecchini: {
-    title: 'Orecchini Demi-Fine in Oro 18K',
-    desc: 'Orecchini demi-fine Isabel Pepe in Argento 925 nichel free con placcatura Oro 18K o Rodio Puro. Massima lucentezza e comfort per pelli sensibili.',
-    h1: 'Orecchini di Luce',
-    intro: 'Cerchi, pendenti e punti luce ipoallergenici in Argento 925 con doppio scudo protettivo per una brillantezza inalterabile tutti i giorni.',
+    title: 'Orecchini Ipoallergenici di Luce in Oro 18K & Rodio',
+    desc: 'Cerchi, pendenti e punti luce ipoallergenici in Argento 925 e Oro 18K. Brillantezza inalterabile ed eleganza per pelli sensibili. Cofanetto velluto incluso.',
+    h1: 'Orecchini di Pura Luce',
+    intro: 'Scintille delicate per ogni giorno: orecchini anallergici in Argento 925 con doppio scudo protettivo per una brillantezza eterna.',
   },
   Anelli: {
-    title: 'Anelli Solitari & Pavé Demi-Fine',
-    desc: 'Scopri gli anelli demi-fine Isabel Pepe: solitari taglio brillante e fasce pavé in Argento 925 con cofanetto di lusso.',
-    h1: 'Anelli Solitari & Pavé',
-    intro: 'Linee pure e scintillio eterno: creazioni nate per celebrare i momenti più speciali con l’eleganza del lusso accessibile e pietre VVS1 D-Color.',
+    title: 'Anelli Solitari, Pavé & Verette Demi-Fine in Oro 18K',
+    desc: 'Anelli di fidanzamento, solitari taglio brillante e verette pavé in Argento 925 e Oro 18K. Un pegno d\'amore senza tempo custodito nel cofanetto regalo rigido.',
+    h1: 'Anelli Solitari & Verette',
+    intro: 'Linee pure e scintillio eterno: creazioni nate per celebrare i momenti più speciali con l’eleganza del lusso accessibile.',
   },
   Bracciali: {
-    title: 'Bracciali Tennis & Rigidi Demi-Fine',
-    desc: 'Bracciali demi-fine Isabel Pepe con placcatura spessa in Oro 18K e Rodio. Eleganza senza tempo per ogni giorno.',
-    h1: 'Bracciali & Tennis',
+    title: 'Bracciali Tennis & Catene Eleganti in Oro 18K & Rodio',
+    desc: 'Bracciali tennis scintillanti e catene a maglia morbida in Argento 925 nobilitato in Oro 18K. Chiusure di sicurezza rinforzate per il lusso di ogni giorno.',
+    h1: 'Bracciali & Tennis Royale',
     intro: 'Scintille al polso per ogni occasione: bracciali in Argento 925 con finiture nobili in Oro 18K o Rodio Puro e chiusure di sicurezza rinforzate.',
   },
   Set: {
-    title: 'Set Parure Royale Demi-Fine',
-    desc: 'Parure esclusive Isabel Pepe: set coordinati in Argento 925 e Oro 18K con Cofanetto Luxury, panno microfibra e Certificato di Autenticità.',
-    h1: 'I Set Royale',
-    intro: 'Parure coordinate pensate per un regalo memorabile o per un look impeccabile. Cofanetto Luxury, panno microfibra e Certificato di Autenticità sempre inclusi.',
+    title: 'Parure & Set Regalo Royale | Gioielli Coordinati di Lusso',
+    desc: 'Parure coordinate esclusive Isabel Pepe per cerimonie, anniversari e regali indimenticabili. Cofanetto Luxury, panno microfibra e Certificato inclusi.',
+    h1: 'I Set Royale & Parure',
+    intro: 'Parure coordinate pensate per un dono memorabile o per un look impeccabile. Cofanetto Luxury, panno microfibra e Certificato di Autenticità inclusi.',
   },
 };
 
@@ -45,16 +45,26 @@ export async function generateMetadata({
   const cat = resolvedParams.category as string | undefined;
 
   if (cat && categorySeo[cat]) {
+    const seo = categorySeo[cat];
     return {
-      title: categorySeo[cat].title,
-      description: categorySeo[cat].desc,
+      title: seo.title,
+      description: seo.desc,
+      openGraph: {
+        title: `${seo.title} | Isabel Pepe`,
+        description: seo.desc,
+      },
     };
   }
 
   return {
-    title: 'Catalogo Gioielli Demi-Fine & Parure',
+    title: 'Collezione Gioielli Demi-Fine | Idee Regalo Donna & Parure',
     description:
-      'Esplora il catalogo gioielli Demi-Fine Isabel Pepe: Argento 925, placcatura spessa Oro 18K e Rodio, pietre taglio brillante e cofanetto regalo luxury incluso.',
+      'Esplora l\'intera collezione di gioielli demi-fine Isabel Pepe: solitari, collane punto luce, orecchini e bracciali tennis in Oro 18K. Cofanetto luxury in velluto in omaggio.',
+    openGraph: {
+      title: 'Collezione Completa Gioielli Demi-Fine | Isabel Pepe',
+      description:
+        'Trova il regalo perfetto o concediti un tocco di luce quotidiana. Creazioni in Argento 925 placcato Oro 18K con cofanetto signature.',
+    },
   };
 }
 

@@ -5,13 +5,18 @@ import { ShieldCheck, Award, Sparkles, AlertCircle, HelpCircle, CheckCircle2, XC
 import CertificateViewerModal from '@/components/CertificateViewerModal';
 
 export const metadata: Metadata = {
-  title: "Garanzia & Certificato di Autenticità",
+  title: "Garanzia Ufficiale 24 Mesi & Certificato di Autenticità",
   description:
-    "Scopri la politica di garanzia e il Certificato di Autenticità Isabel Pepe: materiali certificati Argento 925, placcatura Oro 18K/Rodio e tutela sui difetti di fabbricazione.",
+    "Acquista in totale serenità: ogni creazione Isabel Pepe include il Certificato Ufficiale di Autenticità, punzonatura laser 'IP' e 24 mesi di garanzia legale di conformità.",
   openGraph: {
-    title: "Garanzia & Certificato di Autenticità | Isabel Pepe",
+    title: "Garanzia 24 Mesi & Certificato di Autenticità | Isabel Pepe",
     description:
-      "Scopri la politica di garanzia e il Certificato di Autenticità Isabel Pepe: materiali certificati Argento 925, placcatura Oro 18K/Rodio e tutela sui difetti di fabbricazione.",
+      "Trasparenza, metalli nobili certificati e garanzia legale: scopri la promessa di qualità e affidabilità custodita in ogni creazione Isabel Pepe.",
+  },
+  twitter: {
+    title: "Garanzia & Certificato di Autenticità Isabel Pepe",
+    description:
+      "Standard di eccellenza orafa, certificato gemmologico e garanzia legale 24 mesi su tutti i nostri gioielli.",
   },
 };
 

@@ -9,25 +9,25 @@
 - **Public Contact UI**: `components/ContactForm.tsx` (`app/assistenza-clienti/page.tsx`)
 
 ## Feature Inventory
-| # | Feature | Description | Milestone | Source |
-|---|---------|-------------|-----------|--------|
-| 1 | Database Schema | `support_messages` table with RLS, indexes, and status constraints | M1 | ORIGINAL_REQUEST §R1 |
-| 2 | Ingestion API & Bot Trap | `POST /api/contact` with validation, honeypot, rate limiting, and DB insert | M2 | ORIGINAL_REQUEST §R1, §R4 |
-| 3 | Admin Alert Email | Instant high-priority notification email to Mario & Dev team via Resend | M2 | ORIGINAL_REQUEST §R1 |
-| 4 | Luxury Contact Form UI | Interactive form in `components/ContactForm.tsx` with loading, error, and success states | M3 | ORIGINAL_REQUEST §R1 |
-| 5 | Admin Concierge Inbox UI | `/admin?tab=messages` with sidebar badge, filters, search, viewer, status updates | M4 | ORIGINAL_REQUEST §R2 |
-| 6 | One-Click Direct Reply Engine | Direct customer reply composer with luxury templates, `sendSupportReplyEmail`, and API route | M5 | ORIGINAL_REQUEST §R3 |
-| 7 | End-to-End Verification & Build | Full E2E test pass (Tiers 1-5), `npm run build` Turbopack 0-error check, and git push | M6 | ORIGINAL_REQUEST §Acceptance Criteria |
+| # | Feature | Description | Milestone | Source | Status |
+|---|---------|-------------|-----------|--------|--------|
+| 1 | Database Schema | `support_messages` table with RLS, indexes, and status constraints | M1 | ORIGINAL_REQUEST §R1 | DONE |
+| 2 | Ingestion API & Bot Trap | `POST /api/contact` with validation, honeypot, rate limiting, and DB insert | M2 | ORIGINAL_REQUEST §R1, §R4 | DONE |
+| 3 | Admin Alert Email | Instant high-priority notification email to Mario & Dev team via Resend | M2 | ORIGINAL_REQUEST §R1 | DONE |
+| 4 | Luxury Contact Form UI | Interactive form in `components/ContactForm.tsx` with loading, error, and success states | M3 | ORIGINAL_REQUEST §R1 | DONE |
+| 5 | Admin Concierge Inbox UI | `/admin?tab=messages` with sidebar badge, filters, search, viewer, status updates | M4 | ORIGINAL_REQUEST §R2 | DONE |
+| 6 | One-Click Direct Reply Engine | Direct customer reply composer with luxury templates, `sendSupportReplyEmail`, and API route | M5 | ORIGINAL_REQUEST §R3 | DONE |
+| 7 | End-to-End Verification & Build | Full E2E test pass (Tiers 1-5, 59 tests), `npm run build` Turbopack 0-error check, and git push | M6 | ORIGINAL_REQUEST §Acceptance Criteria | DONE |
 
 ## Milestones
 | # | Name | Scope | Dependencies | Status |
 |---|------|-------|-------------|--------|
-| 1 | M1: Database Schema & Supabase Setup | Execute SQL migration for `support_messages` table, indexes, and RLS policies | none | PLANNED |
-| 2 | M2: Contact Ingestion API & Email Alert | Create `POST /api/contact` with spam traps, rate limiter, DB insert, and `sendSupportAdminNotificationEmail` | M1 | PLANNED |
-| 3 | M3: Luxury Contact Form Frontend | Update `components/ContactForm.tsx` with API integration, validation UX, honeypot, loading/success states | M2 | PLANNED |
-| 4 | M4: Admin Concierge Inbox Dashboard | Create `app/admin/actions_messages.ts`, `app/admin/MessagesTable.tsx`, update `AdminSidebar.tsx` and `page.tsx` | M1 | PLANNED |
-| 5 | M5: Direct Reply Engine & Luxury Templates | Implement `sendSupportReplyEmail` in `lib/email.ts`, `POST /api/admin/messages/reply`, quick-reply templates | M4 | PLANNED |
-| 6 | M6: E2E Testing, Build & Git Push | Execute E2E test suites (Tiers 1-5), verify `npm run build`, commit & push to `origin/main` | M1, M2, M3, M4, M5 | PLANNED |
+| 1 | M1: Database Schema & Supabase Setup | Execute SQL migration for `support_messages` table, indexes, and RLS policies | none | DONE |
+| 2 | M2: Contact Ingestion API & Email Alert | Create `POST /api/contact` with spam traps, rate limiter, DB insert, and `sendSupportAdminNotificationEmail` | M1 | DONE |
+| 3 | M3: Luxury Contact Form Frontend | Update `components/ContactForm.tsx` with API integration, validation UX, honeypot, loading/success states | M2 | DONE |
+| 4 | M4: Admin Concierge Inbox Dashboard | Create `app/admin/actions_messages.ts`, `app/admin/MessagesTable.tsx`, update `AdminSidebar.tsx` and `page.tsx` | M1 | DONE |
+| 5 | M5: Direct Reply Engine & Luxury Templates | Implement `sendSupportReplyEmail` in `lib/email.ts`, `POST /api/admin/messages/reply`, quick-reply templates | M4 | DONE |
+| 6 | M6: E2E Testing, Build & Git Push | Execute E2E test suites (Tiers 1-5), verify `npm run build`, commit & push to `origin/main` | M1, M2, M3, M4, M5 | DONE |
 
 ## Interface Contracts
 

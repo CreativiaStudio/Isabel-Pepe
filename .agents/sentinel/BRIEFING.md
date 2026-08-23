@@ -1,13 +1,13 @@
-# BRIEFING — 2026-08-23T15:14:31Z
+# BRIEFING — 2026-08-23T16:07:11Z
 
 ## Mission
-Coordinate implementation of the Customer Support & Concierge Inbox ecosystem for Isabel Pepe.
+Coordinate implementation of the strategic, luxury-focused SEO & Generative Engine Optimization (GEO) overhaul for Isabel Pepe.
 
 ## 🔒 My Identity
 - Archetype: sentinel
 - Working directory: c:\Users\mario\Progetti Antigravity\isabel-pepe\.agents\sentinel
-- Orchestrator: c33f5840-5cf7-4fab-92ea-2fa142f22f46
-- Victory Auditor: [to be spawned on victory claim]
+- Orchestrator: 0b56785a-5f9a-49cd-95b7-f71cefeaa1cd
+- Victory Auditor: [auditor conversation ID, or to be spawned on victory claim]
 
 ## 🔒 Key Constraints
 - No technical decisions — relay only
@@ -15,9 +15,9 @@ Coordinate implementation of the Customer Support & Concierge Inbox ecosystem fo
 - Must verify via independent auditor (teamwork_preview_victory_auditor) on completion
 
 ## User Context
-- **Last user request**: Implement complete Customer Support & Concierge Inbox ecosystem (Supabase ingestion, contact API, Admin Concierge Inbox tab, Resend one-click replies, security/GDPR).
+- **Last user request**: Execute strategic SEO & GEO overhaul (multi-res favicons, Schema.org Knowledge Graph, 4 gifting/guide landing pages, metadata overhaul, dynamic sitemap & Search Console submission).
 - **Pending clarifications**: none
-- **Delivered results**: none
+- **Delivered results**: none yet
 
 ## Project Status
 - **Phase**: in progress
@@ -30,3 +30,4 @@ Coordinate implementation of the Customer Support & Concierge Inbox ecosystem fo
 
 ## Artifact Index
 - .agents/ORIGINAL_REQUEST.md — Authoritative record of user request
+- .agents/sentinel/BRIEFING.md — Persistent sentinel memory

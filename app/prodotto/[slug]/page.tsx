@@ -9,6 +9,7 @@ import ProductGallery from '@/components/ProductGallery';
 import StickyMobileAddToCart from '@/components/StickyMobileAddToCart';
 import RingSizeSection from '@/components/RingSizeSection';
 import ProductTrustBadges from '@/components/ProductTrustBadges';
+import { getProductPageSchema } from '@/lib/schema';
 
 // Questa funzione genera in automatico i Meta Tag SEO per Google e Facebook
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
@@ -88,15 +89,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     ? Math.round(((product.price - product.discount_price) / product.price) * 100) 
     : 0;
 
+  // 5. Rich Schema.org Knowledge Graph (Product + BreadcrumbList + FAQPage)
+  const productJsonLd = getProductPageSchema(product, allImages);
+
   return (
     <div className="bg-white min-h-screen pt-24 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb / Navigazione Veloce */}
         <nav className="flex text-[11px] uppercase tracking-widest text-gray-400 mb-8 items-center gap-2">
           <Link href="/" className="hover:text-gray-900 transition">Home</Link>
           <ChevronRight size={12} />
-          <Link href="#" className="hover:text-gray-900 transition">{product.category}</Link>
+          <Link href={`/shop?category=${encodeURIComponent(product.category || '')}`} className="hover:text-gray-900 transition">{product.category}</Link>
           <ChevronRight size={12} />
           <span className="text-gray-900 font-medium">{product.name}</span>
         </nav>

@@ -7,6 +7,7 @@ const BASE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://www.isabelpepe.co
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes: MetadataRoute.Sitemap = [
+    // 1. Core Commerce Routes
     {
       url: `${BASE_URL}`,
       lastModified: new Date(),
@@ -19,6 +20,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.9,
     },
+
+    // 2. Intent-Driven Gifting & Guide Clusters (R3)
+    {
+      url: `${BASE_URL}/regali/donna-elegante`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/regali/anniversario`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/regali/compleanno`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+    {
+      url: `${BASE_URL}/guide/gioielli-demi-fine`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
+
+    // 3. Brand & Storytelling Pages
     {
       url: `${BASE_URL}/chi-siamo`,
       lastModified: new Date(),
@@ -31,20 +60,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    {
-      url: `${BASE_URL}/cura-gioielli`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
-    {
-      url: `${BASE_URL}/assistenza-clienti`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6,
-    },
+
+    // 4. Customer Trust & Guide Pages
     {
       url: `${BASE_URL}/garanzia`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/cura-gioielli`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.6,
@@ -55,6 +80,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly',
       priority: 0.6,
     },
+    {
+      url: `${BASE_URL}/assistenza-clienti`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+
+    // 5. Legal & Policies
     {
       url: `${BASE_URL}/spedizioni-resi`,
       lastModified: new Date(),

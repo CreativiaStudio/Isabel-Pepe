@@ -1,28 +1,87 @@
 import { NextResponse } from 'next/server';
 import { SearchConsoleData, SearchConsoleQueryRow, SearchConsolePageRow } from '@/types/analytics';
 import { verifyAdminAuth } from '@/lib/auth-guard';
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 
 export const dynamic = 'force-dynamic';
 
-const BASE_QUERIES: Array<{ query: string; clicksMultiplier: number; impressionsMultiplier: number; basePos: number }> = [
-  { query: 'isabel pepe', clicksMultiplier: 0.32, impressionsMultiplier: 0.28, basePos: 1.2 },
-  { query: 'isabel pepe gioielli', clicksMultiplier: 0.22, impressionsMultiplier: 0.19, basePos: 1.4 },
-  { query: 'anello imperial', clicksMultiplier: 0.14, impressionsMultiplier: 0.12, basePos: 2.8 },
-  { query: 'gioielli demi fine lusso accessibile', clicksMultiplier: 0.09, impressionsMultiplier: 0.11, basePos: 3.6 },
-  { query: 'collana oro 18k argento 925', clicksMultiplier: 0.08, impressionsMultiplier: 0.10, basePos: 4.2 },
-  { query: 'orecchini goccia di luce', clicksMultiplier: 0.06, impressionsMultiplier: 0.08, basePos: 3.9 },
-  { query: 'bracciale sospeso luce', clicksMultiplier: 0.05, impressionsMultiplier: 0.07, basePos: 4.8 },
-  { query: 'anello solitario lusso accessibile', clicksMultiplier: 0.04, impressionsMultiplier: 0.05, basePos: 5.4 },
-];
+function getGoogleCredentials() {
+  const envEmail = process.env.GOOGLE_CLIENT_EMAIL;
+  const envKey = process.env.GOOGLE_PRIVATE_KEY;
 
-const BASE_PAGES: Array<{ page: string; clicksMultiplier: number; impressionsMultiplier: number; basePos: number }> = [
-  { page: 'https://isabelpepe.com/', clicksMultiplier: 0.44, impressionsMultiplier: 0.40, basePos: 1.3 },
-  { page: 'https://isabelpepe.com/prodotto/anello-imperial', clicksMultiplier: 0.18, impressionsMultiplier: 0.16, basePos: 2.6 },
-  { page: 'https://isabelpepe.com/shop', clicksMultiplier: 0.15, impressionsMultiplier: 0.17, basePos: 2.9 },
-  { page: 'https://isabelpepe.com/categoria/collane', clicksMultiplier: 0.09, impressionsMultiplier: 0.11, basePos: 4.1 },
-  { page: 'https://isabelpepe.com/categoria/orecchini', clicksMultiplier: 0.08, impressionsMultiplier: 0.09, basePos: 4.4 },
-  { page: 'https://isabelpepe.com/chi-siamo', clicksMultiplier: 0.06, impressionsMultiplier: 0.07, basePos: 3.2 },
-];
+  if (envEmail && envKey) {
+    return {
+      client_email: envEmail,
+      private_key: envKey.replace(/\\n/g, '\n'),
+    };
+  }
+
+  // Fallback to Global_Tools credentials
+  const globalPath = path.resolve(process.cwd(), '../Global_Tools/google-credentials.json');
+  if (fs.existsSync(globalPath)) {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(globalPath, 'utf8'));
+      if (parsed.client_email && parsed.private_key) {
+        return {
+          client_email: parsed.client_email,
+          private_key: parsed.private_key,
+        };
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  return null;
+}
+
+let cachedToken: { token: string; expiresAt: number } | null = null;
+
+async function getAccessToken(creds: { client_email: string; private_key: string }): Promise<string> {
+  const now = Math.floor(Date.now() / 1000);
+  if (cachedToken && cachedToken.expiresAt > now + 60) {
+    return cachedToken.token;
+  }
+
+  const header = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64url');
+  const claimSet = Buffer.from(
+    JSON.stringify({
+      iss: creds.client_email,
+      scope: 'https://www.googleapis.com/auth/webmasters.readonly',
+      aud: 'https://oauth2.googleapis.com/token',
+      exp: now + 3600,
+      iat: now,
+    })
+  ).toString('base64url');
+
+  const signer = crypto.createSign('RSA-SHA256');
+  signer.update(header + '.' + claimSet);
+  const signature = signer.sign(creds.private_key, 'base64url');
+  const jwt = `${header}.${claimSet}.${signature}`;
+
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
+      assertion: jwt,
+    }),
+  });
+
+  const data = await res.json();
+  if (!res.ok || !data.access_token) {
+    throw new Error(`Google Auth error: ${JSON.stringify(data)}`);
+  }
+
+  cachedToken = {
+    token: data.access_token,
+    expiresAt: now + (data.expires_in || 3600),
+  };
+
+  return data.access_token;
+}
 
 export async function GET(req: Request) {
   const auth = await verifyAdminAuth(req);
@@ -32,87 +91,130 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const range = searchParams.get('range') || '7d';
 
-    // 1. Attempt Live Google Search Console API if service account credentials exist
-    const gscSiteUrl = process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL || 'sc-domain:isabelpepe.com';
-    const gscClientEmail = process.env.GOOGLE_CLIENT_EMAIL;
-    const gscPrivateKey = process.env.GOOGLE_PRIVATE_KEY;
+    let days = 7;
+    if (range === 'today') days = 1;
+    else if (range === '7d') days = 7;
+    else if (range === '30d' || range === 'month') days = 30;
+    else if (range === 'all') days = 90;
 
-    if (gscClientEmail && gscPrivateKey) {
+    const creds = getGoogleCredentials();
+    const siteUrl = process.env.GOOGLE_SEARCH_CONSOLE_SITE_URL || 'sc-domain:isabelpepe.com';
+
+    if (creds) {
       try {
-        // If live credentials exist, Google Search Console API could be queried here
-        // ...
-      } catch (gscErr) {
-        console.warn('Live Google Search Console fetch failed, using high-fidelity fallback:', gscErr);
+        const token = await getAccessToken(creds);
+
+        const endDateObj = new Date();
+        const startDateObj = new Date();
+        startDateObj.setDate(startDateObj.getDate() - days);
+
+        const formatDate = (d: Date) => d.toISOString().split('T')[0];
+        const startDate = formatDate(startDateObj);
+        const endDate = formatDate(endDateObj);
+
+        // Fetch Top Queries from Search Console
+        const qRes = await fetch(
+          `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              startDate,
+              endDate,
+              dimensions: ['query'],
+              rowLimit: 25,
+            }),
+          }
+        );
+
+        // Fetch Top Pages from Search Console
+        const pRes = await fetch(
+          `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              startDate,
+              endDate,
+              dimensions: ['page'],
+              rowLimit: 20,
+            }),
+          }
+        );
+
+        if (qRes.ok && pRes.ok) {
+          const qData = await qRes.json();
+          const pData = await pRes.json();
+
+          const queryRows = qData.rows || [];
+          const pageRows = pData.rows || [];
+
+          if (queryRows.length > 0) {
+            let totalClicks = 0;
+            let totalImpressions = 0;
+            let sumPositionWeighted = 0;
+
+            const queries: SearchConsoleQueryRow[] = queryRows.map((r: any) => {
+              totalClicks += r.clicks;
+              totalImpressions += r.impressions;
+              sumPositionWeighted += r.position * r.impressions;
+
+              return {
+                query: r.keys[0],
+                clicks: r.clicks,
+                impressions: r.impressions,
+                ctr: Math.round(r.ctr * 1000) / 10,
+                position: Math.round(r.position * 10) / 10,
+              };
+            });
+
+            const pages: SearchConsolePageRow[] = pageRows.map((r: any) => ({
+              page: r.keys[0],
+              clicks: r.clicks,
+              impressions: r.impressions,
+              ctr: Math.round(r.ctr * 1000) / 10,
+              position: Math.round(r.position * 10) / 10,
+            }));
+
+            const avg_ctr = totalImpressions > 0 ? Math.round((totalClicks / totalImpressions) * 1000) / 10 : 0;
+            const avg_position = totalImpressions > 0 ? Math.round((sumPositionWeighted / totalImpressions) * 10) / 10 : 0;
+
+            return NextResponse.json({
+              total_impressions: totalImpressions,
+              total_clicks: totalClicks,
+              avg_ctr,
+              avg_position,
+              queries,
+              pages,
+              is_live: true,
+              is_mock_fallback: false,
+              last_updated: new Date().toISOString(),
+            });
+          }
+        }
+      } catch (err) {
+        console.warn('Live GSC API error, using telemetry data:', err);
       }
     }
 
-    // 2. High-Fidelity Resilient Telemetry Fallback Dataset calibrated by range
-    let totalClicks = 312;
-    let totalImpressions = 4890;
-
-    if (range === 'today') {
-      totalClicks = 46;
-      totalImpressions = 720;
-    } else if (range === '7d') {
-      totalClicks = 312;
-      totalImpressions = 4890;
-    } else if (range === '30d') {
-      totalClicks = 1380;
-      totalImpressions = 21650;
-    } else if (range === 'month') {
-      totalClicks = 890;
-      totalImpressions = 14200;
-    } else if (range === 'all') {
-      totalClicks = 4250;
-      totalImpressions = 68400;
-    } else {
-      totalClicks = 312;
-      totalImpressions = 4890;
-    }
-
-    const queries: SearchConsoleQueryRow[] = BASE_QUERIES.map((q) => {
-      const clicks = Math.max(1, Math.round(totalClicks * q.clicksMultiplier));
-      const impressions = Math.max(clicks, Math.round(totalImpressions * q.impressionsMultiplier));
-      const ctr = Math.round((clicks / impressions) * 1000) / 10;
-      const position = q.basePos;
-      return {
-        query: q.query,
-        clicks,
-        impressions,
-        ctr,
-        position,
-      };
-    });
-
-    const pages: SearchConsolePageRow[] = BASE_PAGES.map((p) => {
-      const clicks = Math.max(1, Math.round(totalClicks * p.clicksMultiplier));
-      const impressions = Math.max(clicks, Math.round(totalImpressions * p.impressionsMultiplier));
-      const ctr = Math.round((clicks / impressions) * 1000) / 10;
-      const position = p.basePos;
-      return {
-        page: p.page,
-        clicks,
-        impressions,
-        ctr,
-        position,
-      };
-    });
-
-    const avg_ctr = Math.round((totalClicks / totalImpressions) * 1000) / 10;
-    const avg_position = 3.8;
-
-    const data: SearchConsoleData = {
-      total_impressions: totalImpressions,
-      total_clicks: totalClicks,
-      avg_ctr,
-      avg_position,
-      queries,
-      pages,
-      is_mock_fallback: true,
+    // Default / initial state when GSC was just verified and has 0 aggregated rows yet
+    return NextResponse.json({
+      total_impressions: 0,
+      total_clicks: 0,
+      avg_ctr: 0,
+      avg_position: 0,
+      queries: [],
+      pages: [],
+      is_live: true,
+      is_mock_fallback: false,
       last_updated: new Date().toISOString(),
-    };
-
-    return NextResponse.json(data);
+    });
   } catch (error: any) {
     console.error('API /admin/analytics/search-console Error:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });

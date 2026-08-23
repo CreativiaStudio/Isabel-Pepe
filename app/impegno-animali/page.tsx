@@ -4,13 +4,18 @@ import type { Metadata } from 'next';
 import { Heart, ShieldCheck, Sparkles, Footprints, Gift, CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "L'Arte del Dono — Il Nostro Impegno per gli Animali",
+  title: "L'Arte del Dono — Gioielli Etici & Impegno per gli Animali",
   description:
-    "Il 5% di ogni acquisto Isabel Pepe sostiene direttamente i volontari che dedicano la vita a salvare e accudire animali in difficoltà. Bellezza etica che protegge la vita.",
+    "Il 5% di ogni tuo acquisto sostiene direttamente volontari indipendenti che salvano animali in pericolo. Bellezza autentica e solidale che protegge la vita.",
   openGraph: {
-    title: "L'Arte del Dono — Il Nostro Impegno per gli Animali | Isabel Pepe",
+    title: "L'Arte del Dono — Gioielli Etici che Proteggono la Vita | Isabel Pepe",
     description:
-      "Il 5% di ogni acquisto Isabel Pepe sostiene direttamente i volontari che dedicano la vita a salvare e accudire animali in difficoltà. Bellezza etica che protegge la vita.",
+      "Indossare un gioiello Isabel Pepe significa sostenere chi non ha voce. Doniamo il 5% del ricavato a volontari sul campo dedicati al benessere animale.",
+  },
+  twitter: {
+    title: "L'Arte del Dono | Isabel Pepe & la Missione per gli Animali",
+    description:
+      "Eleganza etica e solidarietà: scopri come ogni nostra creazione sostiene direttamente i volontari che salvano creature indifese.",
   },
 };
 

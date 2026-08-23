@@ -4,13 +4,18 @@ import type { Metadata } from 'next';
 import { Sparkles, Gem, Compass, Feather, Heart } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: "Chi Siamo — L'Arte di Splendere",
+  title: "La Nostra Storia — L'Arte del Lusso Demi-Fine & Valori Etici",
   description:
-    "Scopri la storia e i valori di Isabel Pepe: gioielli Demi-Fine in Argento 925, placcatura Oro 18K, pietre di pura luce e impegno per gli animali.",
+    "Scopri la visione di Elena e Mario: gioielli demi-fine in Oro 18K concepiti per essere vissuti ogni giorno, alta manifattura e il 5% a sostegno degli animali.",
   openGraph: {
-    title: "Chi Siamo — L'Arte di Splendere | Isabel Pepe",
+    title: "La Nostra Storia — Isabel Pepe & L'Arte di Splendere",
     description:
-      "Scopri la storia e i valori di Isabel Pepe: gioielli Demi-Fine in Argento 925, placcatura Oro 18K, pietre di pura luce e impegno per gli animali.",
+      "«La vera eleganza non si custodisce in cassaforte: si indossa». Scopri la storia dei fondatori Elena e Mario e l'atelier di lusso accessibile Isabel Pepe.",
+  },
+  twitter: {
+    title: "Chi Siamo | Isabel Pepe Atelier Gioielli Demi-Fine",
+    description:
+      "Una passione nata per celebrare la bellezza quotidiana con gioielli demi-fine autentici, etici e duraturi.",
   },
 };
 
