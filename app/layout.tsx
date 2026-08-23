@@ -67,6 +67,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: {
+    google: "zhBoVXVcROJG7C0ebSblYcbHgDkgAHx1dXss2fUGO58",
+  },
 };
 
 import Header from "@/components/Header";
