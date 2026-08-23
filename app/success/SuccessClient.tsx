@@ -78,7 +78,7 @@ export default function SuccessClient() {
             <span className="text-xs text-gray-500 uppercase tracking-wider">Stato Ordine</span>
             <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded-full border border-green-200">
               <span className="w-1.5 h-1.5 rounded-full bg-green-600 animate-pulse"></span>
-              In Preparazione
+              In Lavorazione all'Atelier
             </span>
           </div>
 
@@ -103,7 +103,7 @@ export default function SuccessClient() {
               <ShieldCheck className="w-4 h-4 text-[#C0A09A] flex-shrink-0 mt-0.5" />
               <div>
                 <span className="font-medium text-gray-900 block">Assistenza Diretta</span>
-                <span className="text-gray-500 text-[11px]">Supporto Clienti dedicato</span>
+                <span className="text-gray-500 text-[11px]">Concierge personale a tua disposizione</span>
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export default function SuccessClient() {
             className="inline-flex items-center justify-center gap-2 bg-[#1A1A1A] hover:bg-[#8A5E58] text-white py-4 px-8 font-sans text-xs uppercase tracking-[0.2em] transition-all duration-300 rounded-sm font-medium shadow-sm hover:shadow"
           >
             <ShoppingBag size={15} />
-            <span>Continua lo Shopping</span>
+            <span>Esplora la Collezione</span>
           </Link>
           <Link 
             href="/assistenza-clienti"

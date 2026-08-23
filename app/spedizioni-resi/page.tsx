@@ -58,7 +58,7 @@ export default function SpedizioniResiPage() {
                 <strong>Tracciamento in Tempo Reale:</strong> Al momento dell'affidamento del pacco al corriere, riceverai un'email ed un messaggio contenente il tuo <strong>Tracking Code</strong> per monitorare ogni fase della consegna.
               </p>
               <p>
-                <strong>Imballo di Sicurezza:</strong> Ogni spedizione viaggia all'interno di un packaging rigido, anonimo ed assicurato, per garantire che il tuo cofanetto di lusso arrivi integro ed in perfetto stato.
+                <strong>Imballo di Sicurezza:</strong> Ogni spedizione viaggia all'interno di un packaging rigido, discreto ed assicurato, per garantire che il tuo cofanetto di lusso arrivi integro ed in perfetto stato.
               </p>
             </div>
           </div>
@@ -165,7 +165,7 @@ export default function SpedizioniResiPage() {
         {/* NAVIGAZIONE SHOP */}
         <div className="mt-16 text-center border-t border-gray-100 pt-8">
           <Link href="/" className="text-xs uppercase tracking-[0.25em] text-gray-400 hover:text-gray-900 transition-colors">
-            ← Ritorna alla Home Page
+            ← Torna alla Home
           </Link>
         </div>
 

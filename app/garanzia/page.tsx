@@ -41,7 +41,7 @@ export default function GaranziaPage() {
           </div>
 
           <h2 className="font-serif text-2xl sm:text-3xl text-gray-900 tracking-wider mb-6">
-            Cosa Attesta il Nostro Certificato di Garanzia
+            Cosa Certifica il Tuo Documento di Autenticità
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-gray-600 leading-relaxed font-light mb-8">

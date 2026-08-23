@@ -152,7 +152,7 @@ export default function AssistenzaClientiPage() {
         {/* Ritorna alla Home */}
         <div className="mt-16 text-center">
           <Link href="/" className="inline-block text-xs uppercase tracking-[0.25em] text-gray-400 hover:text-gray-900 transition-colors">
-            ← Torna alla Home Page
+            ← Torna alla Home
           </Link>
         </div>
 

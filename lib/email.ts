@@ -170,7 +170,7 @@ export async function sendOrderConfirmationEmail({
 
         <div style="border-top: 1px solid #F0EAE6; padding-top: 25px; font-size: 11px; line-height: 1.6; color: #888888;">
           <p style="margin: 0 0 6px 0;">
-            Ogni gioiello Isabel Pepe include confezionamento luxury, garanzia a vita sui metalli preziosi e certificato di autenticità.
+            Ogni gioiello Isabel Pepe include cofanetto luxury regalo, certificato ufficiale di autenticità e garanzia legale di conformità 24 mesi.
           </p>
           <p style="margin: 0; text-transform: uppercase; letter-spacing: 0.15em; color: #AAAAAA; font-size: 10px;">
             Isabel Pepe • Haute Joaillerie Italiana
@@ -185,7 +185,7 @@ export async function sendOrderConfirmationEmail({
 
   const customerSendPromise = sendEmail({
     to: customerEmail,
-    subject: `✨ Ordine Confermato #${shortOrderId} — Isabel Pepe Atelier`,
+    subject: `✨ Il tuo ordine è confermato, ${customerName || 'cara cliente'} — Isabel Pepe`,
     html,
   });
 
@@ -227,7 +227,7 @@ export async function sendShippingNotificationEmail({
   courierName?: string;
 }) {
   const shortOrderId = orderId.substring(0, 8).toUpperCase();
-  const trackingUrl = `https://www.google.com/search?q=${encodeURIComponent('tracking ' + trackingCode)}`;
+  const trackingUrl = `https://www.sda.it/wps/portal/Servizi_online/Ricerca-spedizioni?tracking=${encodeURIComponent(trackingCode)}`;
 
   const html = `<!DOCTYPE html>
 <html>
@@ -278,8 +278,8 @@ export async function sendShippingNotificationEmail({
         <table align="center" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto 30px auto;">
           <tr>
             <td align="center" style="border-radius: 2px; background-color: #1A1A1A;">
-              <a href="${SITE_URL}/account" target="_blank" style="display: inline-block; padding: 15px 34px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
-                Il Mio Account Isabel Pepe &rarr;
+              <a href="${SITE_URL}/assistenza-clienti" target="_blank" style="display: inline-block; padding: 15px 34px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 2px;">
+                Assistenza Clienti &rarr;
               </a>
             </td>
           </tr>
@@ -302,7 +302,7 @@ export async function sendShippingNotificationEmail({
 
   return sendEmail({
     to: customerEmail,
-    subject: `🚚 Il tuo ordine #${shortOrderId} è in viaggio! — Isabel Pepe`,
+    subject: `🚚 I tuoi gioielli sono in viaggio, ${customerName || 'cara cliente'} — Isabel Pepe`,
     html,
   });
 }
@@ -463,10 +463,10 @@ export function generatePrivilegeWelcomeEmailHtml({
               </td>
               <td valign="top">
                 <p style="margin: 0 0 4px 0; font-family: 'Playfair Display', 'Times New Roman', Times, serif; font-size: 15px; font-weight: 600; color: #0D0D0D;">
-                  Servizio di Cura &amp; Pulizia Gratuita
+                  Cura del Gioiello &amp; Consigli Esclusivi
                 </p>
                 <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #666666;">
-                  Consigli dedicati e panno lucidante professionale per mantenere intatta la purezza e lo splendore delle tue creazioni.
+                  Guida personalizzata alla cura dei tuoi gioielli Isabel Pepe, con panno in microfibra professionale incluso in ogni cofanetto.
                 </p>
               </td>
             </tr>
@@ -486,7 +486,7 @@ export function generatePrivilegeWelcomeEmailHtml({
 
         <!-- Concierge / Atelier Note -->
         <p style="margin: 0; font-size: 12px; line-height: 1.6; color: #888888; font-style: italic;">
-          Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione.
+          Per richieste personalizzate o consulenze gemmologiche su misura, il nostro concierge è sempre a tua completa disposizione: <a href="mailto:info@isabelpepe.com" style="color: #8A5E58; text-decoration: none;">info@isabelpepe.com</a>
         </p>
       </td>
     </tr>

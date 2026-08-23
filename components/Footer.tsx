@@ -411,7 +411,7 @@ export default function Footer() {
           {/* Badges Pagamento con Icone Ufficiali */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <span className="text-[11px] uppercase tracking-[0.2em] text-[#E5DCD6] font-semibold">
-              Pagamenti Sicuri & Rateali:
+              Pagamenti Sicuri — Anche a Rate:
             </span>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-2 w-full sm:w-auto">
               {/* Prima Fila Mobile: Carte & Digital Wallets */}
@@ -492,8 +492,8 @@ export default function Footer() {
         {/* FOOTER BOTTOM: DATI SOCIETARI & COPYRIGHT */}
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#E5DCD6] uppercase font-normal text-center md:text-left">
           <p>© {new Date().getFullYear()} ISABEL PEPE • P.IVA 06399670659 • TUTTI I DIRITTI RISERVATI</p>
-          <p className="normal-case tracking-normal text-[#E5DCD6] text-xs text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal">
-            Made with <Heart size={13} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="font-semibold text-white tracking-wider">Creativia Studio</span>
+          <p className="normal-case tracking-normal text-[#555050] text-[10px] text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal opacity-40">
+            Made with <Heart size={11} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="tracking-wider">Creativia Studio</span>
           </p>
         </div>
 

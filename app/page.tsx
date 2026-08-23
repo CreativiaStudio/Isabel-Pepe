@@ -100,10 +100,10 @@ export default async function Home() {
           <div className="flex flex-col md:flex-row justify-between items-end mb-16 border-b border-gray-100 pb-8">
             <div>
               <span className="font-sans text-[10px] uppercase tracking-[0.3em] text-[#C0A09A] mb-3 block font-semibold">
-                Selezione Esclusiva
+                Best Seller
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl tracking-widest text-[#1A1A1A] uppercase">
-                I Più Amati
+                Le Creazioni più Amate
               </h2>
             </div>
             <Link 
@@ -223,7 +223,7 @@ export default async function Home() {
             L'eleganza senza tempo incontra l'essenza dell'anima.
           </h2>
           <p className="font-sans text-gray-300 text-xs sm:text-sm tracking-[0.25em] uppercase leading-loose max-w-xl mx-auto font-light mb-10 drop-shadow-sm">
-            Gioielli demi-fine disegnati per vivere, viaggiare e risplendere ogni giorno. Perché il vero lusso è sentirsi uniche.
+            Gioielli demi-fine pensati per la donna che sa cosa vale. Perché la vera eleganza non si custodisce — si indossa.
           </p>
           <Link 
             href="/chi-siamo" 
