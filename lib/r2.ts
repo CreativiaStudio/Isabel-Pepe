@@ -1,5 +1,4 @@
 import { S3Client, PutObjectCommand, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-import sharp from 'sharp';
 
 const DEFAULT_R2_ACCOUNT_ID = 'cdc3d1bfef17f23cb453fe2737b2ede8';
 const DEFAULT_R2_ACCESS_KEY_ID = 'a15ba732cf75ed7cb171a095e794a479';
@@ -146,19 +145,22 @@ export async function uploadToR2(
   let finalContentType = initialMime;
   let finalExt = originalExt;
 
-  // 2. Sharp Image Optimization with Auto-Rotate and Fallback
+  // 2. Dynamic Image Optimization (Optional, with pure raw buffer fallback)
   if (isImage) {
     try {
-      finalBuffer = await sharp(buffer)
-        .rotate()
-        .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
-        .webp({ quality: 85, effort: 4 })
-        .toBuffer();
-      finalContentType = 'image/webp';
-      finalExt = 'webp';
-    } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : String(err);
-      console.warn('[uploadToR2] Sharp optimization skipped or failed, fallback to raw buffer:', errMsg);
+      // Safely attempt dynamic sharp optimization if binary is available in runtime
+      const sharpMod = typeof require !== 'undefined' ? require('sharp') : null;
+      if (sharpMod) {
+        finalBuffer = await sharpMod(buffer)
+          .rotate()
+          .resize(2000, 2000, { fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 85, effort: 4 })
+          .toBuffer();
+        finalContentType = 'image/webp';
+        finalExt = 'webp';
+      }
+    } catch {
+      // In serverless environments where native binary is omitted, direct buffer is preserved cleanly
       finalBuffer = buffer;
       finalContentType = initialMime;
       finalExt = originalExt;
