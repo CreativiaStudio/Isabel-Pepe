@@ -92,7 +92,7 @@ export function getOrganizationAndWebsiteSchema() {
           'Credit Card, Apple Pay, Google Pay, PayPal, Klarna, Scalapay',
         sameAs: [
           'https://instagram.com/isabelpepe',
-          'https://www.tiktok.com/@isabel.pepe0',
+          'https://www.tiktok.com/@isabel.pepe88',
           'https://pinterest.com/isabelpepe',
           'https://facebook.com/isabelpepe',
         ],

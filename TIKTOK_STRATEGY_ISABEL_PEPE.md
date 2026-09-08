@@ -1,6 +1,6 @@
 # STRATEGIA DI SOCIAL ADVERTISING & PIANO MEDIA ESECUTIVO TIKTOK
 ## Brand: Isabel Pepe — Alta Gioielleria Demi-Fine & Luxury Gifting
-### Canale Ufficiale TikTok: `@isabel.pepe0` | E-Commerce: `www.isabelpepe.com`
+### Canale Ufficiale TikTok: `@isabel.pepe88` | E-Commerce: `www.isabelpepe.com`
 **Data di Rilascio:** Settembre 2026 | **Versione:** 1.0 Production-Grade Master Blueprint  
 **Autori:** Mario Pepe, Elena Dumea, Performance Media & Engineering Team  
 
@@ -70,7 +70,7 @@
 ## 1.1 Profilo del Brand & Canali Ufficiali
 **Isabel Pepe** è un brand italiano di alta gioielleria artigianale e demi-fine fondato a Salerno da **Mario Pepe** ed **Elena Dumea**. Il brand nasce con una missione chiara: colmare il vuoto strutturale presente nel mercato della gioielleria, posizionandosi esattamente all'intersezione tra la bigiotteria economica usa-e-getta (soggetta ad annerimento, leghe povere in zinco/ottone e irritazioni cutanee) e l'alta gioielleria tradizionale inaccessibile (con ricarichi commerciali del 1.000% tipici delle maison di lusso).
 
-- **Canale Ufficiale TikTok**: `@isabel.pepe0` (https://www.tiktok.com/@isabel.pepe0)
+- **Canale Ufficiale TikTok**: `@isabel.pepe88` (https://www.tiktok.com/@isabel.pepe88)
 - **Store Ufficiale E-Commerce**: `https://www.isabelpepe.com`
 - **Piattaforma E-Commerce**: Next.js 16.2.4 (App Router), React 19.2.4, Supabase Database, Stripe Live Checkout, Tailwind CSS v4.
 - **Logistica e Consegne**: Spedizioni express 24/48h assicurate su territorio nazionale (Poste Italiane / SDA / Packlink PRO) con packaging luxury regalo sempre incluso nel prezzo.
@@ -145,7 +145,7 @@ La presente strategia unisce la creatività artigianale (R1), il rigore matemati
 # PARTE II: R1 — CREATIVE AUDIT & FRAMEWORK DI VALIDAZIONE VIDEO ORGANICI
 
 ## 2.1 I 5 Pilastri Creativi Demi-Fine (Script, Scenografie e Hook)
-Per nutrire il profilo TikTok `@isabel.pepe0` con contenuti eterogenei ma costantemente allineati all'estetica *Old Money & Quiet Luxury*, la produzione video è organizzata in cinque pilastri creativi.
+Per nutrire il profilo TikTok `@isabel.pepe88` con contenuti eterogenei ma costantemente allineati all'estetica *Old Money & Quiet Luxury*, la produzione video è organizzata in cinque pilastri creativi.
 
 ```
        ┌─────────────────────────────────────────────────────────────┐
@@ -233,7 +233,7 @@ Per nutrire il profilo TikTok `@isabel.pepe0` con contenuti eterogenei ma costan
 ---
 
 ## 2.2 Framework Quantitativo a 3 Livelli (Formule e Benchmark)
-Un video organico pubblicato sul canale `@isabel.pepe0` non può essere considerato idoneo alla sponsorizzazione se non supera rigorosamente tutti e tre i seguenti filtri matematici:
+Un video organico pubblicato sul canale `@isabel.pepe88` non può essere considerato idoneo alla sponsorizzazione se non supera rigorosamente tutti e tre i seguenti filtri matematici:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -338,6 +338,14 @@ Ciascun punteggio parziale ($S$) viene normalizzato su base 100 in base alla seg
 | **Watch Time Ratio ($S_{\text{ret}}$)** | < 30.0% | 40.0% | **50.0%** | $\ge 65.0\%$ |
 | **Save Rate ($S_{\text{save}}$)** | < 0.60% | 1.00% | **1.50%** | $\ge 2.50\%$ |
 
+### 🔒 Regola di Ammissione Condizionale (Hard Gating Floor per Tier A):
+Il punteggio composito CVS costituisce una condizione *necessaria ma non sufficiente* per l'accesso allo status di Winner Assoluto (Tier A). Per neutralizzare falsi positivi derivanti da video "clickbait" (con ganci e ritenzione eccezionali che compensano matematicamente un basso indice di salvataggio), l'approvazione per la sponsorizzazione a pagamento impone la seguente **congiunzione logica tassativa**:
+
+$$\mathbf{\text{Tier A Winner} \iff (\text{CVS} \ge 85) \land (\text{Hook Rate} \ge 50.0\%) \land (\text{Retention Rate} \ge 50.0\%) \land (\text{Save Rate} \ge 1.50\%)}$$
+
+> **HARD GATING FLOOR SUI SALVATAGGI (Save Rate >= 1.50%)**:  
+> Se il **Save Rate è inferiore a 1.50%**, il video **NON PUÒ in alcun caso essere approvato come Tier A**, indipendentemente dal punteggio CVS ottenuto (anche qualora il CVS fosse pari a 90 o superiore). Senza l'intenzione d'acquisto certificata dal salvataggio organico, ogni erogazione paid si tradurrebbe in dispersione economica a basso ROAS.
+
 ---
 
 ## 2.5 Tabella di Classificazione a 4 Quadranti & Protocollo Re-Edit
@@ -348,27 +356,30 @@ Ciascun punteggio parziale ($S$) viene normalizzato su base 100 in base alla seg
 ├───────────────┬────────────┬──────────────────────────────────────┬──────────────────────────────┤
 │ CATEGORIA     │ RANGE CVS  │ CRITERI CHIAVE SULLE METRICHE        │ AZIONE OPERATIVA IMMEDIATA   │
 ├───────────────┼────────────┼──────────────────────────────────────┼──────────────────────────────┤
-│ 🏆 WINNER     │ 85 - 100   │ • Hook Rate >= 50%                   │ APPROVAZIONE SPARK ADS       │
-│ ASSOLUTO      │            │ • Retention >= 50%                   │ • Generare codice Spark Ads  │
-│ (Tier A)      │            │ • Save Rate >= 1.5%                  │ • Inserire in Burst Strategy │
-│               │            │                                      │ • Budget 20€/giorno Gio-Dom  │
+│ 🏆 WINNER     │ 85 - 100   │ • CVS >= 85 (Hard Gate Conjunction): │ APPROVAZIONE SPARK ADS       │
+│ ASSOLUTO      │            │   - Hook Rate >= 50.0%               │ • Generare codice Spark Ads  │
+│ (Tier A)      │            │   - Retention >= 50.0%               │ • Inserire in Burst Strategy │
+│               │            │   - Save Rate >= 1.50% (Tassativo!)  │ • Budget 20€/giorno Gio-Dom  │
 ├───────────────┼────────────┼──────────────────────────────────────┼──────────────────────────────┤
-│ ⚠️ POTENZIALE │ 65 - 84    │ • Retention >= 50%                   │ HOOK RE-EDIT & RE-TEST       │
-│ HOOK FAILURE  │            │ • Save Rate >= 1.5%                  │ • NON sponsorizzare ancora   │
-│ (Tier B)      │            │ • Hook Rate < 45%                    │ • Tagliare primi 2.5 secondi │
-│               │            │                                      │ • Montare 3 nuovi hook       │
+│ ⚠️ POTENZIALE │ 65 - 84    │ • Retention >= 50.0%                 │ HOOK RE-EDIT & RE-TEST       │
+│ HOOK RE-EDIT  │            │ • Save Rate >= 1.50%                 │ • NON sponsorizzare ancora   │
+│ (Tier B)      │            │ • Hook Rate tra 40.0% e 49.9%        │ • Tagliare primi 2.5 secondi │
+│               │            │   (Dead Zone 45-49.9% Risolta!)      │ • Montare 3 nuovi hook       │
 │               │            │                                      │ • Ripubblicare organicamente │
 ├───────────────┼────────────┼──────────────────────────────────────┼──────────────────────────────┤
-│ 🛑 SCROLLER   │ 50 - 64    │ • Hook Rate >= 50%                   │ DA SCARTARE PER ADS          │
-│ BAIT          │            │ • Retention < 38%                    │ • L'intro attira ma il corpo │
-│ (Tier C)      │            │ • Save Rate < 0.9%                   │   delude / annoia            │
+│ 🛑 SCROLLER   │ 50 - 64    │ • Hook Rate >= 50.0%                 │ DA SCARTARE PER ADS          │
+│ BAIT          │            │ • Retention < 38.0%                  │ • L'intro attira ma il corpo │
+│ (Tier C)      │            │ • Save Rate < 0.90%                  │   delude / annoia            │
 │               │            │                                      │ • Zero budget pubblicitario  │
 ├───────────────┼────────────┼──────────────────────────────────────┼──────────────────────────────┤
-│ ❌ DA         │ < 50       │ • Hook < 40%                         │ ARCHIVIAZIONE DEFINITIVA     │
-│ SCARTARE      │            │ • Retention < 40%                    │ • Fallimento strutturale di  │
-│ (Tier D)      │            │ • Save Rate < 1.0%                   │   concept ed esecuzione      │
+│ ❌ DA         │ < 50       │ • Hook < 40.0%                       │ ARCHIVIAZIONE DEFINITIVA     │
+│ SCARTARE      │            │ • Retention < 40.0%                  │ • Fallimento strutturale di  │
+│ (Tier D)      │            │ • Save Rate < 1.00%                  │   concept ed esecuzione      │
 └───────────────┴────────────┴──────────────────────────────────────┴──────────────────────────────┘
 ```
+
+> **Risoluzione Definitiva della Dead Zone (Intervallo 45.0% - 49.9%)**:  
+> Nel framework originario, i video con Hook Rate compreso tra il 45.0% e il 49.9% ricadevano in un limbo operativo non categorizzato. Nel modello consolidato, il **Tier B include rigorosamente tutti i video con Hook Rate compreso tra 40.0% e 49.9%** a parità di corpo solido (Retention $\ge 50.0\%$ e Save Rate $\ge 1.50\%$). Tale perimetro garantisce che ogni asset ad alto potenziale di conversione venga tempestivamente intercettato e sottoposto al protocollo di Hook Re-Edit.
 
 ### Protocollo Operativo di Recupero per Tier B (Hook Re-Edit):
 Il Tier B racchiude i video più promettenti: il prodotto, la musica e la dimostrazione finale convincono chi li guarda (ritenzione e salvataggi elevati), ma l'inizio era troppo lento per fermare lo scorrimento del feed.
@@ -378,7 +389,7 @@ Il Tier B racchiude i video più promettenti: il prodotto, la musica e la dimost
    - *Variante 1 (Flash Shock)*: Zoom macro della Moissanite con flash LED accecante a frame zero.
    - *Variante 2 (Diamond Tester Beep)*: La penna termica che suona con barra rossa nei primi 0.5 secondi.
    - *Variante 3 (Copy ad Alto Contrasto in Safe Zone)*: *"Costa 99€ ma tutti pensano che sia da 5.000€"*.
-4. Ripubblicare sul canale `@isabel.pepe0` a distanza di 48 ore.
+4. Ripubblicare sul canale `@isabel.pepe88` a distanza di 48 ore.
 5. La variante che innalza l'Hook Rate sopra il 50% viene promossa istantaneamente a **Tier A (Winner)**.
 
 ---
@@ -436,7 +447,7 @@ Un errore fatale commesso da molti brand emergenti è l'uso della funzione inter
 - **Spark Ads via Ads Manager**: Viene fatturato direttamente da **TikTok Technology Limited (Dublino, Irlanda)** con regolare fattura B2B intestata alla Partita IVA dell'azienda in regime di **Reverse Charge intracomunitario (VIES)**. L'intero investimento pubblicitario è fiscalmente deducibile al 100% come spesa di marketing, e l'IVA non viene anticipata né sprecata.
 
 ### Il Volano di Brand Equity (Flywheel Effect di Spark Ads):
-A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancellano una volta spenta l'inserzione), **con Spark Ads ogni like, condivisione e commento entusiasta rimane impresso sul video organico visibile nel profilo `@isabel.pepe0`**. In questo modo, il denaro investito in pubblicità accresce perennemente la riprova sociale del profilo aziendale.
+A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancellano una volta spenta l'inserzione), **con Spark Ads ogni like, condivisione e commento entusiasta rimane impresso sul video organico visibile nel profilo `@isabel.pepe88`**. In questo modo, il denaro investito in pubblicità accresce perennemente la riprova sociale del profilo aziendale.
 
 ---
 
@@ -447,7 +458,7 @@ A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancella
 |                           FLUSSO OPERATIVO SPARK ADS                              |
 |                                                                                   |
 |  [App TikTok Smartphone]              [Generazione Codice]      [Ads Manager PC]  |
-|  Profilo @isabel.pepe0                Video "Winner"            Creative Library  |
+|  Profilo @isabel.pepe88                Video "Winner"            Creative Library  |
 |  -> Impostazioni pubblicitarie        -> Impostazioni pubbl.    -> Spark Ads      |
 |  -> Toggle ON                         -> Durata 365 giorni      -> Incolla Codice |
 |                                       -> Copia Codice Auth      -> Pronto al Go!  |
@@ -455,8 +466,8 @@ A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancella
 ```
 
 ### FASE 1: Abilitazione Master delle Autorizzazioni sull'App TikTok
-*(Da eseguire una sola volta da smartphone sul profilo `@isabel.pepe0`)*
-1. Aprire l'app TikTok e accedere al profilo `@isabel.pepe0`.
+*(Da eseguire una sola volta da smartphone sul profilo `@isabel.pepe88`)*
+1. Aprire l'app TikTok e accedere al profilo `@isabel.pepe88`.
 2. Toccare il menu in alto a destra (**☰ tre linee orizzontali**).
 3. Selezionare **TikTok Studio** (o *Strumenti per i creator*).
 4. Scorrere fino a **Impostazioni pubblicitarie** (Ad settings).
@@ -464,7 +475,7 @@ A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancella
 
 ### FASE 2: Generazione del Codice Video Spark Ads a 365 Giorni
 *(Da eseguire per ogni video validato come Tier A Winner)*
-1. Aprire il video qualificato a schermo intero sul profilo `@isabel.pepe0`.
+1. Aprire il video qualificato a schermo intero sul profilo `@isabel.pepe88`.
 2. Toccare l'icona con i **tre puntini (...)** in basso a destra (oppure l'icona *Condividi*).
 3. Nella barra inferiore delle azioni, scorrere verso destra e toccare l'icona **Impostazioni pubblicitarie**.
 4. Spuntare l'accettazione dei Termini e attivare l'interruttore **Autorizzazione pubblicitaria (ON)**.
@@ -478,7 +489,7 @@ A differenza dei normali annunci "Dark Post" (in cui commenti e like si cancella
 3. Selezionare nel menu laterale la voce **Spark Ads** (o *Spark Ads Posts*).
 4. Cliccare sul pulsante blu **Richiedi autorizzazione (Apply for Authorization)**.
 5. Incollare il codice alfanumerico copiato dallo smartphone e cliccare **Cerca**.
-6. Verificare l'anteprima del video con la dicitura `@isabel.pepe0` e cliccare **Conferma**.
+6. Verificare l'anteprima del video con la dicitura `@isabel.pepe88` e cliccare **Conferma**.
 7. Il video è ora collegato all'account pubblicitario e pronto per essere selezionato nelle campagne di conversione.
 
 ---
@@ -538,6 +549,13 @@ Non spegnere e riaccendere l'Ad Group manualmente ogni settimana: lo spegnimento
   - Lasciare vuoti tutti gli altri orari e le giornate Lunedì-Mercoledì.
   - L'Ad Group rimarrà formalmente `Attivo` senza interruzioni di apprendimento, erogando i 20€ giornalieri unicamente nelle ore ad alta conversione.
 
+### ⚠️ Configurazione Mandataria del Fuso Orario dell'Account Pubblicitario:
+Il TikTok Ad Account aziendale deve essere tassativamente configurato con il fuso orario:
+$$\mathbf{(GMT+01:00)\text{ Europe/Rome (Ora di Roma / CET / CEST)}}$$
+
+> **PERICOLO DISALLINEAMENTO DAYPARTING**:  
+> In TikTok Ads Manager, la griglia oraria di Dayparting fa riferimento esclusivo al fuso orario impostato a livello di Ad Account (e non all'ora locale del singolo utente raggiunto). Se l'account fosse configurato su fusi predefiniti UTC o USA (es. Pacific Time o Eastern Time), la finestra 18:00–23:30 scatterebbe nelle prime ore del mattino o in piena notte sul mercato italiano, distruggendo il rendimento e disperdendo il budget in orari a tasso di conversione nullo. Verificare preliminarmente l'impostazione in *Ads Manager -> Impostazioni Account -> Fuso Orario*.
+
 ---
 
 ## 3.6 Targeting Demografico Qualificato & Esclusione Tassativa 13-17 Anni
@@ -591,10 +609,14 @@ Non spegnere e riaccendere l'Ad Group manualmente ogni settimana: lo spegnimento
 | Codice Regola | Trigger Temporale / Spesa | Metrica Rilevata | Diagnosi del Problema | Azione Correttiva Immediata |
 | :---: | :---: | :---: | :---: | :---: |
 | **KILL-01** | Primi **10,00 €** spesi (o 1.000 impression) | **Hook Rate < 30%** e **CTR < 0.60%** | Il gancio visivo iniziale non arresta lo scorrimento del feed. | **SPEGNERE IMMEDIATAMENTE l'annuncio**. Sostituire con un hook visivo più incisivo (flash macro). |
-| **KILL-02** | Primi **20,00 €** spesi (fine Giorno 1) | **CPC > 0.85 €** (con meno di 20 clic generati) | Segmento troppo costoso o basso indice di pertinenza dell'asta. | **SPEGNERE l'Ad Group**. Verificare che l'età 13-17 sia esclusa e allargare leggermente gli interessi. |
+| **KILL-02** | Primi **20,00 €** spesi (fine Giorno 1) | **(Spesa >= 20,00 €) AND (CTR < 0.70%) AND (CPC > 0.85 €)** (con meno di 20 clic generati) | Basso indice di pertinenza dell'asta o creatività non performante. | **SPEGNERE l'Ad Group**. Verificare che l'età 13-17 sia esclusa e allargare leggermente gli interessi. |
 | **KILL-03** | Primi **20,00 € – 30,00 €** spesi | **35+ Clic al sito ma ZERO AddToCart** | Attrito evidente sulla pagina prodotto (prezzo percepito, velocità mobile). | **PAUSA CAMPAGNA**. Testare velocità mobile di `isabelpepe.com`, layout scheda e chiarezza della CTA. |
 | **KILL-04** | Al raggiungimento di **40,00 €** spesi (Giorno 2) | **Cost per AddToCart > 14.00 €** (oppure 0 carrelli) | Costo di acquisizione carrello insostenibile rispetto ai margini operativi. | **SPEGNERE DEFINITIVAMENTE l'Ad Group**. Il video non converte su scala paid. |
 | **KILL-05** | Al termine della Burst (**80,00 €** spesi) | 10+ Carrelli registrati ma **ZERO Checkout Avviati / Ordini** | Attrito nel flusso transazionale (es. spese di spedizione inattese o dubbi sui pagamenti). | **STOP SPESA ADV**. Intervento prioritario sul checkout Stripe prima di riattivare il traffico. |
+
+> **IMMUNITÀ AI PICCHI CPM MACROECONOMICI (Regola di Salvaguardia KILL-02)**:  
+> Poiché $\text{CPC} = \frac{\text{CPM}}{1000 \times \text{CTR}}$, durante periodi di forte inflazione dell'asta su TikTok (es. Black Friday, Q4, festività nazionali o congestionamento del weekend con $\text{CPM} > 8{,}00\text{ €}$), il CPC può temporaneamente superare la soglia di 0.85 € anche in presenza di un video altamente attrattivo.  
+> **Clausola di Salvaguardia**: Se il **CTR è $\ge 0.90\%$** (a conferma dell'elevata pertinenza creativa e dell'interesse genuino dell'audience), **NON spegnere l'annuncio per il solo CPC elevato**. In questo scenario il costo per clic riflette una contingenza macroeconomica temporanea della domanda pubblicitaria e non un deficit del contenuto creativo.
 
 ### Protocollo di Scaling Progressivo:
 Quando un video Spark Ads supera le soglie e dimostra sostenibilità economica, si attiva la procedura di incremento:
@@ -605,11 +627,12 @@ Quando un video Spark Ads supera le soglie e dimostra sostenibilità economica, 
   [BURST STANDARD]              [SCALE ORIZZONTALE]             [SCALE VERTICALE]
   Giovedì - Domenica    -->     Mercoledì - Domenica    -->     Budget +20%
   20€/giorno = 80€/sett         20€/giorno = 100€/sett          24€/giorno = 120€/sett
-  ROAS >= 3.0x                  Stabilità confermata            Mantenimento CPA
+  ROAS >= 3.0x (14gg)           Stabilità confermata            Mantenimento CPA
 ```
 
-1. **Scale Orizzontale (Estensione al Mercoledì)**:
-   - *Condizione*: L'Ad Group genera almeno 2 ordini e-commerce su un ciclo di burst con **ROAS $\ge 3.0\text{x}$** e **Cost per AddToCart $\le 6.00\text{ €}$**.
+1. **Scale Orizzontale (Estensione al Mercoledì su Finestra Mobile a 14 Giorni)**:
+   - *Condizione*: L'Ad Group mantiene **ROAS $\ge 3.0\text{x}$** e **Cost per AddToCart $\le 6.00\text{ €}$** valutati su una **finestra mobile di 14 giorni (2 cicli consecutivi di burst, pari a 160,00 € totali spesi)** generando almeno 2-3 ordini e-commerce.
+   - *Mitigazione della Varianza Stocastica di Poisson*: Con un budget di 80 € a ciclo e un CPC medio di 0.65 € (~123 clic), ipotizzando un tasso di conversione (CVR) fisiologico dell'1.0% per gioielleria demi-fine su traffico freddo, il numero atteso di ordini per singola burst è pari a $\lambda = 1.23$. La probabilità di Poisson di registrare $\ge 2$ ordini su una sola burst è appena del **34.8%**, implicando che nel 65.2% dei casi un video profittevole rischierebbe di essere bloccato per pura varianza statistica del campione ridotto. Estendendo l'orizzonte a **14 giorni (160 € di spesa, ~246 clic, $\lambda = 2.46$)**, la probabilità $P(\ge 2 \text{ ordini})$ sale a oltre il **70.5%**, garantendo decisioni di scaling robuste ed esenti da rumore casuale.
    - *Azione*: Estendere il Dayparting al Mercoledì (18:00 - 23:30). La settimana passa da 4 a **5 giorni di burst** e il budget settimanale sale a **100,00 €**. L'algoritmo non subisce shock di budget giornaliero mantenendo l'erogazione costante.
 2. **Scale Verticale (Incremento Conservativo del +20%)**:
    - *Condizione*: La campagna a 5 giorni mantiene un ROAS $\ge 3.0\text{x}$ stabile per due settimane consecutive.
@@ -663,7 +686,7 @@ All'interno di TikTok Ads Manager (*Assets -> Audiences -> Create Audience -> Cu
    - *Finestra di Conservazione*: 30 giorni (e archivio a 60 giorni per periodi festivi).
 2. **`CA_TT_Profile_Engaged_Savers_Last60D` (Audience Wishlist & Alto Intento)**:
    - *Origine*: Engagement -> TikTok Account.
-   - *Criterio*: Utenti che hanno **salvato uno o più video** o interagito con il profilo `@isabel.pepe0`.
+   - *Criterio*: Utenti che hanno **salvato uno o più video** o interagito con il profilo `@isabel.pepe88`.
    - *Finestra di Conservazione*: 60 giorni.
 3. **`WCA_Website_Visitors_30D` & `WCA_AddToCart_7D` (Audience E-Commerce)**:
    - *Origine*: Website Traffic (TikTok Pixel).
@@ -686,7 +709,7 @@ Creare il file `types/tiktok.d.ts`:
 
 ```typescript
 // =========================================================================
-// ISABEL PEPE - TIKTOK PIXEL TYPESCRIPT DEFINITIONS
+// ISABEL PEPE - TIKTOK PIXEL TYPESCRIPT DEFINITIONS (HARDENED)
 // File: types/tiktok.d.ts
 // =========================================================================
 
@@ -720,16 +743,23 @@ export interface TikTokEventParams {
   [key: string]: unknown;
 }
 
+export interface TikTokEventOptions {
+  event_id?: string;
+  [key: string]: unknown;
+}
+
 export interface TikTokQueue {
   (action: string, ...args: unknown[]): void;
-  page: () => void;
-  track: (event: string, params?: TikTokEventParams) => void;
+  page: (options?: TikTokEventOptions) => void;
+  track: (event: string, params?: TikTokEventParams, options?: TikTokEventOptions) => void;
   identify: (params: TikTokIdentifyParams) => void;
   load: (pixelId: string, options?: unknown) => void;
   instances: () => unknown[];
   holdConsent: () => void;
   grantConsent: () => void;
   revokeConsent: () => void;
+  enableCookie: () => void;
+  disableCookie: () => void;
   _i?: Record<string, unknown>;
   methods?: string[];
 }
@@ -747,49 +777,179 @@ export {};
 ---
 
 ### 2. Modulo Helper & Advanced Matching: `lib/tiktok-pixel.ts`
-Creare il file `lib/tiktok-pixel.ts`. Questo modulo implementa l'hashing crittografico SHA-256 via Web Crypto API nativa, normalizza i numeri di telefono in formato internazionale E.164, gestisce la guardia anti-duplicazione e incapsula tutte le chiamate a `window.ttq` in blocchi protetti `try...catch`.
+Creare il file `lib/tiktok-pixel.ts`. Questo modulo implementa l'hashing crittografico SHA-256 via Web Crypto API nativa con **fallback automatico bitwise pure-JS a 32-bit** (garantendo che nessun PII venga mai trasmesso in chiaro anche in assenza di SubtleCrypto), normalizza i numeri di telefono in formato internazionale E.164, applica il controllo preventivo del consenso marketing a tutte le funzioni e protegge la persistenza `sessionStorage` dalle restrizioni di Safari Private Browsing:
 
 ```typescript
 // =========================================================================
-// ISABEL PEPE - TIKTOK PIXEL CLIENT HELPER & ADVANCED MATCHING
+// ISABEL PEPE - TIKTOK PIXEL CLIENT HELPER & ADVANCED MATCHING (HARDENED)
 // File: lib/tiktok-pixel.ts
 // =========================================================================
 
-import { TikTokContentItem, TikTokEventParams, TikTokIdentifyParams } from '@/types/tiktok';
+import {
+  TikTokContentItem,
+  TikTokEventParams,
+  TikTokEventOptions,
+  TikTokIdentifyParams,
+} from '@/types/tiktok';
 
 export const TIKTOK_PIXEL_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID || '';
 
 /**
- * Calcola l'hash SHA-256 esadecimale tramite Web Crypto API nativa del browser
+ * Verifica dinamica se il consenso marketing è concesso nel localStorage
+ */
+export function hasActiveMarketingConsent(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const saved = localStorage.getItem('isabel_pepe_cookie_consent');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      return parsed?.categories?.marketing === true;
+    }
+  } catch {
+    return false;
+  }
+  return false;
+}
+
+/**
+ * Fallback puro JavaScript a 32-bit per il calcolo di SHA-256 standard.
+ * Garantisce hashing crittografico sicuro anche in assenza di window.crypto.subtle
+ * (es. ambienti dev HTTP, localhost non-HTTPS, webview restrittive).
+ */
+function pureJsSha256(str: string): string {
+  const ascii = unescape(encodeURIComponent(str));
+  const rightRotate = (value: number, amount: number) =>
+    (value >>> amount) | (value << (32 - amount));
+
+  const mathPow = Math.pow;
+  const maxWord = mathPow(2, 32);
+  const words: number[] = [];
+  const asciiBitLength = ascii.length * 8;
+
+  let hash: number[] = [];
+  const k: number[] = [];
+  let primeCounter = 0;
+
+  const isPrime = (candidate: number) => {
+    for (let factor = 2; factor <= Math.sqrt(candidate); factor++) {
+      if (candidate % factor === 0) return false;
+    }
+    return true;
+  };
+
+  for (let candidate = 2; primeCounter < 64; candidate++) {
+    if (isPrime(candidate)) {
+      if (primeCounter < 8) {
+        hash[primeCounter] = (mathPow(candidate, 0.5) * maxWord) | 0;
+      }
+      k[primeCounter] = (mathPow(candidate, 1 / 3) * maxWord) | 0;
+      primeCounter++;
+    }
+  }
+
+  words[asciiBitLength >> 5] |= 0x80 << (24 - (asciiBitLength % 32));
+  words[(((asciiBitLength + 64) >> 9) << 4) + 15] = asciiBitLength;
+
+  for (let i = 0; i < ascii.length; i++) {
+    words[i >> 2] |= ascii.charCodeAt(i) << (24 - (i % 4) * 8);
+  }
+
+  for (let j = 0; j < words.length; j += 16) {
+    const w = words.slice(j, j + 16);
+    const oldHash = hash.slice(0);
+
+    for (let i = 0; i < 64; i++) {
+      const w15 = w[i - 15], w2 = w[i - 2];
+      const s0 = rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 >>> 3);
+      const s1 = rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 >>> 10);
+      w[i] = (i < 16) ? (w[i] || 0) : ((w[i - 16] + s0 + w[i - 7] + s1) | 0);
+
+      const s1_h = rightRotate(hash[4], 6) ^ rightRotate(hash[4], 11) ^ rightRotate(hash[4], 25);
+      const ch = (hash[4] & hash[5]) ^ (~hash[4] & hash[6]);
+      const temp1 = (hash[7] + s1_h + ch + k[i] + w[i]) | 0;
+      const s0_h = rightRotate(hash[0], 2) ^ rightRotate(hash[0], 13) ^ rightRotate(hash[0], 22);
+      const maj = (hash[0] & hash[1]) ^ (hash[0] & hash[2]) ^ (hash[1] & hash[2]);
+      const temp2 = (s0_h + maj) | 0;
+
+      hash = [(temp1 + temp2) | 0, hash[0], hash[1], hash[2], (hash[3] + temp1) | 0, hash[4], hash[5], hash[6]];
+    }
+
+    for (let i = 0; i < 8; i++) {
+      hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+  }
+
+  let result = '';
+  for (let i = 0; i < 8; i++) {
+    for (let j = 3; j >= 0; j--) {
+      const b = (hash[i] >> (j * 8)) & 255;
+      result += (b < 16 ? '0' : '') + b.toString(16);
+    }
+  }
+  return result;
+}
+
+/**
+ * Calcola l'hash SHA-256 esadecimale standard.
+ * Prioritizza la Web Crypto API nativa del browser e degrada in modo trasparente
+ * sul fallback bitwise pure-JS se subtle non è disponibile.
+ * FAIL-SAFE: Non restituisce MAI il testo in chiaro e rigetta stringhe vuote/whitespace.
  */
 export async function sha256Hex(plainText: string): Promise<string> {
-  if (typeof window === 'undefined' || !window.crypto || !window.crypto.subtle) {
-    return plainText;
+  if (!plainText || typeof plainText !== 'string') return '';
+  const trimmed = plainText.trim();
+  if (trimmed.length === 0) return '';
+
+  if (typeof window !== 'undefined' && window.crypto && window.crypto.subtle) {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(trimmed);
+      const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+    } catch (err) {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn('[TikTok Pixel] SubtleCrypto digest failed, fallback to pure-JS SHA-256:', err);
+      }
+      return pureJsSha256(trimmed);
+    }
   }
-  try {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(plainText);
-    const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
-  } catch {
-    return plainText;
-  }
+
+  // Fallback sicuro pure-JS (mai esporre plainText in chiaro!)
+  return pureJsSha256(trimmed);
 }
 
 /**
  * Normalizza il recapito telefonico nel formato internazionale E.164 (+39...)
  */
 export function normalizePhoneE164(rawPhone: string): string {
-  if (!rawPhone) return '';
-  const digits = rawPhone.replace(/[^\d+]/g, '');
-  if (digits.startsWith('+')) return digits;
-  if (digits.startsWith('00')) return '+' + digits.slice(2);
-  // Default Italia se il prefisso è omesso
-  if (digits.length >= 9 && digits.length <= 11) {
-    return '+39' + digits;
+  if (!rawPhone || typeof rawPhone !== 'string') return '';
+  let cleaned = rawPhone.trim().replace(/[^\d+]/g, '');
+  if (!cleaned) return '';
+
+  // Assicura al massimo un unico '+' iniziale
+  if (cleaned.includes('+')) {
+    cleaned = '+' + cleaned.replace(/\+/g, '');
   }
-  return digits;
+
+  if (cleaned.startsWith('00')) {
+    cleaned = '+' + cleaned.slice(2);
+  } else if (!cleaned.startsWith('+')) {
+    if (cleaned.startsWith('39') && cleaned.length >= 11 && cleaned.length <= 13) {
+      cleaned = '+' + cleaned;
+    } else if (cleaned.length >= 9 && cleaned.length <= 11) {
+      cleaned = '+39' + cleaned;
+    } else {
+      cleaned = '+' + cleaned;
+    }
+  }
+
+  // Verifica standard E.164 (+ seguito da 7 a 15 cifre numeriche)
+  if (!/^\+[1-9]\d{6,14}$/.test(cleaned)) {
+    return '';
+  }
+
+  return cleaned;
 }
 
 /**
@@ -797,6 +957,8 @@ export function normalizePhoneE164(rawPhone: string): string {
  */
 export function trackTikTokPageView(): void {
   if (typeof window === 'undefined' || !window.ttq) return;
+  if (!hasActiveMarketingConsent()) return;
+
   try {
     window.ttq.page();
   } catch (err) {
@@ -815,24 +977,33 @@ export async function identifyTikTokUser(params: {
   visitorId?: string;
 }): Promise<void> {
   if (typeof window === 'undefined' || !window.ttq) return;
+  if (!hasActiveMarketingConsent()) return;
 
   try {
     const identifyPayload: TikTokIdentifyParams = {};
 
-    if (params.email) {
+    if (params.email && typeof params.email === 'string') {
       const cleanEmail = params.email.trim().toLowerCase();
-      identifyPayload.email = await sha256Hex(cleanEmail);
-    }
-
-    if (params.phone) {
-      const cleanPhone = normalizePhoneE164(params.phone);
-      if (cleanPhone) {
-        identifyPayload.phone_number = await sha256Hex(cleanPhone);
+      if (cleanEmail.length > 0 && cleanEmail.includes('@')) {
+        const hash = await sha256Hex(cleanEmail);
+        if (hash) identifyPayload.email = hash;
       }
     }
 
-    if (params.visitorId) {
-      identifyPayload.external_id = await sha256Hex(params.visitorId.trim());
+    if (params.phone && typeof params.phone === 'string') {
+      const cleanPhone = normalizePhoneE164(params.phone);
+      if (cleanPhone) {
+        const hash = await sha256Hex(cleanPhone);
+        if (hash) identifyPayload.phone_number = hash;
+      }
+    }
+
+    if (params.visitorId && typeof params.visitorId === 'string') {
+      const cleanVisitor = params.visitorId.trim();
+      if (cleanVisitor.length > 0) {
+        const hash = await sha256Hex(cleanVisitor);
+        if (hash) identifyPayload.external_id = hash;
+      }
     }
 
     if (Object.keys(identifyPayload).length > 0) {
@@ -846,13 +1017,18 @@ export async function identifyTikTokUser(params: {
 }
 
 /**
- * Helper generico per invio eventi standard protetto da try/catch
+ * Helper generico per invio eventi standard protetto da controllo consenso e try/catch
  */
-export function trackTikTokEvent(eventName: string, params?: TikTokEventParams): void {
+export function trackTikTokEvent(
+  eventName: string,
+  params?: TikTokEventParams,
+  options?: TikTokEventOptions
+): void {
   if (typeof window === 'undefined' || !window.ttq) return;
+  if (!hasActiveMarketingConsent()) return;
 
   try {
-    window.ttq.track(eventName, params);
+    window.ttq.track(eventName, params, options);
   } catch (err) {
     if (process.env.NODE_ENV === 'development') {
       console.warn(`[TikTok Pixel] Errore evento ${eventName}:`, err);
@@ -923,13 +1099,20 @@ export function trackTikTokCompletePayment(order: {
   total: number;
   items?: { id: string; name: string; price: number; quantity: number }[];
 }): void {
-  // Guardia anti-duplicazione: previene doppi eventi su refresh della pagina /success
+  if (!order || !order.orderId) return;
+
+  // Guardia anti-duplicazione protetta da try/catch contro Safari Private Mode
   if (typeof window !== 'undefined') {
-    const storageKey = `isabel_tt_payment_${order.orderId}`;
-    if (sessionStorage.getItem(storageKey)) {
-      return;
+    try {
+      const storageKey = `isabel_tt_payment_${order.orderId}`;
+      if (sessionStorage.getItem(storageKey)) {
+        return;
+      }
+      sessionStorage.setItem(storageKey, 'true');
+    } catch {
+      // In modalità privata (Safari Private Browsing) o storage disabilitato,
+      // l'eccezione SecurityError viene intercettata senza bloccare il tracciamento
     }
-    sessionStorage.setItem(storageKey, 'true');
   }
 
   const contents: TikTokContentItem[] = (order.items || []).map((i) => ({
@@ -940,67 +1123,71 @@ export function trackTikTokCompletePayment(order: {
     price: Number(i.price),
   }));
 
-  trackTikTokEvent('CompletePayment', {
-    order_id: order.orderId,
-    value: Number(order.total.toFixed(2)),
-    currency: 'EUR',
-    contents: contents.length > 0 ? contents : undefined,
-  });
+  // Invia event_id nelle opzioni per la deduplicazione nativa TikTok Events API
+  trackTikTokEvent(
+    'CompletePayment',
+    {
+      order_id: order.orderId,
+      value: Number(order.total.toFixed(2)),
+      currency: 'EUR',
+      contents: contents.length > 0 ? contents : undefined,
+    },
+    { event_id: order.orderId }
+  );
 }
 ```
 
 ---
 
 ### 3. Componente Client Next.js: `components/TikTokPixel.tsx`
-Creare il file `components/TikTokPixel.tsx`. Questo componente gestisce l'inizializzazione non-bloccante (`strategy="afterInteractive"`), l'idempotenza `ttq._i[pixelId]` per evitare doppie inizializzazioni, il cambio rotta in SPA e l'attivazione immediata su ricezione dell'evento GDPR `isabel_cookie_consent` senza richiedere alcun ricaricamento di pagina.
+Creare il file `components/TikTokPixel.tsx`. Questo componente gestisce l'inizializzazione non-bloccante (`strategy="afterInteractive"`), l'idempotenza `ttq._i[pixelId]` per evitare doppie inizializzazioni, il cambio rotta in SPA basato unicamente su `pathname` (evitando pageview spuri su filtri query string), l'incapsulamento protetto in `<Suspense fallback={null}>` per conformità con Next.js 16 App Router, e la gestione dinamica del consenso GDPR con **revoca attiva** (`revokeConsent()`, `disableCookie()` ed eliminazione immediata dei cookie di tracciamento `_ttp` e `_ttclid`):
 
 ```tsx
 'use client';
 
 // =========================================================================
-// ISABEL PEPE - TIKTOK PIXEL INTEGRATION COMPONENT
+// ISABEL PEPE - TIKTOK PIXEL INTEGRATION COMPONENT (HARDENED)
 // File: components/TikTokPixel.tsx
 // =========================================================================
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import Script from 'next/script';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { TIKTOK_PIXEL_ID, trackTikTokPageView } from '@/lib/tiktok-pixel';
+import { usePathname } from 'next/navigation';
+import { TIKTOK_PIXEL_ID, trackTikTokPageView, hasActiveMarketingConsent } from '@/lib/tiktok-pixel';
 
-export default function TikTokPixel() {
+function TikTokPixelInner() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [hasMarketingConsent, setHasMarketingConsent] = useState(false);
   const isInitialMount = useRef(true);
 
-  // 1. Verifica Consenso Cookie GDPR (sincronizzato con CookieBanner.tsx)
+  // 1. Verifica Consenso Cookie GDPR e Binding al ciclo di vita
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const checkConsent = () => {
-      try {
-        const saved = localStorage.getItem('isabel_pepe_cookie_consent');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (parsed?.categories?.marketing === true) {
-            setHasMarketingConsent(true);
-            return;
-          }
-        }
-      } catch {
-        // Nessun cookie o errore parsing
-      }
-      setHasMarketingConsent(false);
-    };
-
-    checkConsent();
+    // Sincronizzazione iniziale stato consenso
+    setHasMarketingConsent(hasActiveMarketingConsent());
 
     const handleConsentUpdate = (e: Event) => {
       const customEvent = e as CustomEvent<{ categories?: { marketing?: boolean } }>;
-      if (customEvent.detail?.categories?.marketing === true) {
+      const marketing = customEvent.detail?.categories?.marketing;
+
+      if (marketing === true) {
         setHasMarketingConsent(true);
-      } else if (customEvent.detail?.categories && customEvent.detail.categories.marketing === false) {
+        if (window.ttq?.grantConsent) {
+          window.ttq.grantConsent();
+        }
+      } else if (marketing === false) {
         setHasMarketingConsent(false);
+        // Revoca attiva TikTok SDK ed eliminazione cookie _ttp e _ttclid
+        if (window.ttq?.revokeConsent) {
+          window.ttq.revokeConsent();
+        }
+        if (window.ttq?.disableCookie) {
+          window.ttq.disableCookie();
+        }
+        // Pulizia esplicita cookie di prima parte _ttp e _ttclid
+        document.cookie = '_ttp=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;';
+        document.cookie = '_ttclid=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;';
       }
     };
 
@@ -1010,7 +1197,7 @@ export default function TikTokPixel() {
     };
   }, []);
 
-  // 2. Gestione Transizioni di Rotta SPA (Route Changes)
+  // 2. Gestione Transizioni di Rotta SPA (solo su effettivo cambio pathname)
   useEffect(() => {
     if (!hasMarketingConsent) return;
 
@@ -1020,9 +1207,9 @@ export default function TikTokPixel() {
       return;
     }
 
-    // Su ogni cambio route successivo in SPA, invia ttq.page()
+    // Su ogni effettivo cambio di percorso in SPA, invia ttq.page()
     trackTikTokPageView();
-  }, [pathname, searchParams, hasMarketingConsent]);
+  }, [pathname, hasMarketingConsent]);
 
   // Se il Pixel ID non è configurato o l'utente non ha prestato consenso marketing, non montare nulla
   if (!TIKTOK_PIXEL_ID || !hasMarketingConsent) {
@@ -1059,7 +1246,26 @@ export default function TikTokPixel() {
     />
   );
 }
+
+export default function TikTokPixel() {
+  return (
+    <Suspense fallback={null}>
+      <TikTokPixelInner />
+    </Suspense>
+  );
+}
 ```
+
+> **Guida all'Integrazione in `app/layout.tsx` (Next.js 16 Suspense Boundary)**:  
+> Analogamente al componente proprietario `<Tracker />`, inserire `<TikTokPixel />` nel body di `app/layout.tsx` avvolto in un boundary `<Suspense fallback={null}>` per preservare la static site generation (SSG) e prevenire de-ottimizzazioni in fase di build:
+> ```tsx
+> <Suspense fallback={null}>
+>   <Tracker />
+> </Suspense>
+> <Suspense fallback={null}>
+>   <TikTokPixel />
+> </Suspense>
+> ```
 
 ---
 
@@ -1195,16 +1401,24 @@ export default function ProductViewTracker({ product }: Props) {
 
 ---
 
-## 4.6 Protezione Idempotente su CompletePayment (`sessionStorage`)
-Per impedire che il Pixel registri conversioni duplicate qualora il cliente ricarichi la pagina `/success?session_id=...` o vi acceda nuovamente dai preferiti del browser, la funzione `trackTikTokCompletePayment` in `lib/tiktok-pixel.ts` verifica la chiave `isabel_tt_payment_${orderId}` all'interno di `sessionStorage`. Se la chiave è già presente nella sessione corrente, la chiamata viene ignorata istantaneamente.
+## 4.6 Protezione Idempotente su CompletePayment (`sessionStorage` & Resilienza Safari)
+Per impedire che il Pixel registri conversioni duplicate qualora il cliente ricarichi la pagina `/success?session_id=...` o vi acceda nuovamente dalla cronologia/preferiti del browser:
+1. **Deduplicazione Client-Side via `sessionStorage`**: La funzione `trackTikTokCompletePayment` in `lib/tiktok-pixel.ts` memorizza la chiave univoca `isabel_tt_payment_${orderId}`. Se la transazione è già stata tracciata nella sessione corrente, la chiamata viene interrotta istantaneamente.
+2. **Resilienza alle Restrizioni di Safari Private Browsing (`try...catch`)**: In ambienti di navigazione anonima (iOS Safari Private Mode) o con impostazioni restrittive anti-tracciamento, l'accesso diretto a `sessionStorage` scatena un'eccezione non gestita di tipo `SecurityError: The operation is insecure`. Nel codice implementato, l'accesso allo storage è integralmente avvolto in un blocco `try...catch`: qualora lo storage sia inaccessibile, l'errore viene neutralizzato e l'evento di conversione viene comunque inviato a TikTok senza causare crash sull'interfaccia cliente di `/success`.
+3. **Deduplicazione Server/Client con `event_id`**: Contestualmente al payload standard, l'evento `CompletePayment` trasmette l'opzione `{ event_id: order.orderId }`. Questo parametro consente a TikTok Events Manager di deduplicare in modo perfetto l'evento con il rispettivo tracciamento server-side emesso da `lib/tiktok-events-api.ts`.
 
 ---
 
 ## 4.7 Conformità GDPR & Binding Dinamico con `CookieBanner.tsx`
 Nel pieno rispetto del Regolamento UE 2016/679 (GDPR) e delle Linee Guida del Garante Privacy italiano (Luglio 2021):
-1. **Nessun Tracciamento Preventivo**: Il tag TikTok Pixel non viene caricato finché l'utente non esprime il consenso esplicito alla categoria `marketing`.
-2. **Attivazione Dinamica Istantanea**: All'accettazione dei cookie nel banner, viene emesso l'evento `window.dispatchEvent(new CustomEvent('isabel_cookie_consent', { detail: { categories: { marketing: true } } }))`. Il componente `TikTokPixel.tsx` riceve il segnale, monta lo script via Next.js Script e avvia la telemetria senza richiedere il ricaricamento del browser.
-3. **Revoca Immediata**: Se l'utente disattiva i cookie marketing tramite il pannello di gestione preferenze, `hasMarketingConsent` commuta su `false` e il tracciamento si arresta.
+1. **Nessun Tracciamento Preventivo**: Il tag TikTok Pixel non viene caricato finché l'utente non esprime il consenso esplicito alla categoria `marketing`. Se il consenso non è concesso, `<TikTokPixel />` restituisce `null` e nessun asset ByteDance viene scaricato.
+2. **Controllo Preventivo su Tutti gli Helper (`hasActiveMarketingConsent`)**: Ogni funzione di tracciamento in `lib/tiktok-pixel.ts` (`trackTikTokPageView`, `identifyTikTokUser`, `trackTikTokEvent`, `trackTikTokAddToCart`, etc.) verifica preliminarmente `hasActiveMarketingConsent()`. Anche se il metodo venisse invocato programmaticamente prima del consenso o dopo una revoca, nessun pacchetto di telemetria viene inviato ai server TikTok.
+3. **Attivazione Dinamica Istantanea**: All'accettazione dei cookie nel banner, viene emesso l'evento `window.dispatchEvent(new CustomEvent('isabel_cookie_consent', { detail: { categories: { marketing: true } } }))`. Il componente `TikTokPixel.tsx` riceve il segnale, chiama `window.ttq.grantConsent()`, monta lo script via Next.js Script e avvia la telemetria senza richiedere il ricaricamento del browser.
+4. **Revoca Attiva e Distruzione dei Cookie (`revokeConsent` & Purge)**: Qualora l'utente revochi il consenso marketing dal pannello delle preferenze:
+   - Viene invocato il metodo SDK nativo `window.ttq.revokeConsent()`.
+   - Viene disabilitata l'emissione dei cookie con `window.ttq.disableCookie()`.
+   - Vengono cancellati immediatamente dal browser i cookie first-party `_ttp` e `_ttclid` sovrascrivendoli con data di scadenza passata (`Expires=Thu, 01 Jan 1970 00:00:01 GMT; Max-Age=0;`).
+   - Lo stato locale `hasMarketingConsent` commuta su `false`, bloccando all'istante ogni ulteriore tracciamento.
 
 ---
 
@@ -1283,7 +1497,7 @@ Il piano operativo scandisce le attività tecniche, creative e di media buying l
 - Completamento delle 4 fasi del Protocollo QA e conferma dello stato attivo in TikTok Events Manager.
 
 #### SETTIMANA 2: Seeding Creativo Organico & Calcolo CVS Score
-- Elena e Mario realizzano e pubblicano sul profilo `@isabel.pepe0` almeno 4 video dedicati ai formati prioritari:
+- Elena e Mario realizzano e pubblicano sul profilo `@isabel.pepe88` almeno 4 video dedicati ai formati prioritari:
   1. *Video 1*: Flash Shock Moissanite & Diamond Tester (Pilastro 2).
   2. *Video 2*: Unboxing Scrigno Luxury con apertura ASMR e certificato GRA (Pilastro 3).
   3. *Video 3*: Macro punzonatura S925, banco da orafo e panno di pulizia (Pilastro 1).
@@ -1346,6 +1560,7 @@ Il piano operativo scandisce le attività tecniche, creative e di media buying l
 | **Budget Type** | Daily Budget a livello di Ad Group (ABO): 20,00 € / giorno |
 | **Strategia d'Asta** | Lowest Cost (Costo più basso) |
 | **Dayparting Settimanale** | Gio-Ven 18:00-23:30 \| Sab-Dom 11:00-23:30 \| Lun-Mer spento |
+| **Fuso Orario Ad Account** | `(GMT+01:00) Europe/Rome` (Tassativo per allineamento Dayparting 18:00-23:30) |
 | **Targeting Geografico** | Italia (tutto il territorio nazionale) |
 | **Fasce d'Età Inserite** | `25-34`, `35-44`, `45-54` (**13-17 categoricamente deselezionata**) |
 | **Finestra Attribuzione** | 7-day Click / 1-day View |

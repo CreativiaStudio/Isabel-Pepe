@@ -40,7 +40,7 @@ The Isabel Pepe image ingestion and catalog persistence architecture is organize
 | M1 | Server Upload & Storage Pipeline Hardening | `lib/r2.ts`, `app/api/upload/route.ts`, `app/admin/actions.ts: uploadProductImageAction, updateProductImage` | none | DONE |
 | E2E | E2E Testing Suite Creation | Requirement-driven test suite (Tiers 1-4) published to `TEST_READY.md` (49/49 passing) | none | DONE |
 | M2 | Client-Side Pre-Processing & Safe Parsing | `ProductForm.tsx`, `MediaLibraryModal.tsx`, `compressImageClient`, `safeParseUploadResponse`, 2-tier fallback | M1 | DONE |
-| M3 | 5-Slot Gallery State & Non-Destructive Persistence | `ProductForm.tsx`, `actions.ts`, `app/api/admin/products/route.ts`, slot preservation for `Set Isabel Rose (A145)` | M1, M2 | PLANNED |
+| M3 | 5-Slot Gallery State & Non-Destructive Persistence | `ProductForm.tsx`, `actions.ts`, `app/api/admin/products/route.ts`, slot preservation for `Set Isabel Rose (A145)` | M1, M2 | DONE |
 | M4 | Final E2E Test Pass, Adversarial Hardening & Build Verification | Pass 100% of E2E tests, execute Tier 5 adversarial checks, and verify `npm run build` | M1, M2, M3, E2E | PLANNED |
 
 ## Interface Contracts
