@@ -361,7 +361,7 @@ export default function Footer() {
 
               {/* TikTok */}
               <a 
-                href="https://tiktok.com/@isabelpepe" 
+                href="https://www.tiktok.com/@isabel.pepe0" 
                 target="_blank" 
                 rel="noopener noreferrer" 
                 aria-label="TikTok Isabel Pepe"

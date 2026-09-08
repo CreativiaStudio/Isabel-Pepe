@@ -91,6 +91,7 @@ import WishlistDrawer from "@/components/WishlistDrawer";
 import CookieBanner from "@/components/CookieBanner";
 import PrivilegeClubModal from "@/components/PrivilegeClubModal";
 import Tracker from "@/components/Tracker";
+import TikTokPixel from "@/components/TikTokPixel";
 import { Suspense } from "react";
 
 export default function RootLayout({
@@ -110,6 +111,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(rootJsonLd) }}
         />
+        <TikTokPixel />
       </head>
       <body className="min-h-full flex flex-col">
         <Suspense fallback={null}>

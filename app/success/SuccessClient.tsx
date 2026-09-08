@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { CheckCircle, Package, Truck, ShieldCheck, ShoppingBag, ArrowRight } from 'lucide-react';
 import { useCartStore } from '@/store/cart';
+import { trackAnalyticsEvent } from '@/lib/analytics-events';
 
 export default function SuccessClient() {
   const searchParams = useSearchParams();
@@ -31,10 +32,18 @@ export default function SuccessClient() {
         .then((res) => res.json())
         .then((data) => {
           if (data && data.success) {
+            const revenue = data.amountTotal ? data.amountTotal / 100 : 0;
             setOrderDetails({
               customerEmail: data.customerEmail,
               customerName: data.customerName,
               amount: data.amountTotal,
+            });
+
+            // Dispatcia l'evento di acquisto (Analytics e TikTok Pixel)
+            trackAnalyticsEvent('purchase', {
+              order_id: data.orderId || sessionId,
+              revenue,
+              cart_total: revenue,
             });
           }
         })

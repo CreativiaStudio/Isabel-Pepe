@@ -66,6 +66,52 @@ export async function trackAnalyticsEvent(
         console.warn('Analytics event tracking error:', err);
       }
     });
+
+    // Dispatch to TikTok Pixel if available
+    if (typeof window !== 'undefined' && (window as any).ttq) {
+      try {
+        const ttq = (window as any).ttq;
+        if (eventName === 'view_item') {
+          ttq.track('ViewContent', {
+            contents: [{
+              content_id: eventData?.product_id || eventData?.product_slug,
+              content_type: 'product',
+              content_name: eventData?.product_name,
+              price: eventData?.product_price || eventData?.price,
+              quantity: 1,
+            }],
+            value: eventData?.product_price || eventData?.price || 0,
+            currency: 'EUR',
+          });
+        } else if (eventName === 'add_to_cart') {
+          ttq.track('AddToCart', {
+            contents: [{
+              content_id: eventData?.product_id || eventData?.product_slug,
+              content_type: 'product',
+              content_name: eventData?.product_name,
+              price: eventData?.product_price || eventData?.price,
+              quantity: eventData?.quantity || 1,
+            }],
+            value: (eventData?.product_price || eventData?.price || 0) * (eventData?.quantity || 1),
+            currency: 'EUR',
+          });
+        } else if (eventName === 'begin_checkout') {
+          ttq.track('InitiateCheckout', {
+            value: eventData?.cart_total || 0,
+            currency: 'EUR',
+          });
+        } else if (eventName === 'purchase') {
+          ttq.track('CompletePayment', {
+            value: eventData?.revenue || eventData?.cart_total || 0,
+            currency: 'EUR',
+          });
+        }
+      } catch (ttErr) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('TikTok Pixel dispatch error:', ttErr);
+        }
+      }
+    }
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('Failed to dispatch analytics event:', error);
