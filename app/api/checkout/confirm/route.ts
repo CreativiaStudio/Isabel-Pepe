@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe';
 import { supabaseAdmin } from '@/lib/supabase';
 import { sendOrderConfirmationEmail } from '@/lib/email';
 import { incrementDailyMetric } from '@/lib/analytics';
+import { sendTikTokServerEvent } from '@/lib/tiktok-events-api';
 
 export async function POST(req: Request) {
   try {
@@ -71,6 +72,23 @@ export async function POST(req: Request) {
             shippingAddress,
           }).catch((err) => console.error('Error sending order confirmation email:', err));
         }
+
+        // Invia evento di acquisto a TikTok Events API (Server-Side)
+        sendTikTokServerEvent({
+          event: 'CompletePayment',
+          eventId: sessionId,
+          userEmail: customerEmail,
+          userPhone: (session as any).customer_details?.phone || undefined,
+          value: amountTotal,
+          currency: 'EUR',
+          contents: items.map((it: any) => ({
+            content_id: it.id || it.slug,
+            content_name: it.title,
+            price: it.price,
+            quantity: it.quantity || 1,
+            content_type: 'product',
+          })),
+        }).catch((err) => console.error('TikTok Events API error:', err));
 
         // Funnel Milestone: Update analytics_sessions with completed purchase
         if (analyticsSessionId) {
