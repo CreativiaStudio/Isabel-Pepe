@@ -490,8 +490,8 @@ export default function Footer() {
         </div>
 
         {/* FOOTER BOTTOM: DATI SOCIETARI & COPYRIGHT */}
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.2em] text-[#E5DCD6] uppercase font-normal text-center md:text-left">
-          <p>© {new Date().getFullYear()} ISABEL PEPE • P.IVA 06399670659 • TUTTI I DIRITTI RISERVATI</p>
+        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-[0.15em] text-[#E5DCD6] uppercase font-normal text-center md:text-left">
+          <p>© {new Date().getFullYear()} ISABEL PEPE — BRAND DI PROPRIETÀ DI CREATIVIA DIGITAL STUDIO DI P.M. • P.IVA 06399670659 • VIA CASA GALLO DI GIOVI SANTO STEFANO 23, 84133 SALERNO</p>
           <p className="normal-case tracking-normal text-[#555050] text-[10px] text-center md:text-right flex items-center justify-center md:justify-end gap-1.5 font-normal opacity-40">
             Made with <Heart size={11} className="text-[#C0A09A] fill-[#C0A09A] shrink-0 inline" /> <span className="tracking-wider">Creativia Studio</span>
           </p>
