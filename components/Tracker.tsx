@@ -143,9 +143,12 @@ export default function Tracker() {
       ['utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid', 'ttclid'].includes(k.toLowerCase())
     );
 
-    // If there is new campaign or external referrer, or no cached attribution, classify and store
-    if (!cachedAttribution || hasExternalReferrer || hasUtms) {
-      const attribution = classifyAttribution(rawReferrer, searchObj);
+    const ua = navigator.userAgent || '';
+    const isSocialApp = /musical_ly|tiktok|bytelocale|bytedance|trill|instagram|fban|fbav/i.test(ua);
+
+    // If there is new campaign, external referrer, in-app social browser, or no cached attribution, classify and store
+    if (!cachedAttribution || hasExternalReferrer || hasUtms || (isSocialApp && cachedAttribution.traffic_channel === 'Direct')) {
+      const attribution = classifyAttribution(rawReferrer, searchObj, ua);
       storeSessionAttribution(attribution);
     }
 

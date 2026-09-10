@@ -91,7 +91,7 @@ export default function GuidaTagliePage() {
                         <span>Taglia {row.sizeIT}</span>
                         {isStandardSize && (
                           <span className="bg-[#C0A09A] text-white text-[9px] uppercase tracking-wider font-sans font-bold px-2 py-0.5 rounded-full">
-                            Taglia Collezione Isabel Pepe
+                            Unica Taglia Disponibile (Collezione Isabel Pepe)
                           </span>
                         )}
                       </td>

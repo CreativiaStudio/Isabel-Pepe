@@ -91,11 +91,22 @@ export function isInternalDomain(host: string): boolean {
  */
 export function classifyAttribution(
   referrer?: string | null,
-  searchParamsInput?: Record<string, string | null | undefined> | URLSearchParams | string | null
+  searchParamsInput?: Record<string, string | null | undefined> | URLSearchParams | string | null,
+  userAgentInput?: string | null
 ): AttributionData {
   const params = parseUtmParams(searchParamsInput);
   const ref = (referrer || '').trim();
   const refHost = extractReferrerHost(ref);
+
+  const ua = (userAgentInput || (typeof navigator !== 'undefined' ? navigator.userAgent : '') || '').toLowerCase();
+  const isTikTokApp =
+    ua.includes('musical_ly') ||
+    ua.includes('tiktok') ||
+    ua.includes('bytelocale') ||
+    ua.includes('bytedance') ||
+    ua.includes('trill');
+  const isInstagramApp = ua.includes('instagram');
+  const isFacebookApp = ua.includes('fban') || ua.includes('fbav');
 
   const utm_source = params['utm_source'] ? params['utm_source'].toLowerCase() : null;
   const utm_medium = params['utm_medium'] ? params['utm_medium'].toLowerCase() : null;
@@ -219,13 +230,13 @@ export function classifyAttribution(
   // 5. Instagram Organic
   const isInstagramHost = refHost.includes('instagram.com') || refHost === 'l.instagram.com';
   const isInstagramSource = ['instagram', 'ig'].includes(utm_source || '');
-  if ((isInstagramHost || isInstagramSource) && !fbclid && utm_medium !== 'cpc') {
+  if ((isInstagramHost || isInstagramSource || isInstagramApp) && !fbclid && utm_medium !== 'cpc') {
     return {
       traffic_channel: 'Instagram Organic',
       traffic_source: 'instagram',
       traffic_medium: utm_medium || 'organic_social',
-      utm_source,
-      utm_medium,
+      utm_source: utm_source || 'instagram',
+      utm_medium: utm_medium || 'organic_social',
       utm_campaign,
       utm_content,
       utm_term,
@@ -238,13 +249,13 @@ export function classifyAttribution(
   // 6. Facebook Organic
   const isFacebookHost = refHost.includes('facebook.com') || refHost === 'l.facebook.com' || refHost === 'm.facebook.com';
   const isFacebookSource = ['facebook', 'fb'].includes(utm_source || '');
-  if ((isFacebookHost || isFacebookSource) && !fbclid && utm_medium !== 'cpc') {
+  if ((isFacebookHost || isFacebookSource || isFacebookApp) && !fbclid && utm_medium !== 'cpc') {
     return {
       traffic_channel: 'Facebook Organic',
       traffic_source: 'facebook',
       traffic_medium: utm_medium || 'organic_social',
-      utm_source,
-      utm_medium,
+      utm_source: utm_source || 'facebook',
+      utm_medium: utm_medium || 'organic_social',
       utm_campaign,
       utm_content,
       utm_term,
@@ -299,14 +310,21 @@ export function classifyAttribution(
   }
 
   // 9. TikTok
-  const isTikTok = ttclid || refHost.includes('tiktok.com') || utm_source === 'tiktok';
+  const isTikTok =
+    ttclid ||
+    refHost.includes('tiktok.com') ||
+    ref.includes('com.zhiliaoapp.musically') ||
+    ref.includes('com.ss.android.ugc.trill') ||
+    isTikTokApp ||
+    utm_source === 'tiktok' ||
+    utm_source === 'tiktok_organic';
   if (isTikTok) {
     return {
       traffic_channel: 'TikTok',
       traffic_source: 'tiktok',
       traffic_medium: utm_medium || (ttclid ? 'paid_social' : 'organic_social'),
-      utm_source,
-      utm_medium,
+      utm_source: utm_source || 'tiktok',
+      utm_medium: utm_medium || (ttclid ? 'paid_social' : 'organic_social'),
       utm_campaign,
       utm_content,
       utm_term,

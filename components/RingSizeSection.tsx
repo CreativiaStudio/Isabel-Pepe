@@ -45,13 +45,13 @@ export default function RingSizeSection() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif text-sm font-semibold text-gray-900">Taglia Unica 12 (IT)</span>
+                <span className="font-serif text-sm font-semibold text-gray-900">Unica Taglia Disponibile: Misura 12 (IT)</span>
                 <span className="bg-[#F5EBE9] text-[#8A6A64] text-[10px] font-sans font-semibold px-2 py-0.5 rounded-full">
                   Ø 16.5 mm
                 </span>
               </div>
               <span className="text-[11px] text-gray-500 font-light block mt-0.5">
-                Diametro interno: <strong>16.5 mm</strong> • Circonferenza: <strong>52 mm</strong>
+                Diametro interno: <strong>16.5 mm</strong> • Circonferenza: <strong>52 mm</strong> (Struttura fissa non regolabile)
               </span>
             </div>
           </div>
@@ -61,7 +61,7 @@ export default function RingSizeSection() {
         <div className="mt-3 pt-3 border-t border-[#F0E6E1]/70 flex items-start gap-2 text-xs text-gray-600 font-light leading-relaxed">
           <Sparkles size={14} className="text-[#C0A09A] shrink-0 mt-0.5" />
           <p>
-            Questo anello è realizzato nella <strong>misura standard italiana 12 (Ø 16.5 mm)</strong>, la taglia più versatile e confortevole per anulare, medio o indice.
+            Anello a struttura chiusa e solida (non regolabile), realizzato nell'<strong>unica taglia disponibile: misura standard italiana 12 (Ø 16.5 mm)</strong>, ideale per anulare, medio o indice.
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@ export default function RingSizeSection() {
                 </div>
                 <div>
                   <h3 className="font-serif text-lg uppercase tracking-wider text-gray-900">Guida alla Misura Anello</h3>
-                  <p className="text-xs text-gray-500 font-light">Specifiche e verifica della Taglia Unica 12 (IT)</p>
+                  <p className="text-xs text-gray-500 font-light">Specifiche e verifica dell'Unica Taglia Disponibile (Misura 12 IT)</p>
                 </div>
               </div>
               <button 
@@ -107,7 +107,7 @@ export default function RingSizeSection() {
                     Dati di Calibrazione Ufficiale
                   </span>
                   <span className="bg-emerald-100 text-emerald-800 text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Taglia di Collezione
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Unica Misura di Collezione (Non Regolabile)
                   </span>
                 </div>
 
@@ -164,10 +164,10 @@ export default function RingSizeSection() {
               {/* Consiglio Vestibilità */}
               <div className="bg-[#FAF8F5] p-4 rounded-xl border border-[#F0E6E1] text-xs text-gray-600 space-y-1">
                 <span className="font-semibold text-gray-900 block flex items-center gap-1.5">
-                  <Info size={14} className="text-[#C0A09A]" /> Consiglio di Vestibilità:
+                  <Info size={14} className="text-[#C0A09A]" /> Struttura e Consiglio di Vestibilità:
                 </span>
                 <p className="font-light leading-relaxed">
-                  La Taglia 12 (Ø 16.5 mm) è la misura standard regina della gioielleria femminile: se per l'anulare della tua mano dovesse risultare leggermente comoda o aderente, calzerà con grazia su dito medio o indice.
+                  I nostri anelli sono creazioni a fascia chiusa in Argento 925 di alta oreficeria (non sono anelli aperti o regolabili, per preservarne la robustezza strutturale e la purezza estetica). L'<strong>unica taglia realizzata è la Misura 12 IT (Ø 16.5 mm)</strong>: se per l'anulare della tua mano dovesse risultare leggermente comoda o aderente, calzerà con grazia su dito medio o indice.
                 </p>
               </div>
 

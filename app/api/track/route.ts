@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     // 3. Omnichannel Attribution Engine
-    const attribution = classifyAttribution(referrer, searchParams || path);
+    const attribution = classifyAttribution(referrer, searchParams || path, userAgent);
     const referrerHost = extractReferrerHost(referrer);
     const activeSessionId = sessionId || `sid_${visitorId}_${Date.now()}`;
     const isProduct = path.startsWith('/prodotto/');

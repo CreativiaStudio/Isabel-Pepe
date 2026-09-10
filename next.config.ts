@@ -67,6 +67,20 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      {
+        source: '/tiktok',
+        destination: '/?utm_source=tiktok&utm_medium=organic_social&utm_campaign=bio_link',
+        permanent: false,
+      },
+      {
+        source: '/bio',
+        destination: '/?utm_source=social_bio&utm_medium=organic_social&utm_campaign=bio_link',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
