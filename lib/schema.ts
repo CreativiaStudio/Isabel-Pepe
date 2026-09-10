@@ -57,10 +57,9 @@ export function getOrganizationAndWebsiteSchema() {
         telephone: '+39 089 000000',
         address: {
           '@type': 'PostalAddress',
-          streetAddress: 'Via Casa Gallo di Giovi Santo Stefano 23',
           addressLocality: 'Salerno',
           addressRegion: 'SA',
-          postalCode: '84133',
+          postalCode: '84100',
           addressCountry: 'IT',
         },
         geo: {

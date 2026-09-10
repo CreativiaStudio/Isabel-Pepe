@@ -35,7 +35,7 @@ export default function PrivacyPage() {
               <p><strong>Ragione Sociale:</strong> Creativia Digital Studio di Mario Pepe</p>
               <p><strong>P.IVA:</strong> 06399670659</p>
               <p><strong>C.F.:</strong> PPEMRA83L15F205G</p>
-              <p><strong>Sede Legale:</strong> Via Casa Gallo di Giovi Santo Stefano 23, 84133 Salerno (SA) - Italia</p>
+              <p><strong>Sede Legale:</strong> Salerno (SA) - Italia</p>
               <p><strong>PEC:</strong> creativiastudio@pec.it</p>
               <p><strong>Email di Contatto:</strong> info@isabelpepe.com</p>
             </div>
