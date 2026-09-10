@@ -198,7 +198,7 @@ export default function PrivilegeClubModal() {
         {/* Left Side: Luxury Haute Joaillerie Image & Mood */}
         <div className="relative md:w-5/12 bg-[#0D0D0D] hidden sm:block overflow-hidden min-h-[220px] md:min-h-full">
           <img
-            src="/Brand/anello-imperial-modella-seta-nera.jpg"
+            src="/Brand/anello_imperial_abito_nero.jpg"
             alt="Isabel Pepe Creazioni Gioielleria Demi-Fine"
             className="w-full h-full object-cover object-center opacity-85 hover:scale-105 transition-transform duration-1000"
           />
