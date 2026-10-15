@@ -1,0 +1,12 @@
+{"id":"edit.clear","params":{"clips":[42,43,44,45,46,47,48,49,50,51,52]}}
+{"id":"timeline.place","params":{"item":1,"track":"V1","seconds":0,"insert":false,"audio":false,"duration":889056000000}}
+{"id":"timeline.place","params":{"item":2,"track":"V1","seconds":3.5,"insert":false,"audio":false,"duration":889056000000}}
+{"id":"timeline.place","params":{"item":3,"track":"V1","seconds":7,"insert":false,"audio":false,"duration":889056000000}}
+{"id":"timeline.place","params":{"item":4,"track":"V1","seconds":10.5,"insert":false,"audio":false,"duration":762048000000}}
+{"id":"timeline.place","params":{"item":5,"track":"V1","seconds":13.5,"insert":false,"audio":false,"duration":635040000000}}
+{"id":"timeline.place","params":{"item":6,"track":"A1","seconds":0,"insert":false,"video":false,"duration":4064256000000}}
+{"id":"timeline.place","params":{"item":9,"track":"A2","seconds":0.5,"insert":false,"video":false}}
+{"id":"timeline.place","params":{"item":10,"track":"A2","seconds":3.8,"insert":false,"video":false}}
+{"id":"timeline.place","params":{"item":11,"track":"A2","seconds":10.8,"insert":false,"video":false}}
+{"id":"timeline.place","params":{"item":7,"track":"A3","seconds":3.5,"insert":false,"video":false}}
+{"id":"timeline.place","params":{"item":8,"track":"A3","seconds":13.2,"insert":false,"video":false,"duration":711244800000}}

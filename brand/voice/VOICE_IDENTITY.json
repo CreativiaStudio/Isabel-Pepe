@@ -1,0 +1,13 @@
+{
+  "voice_name": "Isabel Pepe Master Voice",
+  "gender": "female",
+  "tone": "Luxury, caldo, intimo, suadente",
+  "provider": "elevenlabs",
+  "sample_rate": 48000,
+  "samples": [
+    "vo1.mp3",
+    "vo2.mp3",
+    "vo3.mp3"
+  ],
+  "claim": "Isabel Pepe. Vivi il tuo splendore."
+}

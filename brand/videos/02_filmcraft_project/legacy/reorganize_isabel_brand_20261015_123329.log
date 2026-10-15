@@ -1,0 +1,39 @@
+[12:33:28] === 1. Struttura brand/ ===
+[12:33:28] pronta: C:\Users\mario\Progetti Antigravity\isabel-pepe\brand (+ videos, voice, avatar, assets)
+[12:33:28] === 2. videos/ -> brand/videos/ ===
+[12:33:28] videos/ gia' spostata (ok)
+[12:33:28] === 3. Campioni vocali -> brand/voice/ ===
+[12:33:29] COPIATO campione voce: vo1.mp3
+[12:33:29] COPIATO campione voce: vo2.mp3
+[12:33:29] COPIATO campione voce: vo3.mp3
+[12:33:29] === 4. Orfani della root -> legacy/ ===
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\isabel-pepe\isabel_reel_demo.fcproj
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\isabel-pepe\FilmCraft Previews
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\isabel-pepe\build_isabel_filmcraft.js
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\isabel-pepe\filmcraft_demo
+[12:33:29] === 5. Master da hyperframes-showcase/output -> 03_masters ===
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\isabel_emotional_luxury_spot.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\isabel_cinema_cut.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\isabel_pepe_v2.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\isabel_product_orbit.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\reel_01_glow_ribbon_specs.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\reel_02_vivienne_mythbuster.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\reel_03_romance_unboxing.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\isabel_pepe_hyperframes_master.mp4
+[12:33:29] SKIP (assente): C:\Users\mario\Progetti Antigravity\Creativia\hyperframes-showcase\output\contact_product_orbit.jpg
+[12:33:29] === 6. Render intermedi + output/ ===
+[12:33:29] SKIP (assente): reel_v1_silent.mp4
+[12:33:29] SKIP (assente): reel_v2_silent.mp4
+[12:33:29] SKIP (assente): reel_v3_silent.mp4
+[12:33:29] === 7. Aggiorno i path nel .fcproj e nei log comandi ===
+[12:33:29] nessun path da aggiornare in: C:\Users\mario\Progetti Antigravity\isabel-pepe\brand\videos\02_filmcraft_project\isabel_spot_vivienne.fcproj
+[12:33:29] AGGIORNATO path: C:\Users\mario\Progetti Antigravity\isabel-pepe\brand\videos\02_filmcraft_project\commands.jsonl
+[12:33:29] nessun path da aggiornare in: C:\Users\mario\Progetti Antigravity\isabel-pepe\brand\videos\02_filmcraft_project\commands_full.jsonl
+[12:33:29] === 8. Verifica integrita ===
+[12:33:29] JSON integro: format=filmcraft.project schema=15 active_sequence=19 item=12
+[12:33:29] tutti i media puntano a brand\videos\01_raw_assets ed esistono: OK
+[12:33:29] root pulita, brand/ completa, output/ vuota: OK
+[12:33:29] eseguo: filmcraft-cli --project <fcproj> inspect sequence
+[12:33:29] inspect sequence: JSON valido -> il progetto si apre correttamente (exit 0)
+[12:33:29] inspect project: exit=0
+[12:33:29] === FATTO ===

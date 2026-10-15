@@ -1,0 +1,12 @@
+{
+  "avatar_name": "Vivienne Luxury Model",
+  "type": "photo_avatar_cinematic",
+  "framing": "close_up / medium_close_up",
+  "style": "Elegante, seta champagne, trucco soft luxury",
+  "lighting": "Luce calda diffusa, riflessi dorati",
+  "provider": "kling_fal_ai",
+  "sources": [
+    "01_hero_model_intro.mp4",
+    "04_hero_model_smile.mp4"
+  ]
+}

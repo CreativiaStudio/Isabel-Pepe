@@ -53,7 +53,7 @@ export default function Header() {
                     {/* Anelli */}
                     <Link href="/shop?category=Anelli" onClick={() => setIsCollectionsOpen(false)} className="group/item flex flex-col gap-4">
                       <div className="w-full aspect-[4/5] overflow-hidden bg-[#F9F8F6]">
-                        <img src="/Products/mega_menu_anelli.webp" alt="Anelli" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
+                        <img src="/Brand/mega_menu/mega_menu_anelli.webp" alt="Anelli" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
                       </div>
                       <span className="font-serif text-sm tracking-widest uppercase text-gray-900 group-hover/item:text-[#C0A09A] transition-colors text-center">Anelli</span>
                     </Link>
@@ -61,7 +61,7 @@ export default function Header() {
                     {/* Collane */}
                     <Link href="/shop?category=Collane" onClick={() => setIsCollectionsOpen(false)} className="group/item flex flex-col gap-4">
                       <div className="w-full aspect-[4/5] overflow-hidden bg-[#F9F8F6]">
-                        <img src="/Products/mega_menu_collane.jpg" alt="Collane" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
+                        <img src="/Brand/mega_menu/mega_menu_collane.jpg" alt="Collane" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
                       </div>
                       <span className="font-serif text-sm tracking-widest uppercase text-gray-900 group-hover/item:text-[#C0A09A] transition-colors text-center">Collane</span>
                     </Link>
@@ -69,7 +69,7 @@ export default function Header() {
                     {/* Orecchini */}
                     <Link href="/shop?category=Orecchini" onClick={() => setIsCollectionsOpen(false)} className="group/item flex flex-col gap-4">
                       <div className="w-full aspect-[4/5] overflow-hidden bg-[#F9F8F6]">
-                        <img src="/Products/mega_menu_orecchini.webp" alt="Orecchini" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
+                        <img src="/Brand/mega_menu/mega_menu_orecchini.webp" alt="Orecchini" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
                       </div>
                       <span className="font-serif text-sm tracking-widest uppercase text-gray-900 group-hover/item:text-[#C0A09A] transition-colors text-center">Orecchini</span>
                     </Link>
@@ -77,7 +77,7 @@ export default function Header() {
                     {/* Bracciali */}
                     <Link href="/shop?category=Bracciali" onClick={() => setIsCollectionsOpen(false)} className="group/item flex flex-col gap-4">
                       <div className="w-full aspect-[4/5] overflow-hidden bg-[#F9F8F6]">
-                        <img src="/Products/mega_menu_bracciali.jpg" alt="Bracciali" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
+                        <img src="/Brand/mega_menu/mega_menu_bracciali.jpg" alt="Bracciali" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
                       </div>
                       <span className="font-serif text-sm tracking-widest uppercase text-gray-900 group-hover/item:text-[#C0A09A] transition-colors text-center">Bracciali</span>
                     </Link>
@@ -85,7 +85,7 @@ export default function Header() {
                     {/* Set */}
                     <Link href="/shop?category=Set" onClick={() => setIsCollectionsOpen(false)} className="group/item flex flex-col gap-4">
                       <div className="w-full aspect-[4/5] overflow-hidden bg-[#F9F8F6]">
-                        <img src="/Products/mega_menu_set.webp" alt="Set" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
+                        <img src="/Brand/mega_menu/mega_menu_set.webp" alt="Set" className="w-full h-full object-cover group-hover/item:scale-105 transition duration-700" />
                       </div>
                       <span className="font-serif text-sm tracking-widest uppercase text-gray-900 group-hover/item:text-[#C0A09A] transition-colors text-center">Set</span>
                     </Link>
@@ -229,7 +229,7 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="bg-[#FAF8F5] p-3 rounded-lg flex flex-col items-center gap-2 border border-gray-100 active:scale-95 transition-transform"
                 >
-                  <img src="/Products/mega_menu_anelli.webp" alt="Anelli" className="w-12 h-12 object-cover rounded-md" />
+                  <img src="/Brand/mega_menu/mega_menu_anelli.webp" alt="Anelli" className="w-12 h-12 object-cover rounded-md" />
                   <span className="text-xs font-serif uppercase tracking-wider text-gray-900">Anelli</span>
                 </Link>
 
@@ -238,7 +238,7 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="bg-[#FAF8F5] p-3 rounded-lg flex flex-col items-center gap-2 border border-gray-100 active:scale-95 transition-transform"
                 >
-                  <img src="/Products/mega_menu_collane.jpg" alt="Collane" className="w-12 h-12 object-cover rounded-md" />
+                  <img src="/Brand/mega_menu/mega_menu_collane.jpg" alt="Collane" className="w-12 h-12 object-cover rounded-md" />
                   <span className="text-xs font-serif uppercase tracking-wider text-gray-900">Collane</span>
                 </Link>
 
@@ -247,7 +247,7 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="bg-[#FAF8F5] p-3 rounded-lg flex flex-col items-center gap-2 border border-gray-100 active:scale-95 transition-transform"
                 >
-                  <img src="/Products/mega_menu_orecchini.webp" alt="Orecchini" className="w-12 h-12 object-cover rounded-md" />
+                  <img src="/Brand/mega_menu/mega_menu_orecchini.webp" alt="Orecchini" className="w-12 h-12 object-cover rounded-md" />
                   <span className="text-xs font-serif uppercase tracking-wider text-gray-900">Orecchini</span>
                 </Link>
 
@@ -256,7 +256,7 @@ export default function Header() {
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="bg-[#FAF8F5] p-3 rounded-lg flex flex-col items-center gap-2 border border-gray-100 active:scale-95 transition-transform"
                 >
-                  <img src="/Products/mega_menu_set.webp" alt="Set" className="w-12 h-12 object-cover rounded-md" />
+                  <img src="/Brand/mega_menu/mega_menu_set.webp" alt="Set" className="w-12 h-12 object-cover rounded-md" />
                   <span className="text-xs font-serif uppercase tracking-wider text-gray-900">Set</span>
                 </Link>
               </div>

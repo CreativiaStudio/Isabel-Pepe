@@ -1,0 +1,7 @@
+# FilmCraft build for the Isabel Pepe reel (generated).
+{"id":"file.newProject","params":{"name":"isabel_reel"}}
+{"id":"file.import","params":{"paths":["C:\\Users\\mario\\Progetti Antigravity\\isabel-pepe\\filmcraft_demo\\isabel_avatar.mp4","C:\\Users\\mario\\Progetti Antigravity\\isabel-pepe\\filmcraft_demo\\isabel_broll.mp4","C:\\Users\\mario\\Progetti Antigravity\\isabel-pepe\\filmcraft_demo\\isabel_mixed_audio.mp3"]}}
+{"id":"file.newSequence","params":{"name":"Isabel Reel","width":1280,"height":720,"fps":25,"sampleRate":48000,"video":3,"audio":3}}
+{"id":"timeline.place","params":{"items":[1,2],"track":"V1","seconds":0,"audio":false}}
+{"id":"timeline.place","params":{"item":3,"track":"A1","seconds":0}}
+{"id":"captions.import","params":{"path":"C:\\Users\\mario\\Progetti Antigravity\\isabel-pepe\\filmcraft_demo\\isabel_subtitles.srt","name":"Italiano"}}

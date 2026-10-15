@@ -7,15 +7,15 @@ import path from 'path';
 export function ensureCertificateAliases() {
   try {
     const brandDir = path.resolve(process.cwd(), 'public/Brand');
-    const cleanWebp = path.join(brandDir, 'certificato_perle_card_clean.webp');
-    const aliasWebp = path.join(brandDir, 'certificato_perle_oro18k.webp');
-    if (fs.existsSync(cleanWebp) && !fs.existsSync(aliasWebp)) {
-      fs.copyFileSync(cleanWebp, aliasWebp);
+    const masterWebp = path.join(brandDir, 'certificato_perle_oro18k.webp');
+    const legacyWebp = path.join(brandDir, 'certificato_perle_card_clean.webp');
+    if (fs.existsSync(masterWebp)) {
+      fs.copyFileSync(masterWebp, legacyWebp);
     }
-    const cleanJpg = path.join(brandDir, 'certificato_perle_card_clean.jpg');
-    const aliasJpg = path.join(brandDir, 'certificato_perle_oro18k.jpg');
-    if (fs.existsSync(cleanJpg) && !fs.existsSync(aliasJpg)) {
-      fs.copyFileSync(cleanJpg, aliasJpg);
+    const masterJpg = path.join(brandDir, 'certificato_perle_oro18k.jpg');
+    const legacyJpg = path.join(brandDir, 'certificato_perle_card_clean.jpg');
+    if (fs.existsSync(masterJpg)) {
+      fs.copyFileSync(masterJpg, legacyJpg);
     }
   } catch (e) {
     // Ignore in environments where fs is restricted

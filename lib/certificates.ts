@@ -69,7 +69,7 @@ export function getProductCertificateInfo(product: ProductInput = {}): ProductCe
   if (isPearl) {
     return {
       certificateType: 'pearl_gold',
-      certificateImage: '/Brand/certificato_perle_card_clean.webp',
+      certificateImage: '/Brand/certificato_perle_oro18k.webp',
       hasGraTabs: false,
       badgeTitle: "Garanzia Ufficiale di Qualità",
       badgeSubtitle: "Certificato Perle Naturali d'Acqua Dolce & Oro 18K",
@@ -79,7 +79,7 @@ export function getProductCertificateInfo(product: ProductInput = {}): ProductCe
         {
           id: 'card',
           label: '1. Certificato Ufficiale Perle',
-          imageSrc: '/Brand/certificato_perle_card_clean.webp',
+          imageSrc: '/Brand/certificato_perle_oro18k.webp',
           alt: "Certificato di Autenticità Perle Naturali e Oro 18K",
           badge: "Perle & Oro 18K",
           description: "Certificato ufficiale nominale che attesta la naturalezza e coltivazione delle perle d'acqua dolce e la placcatura in Oro 18K (1.0 Micron)."
